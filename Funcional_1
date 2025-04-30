@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Questionário Alimentos Funcionais</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { margin-bottom: 30px; border: 1px solid #ccc; padding: 15px; border-radius: 5px; }
+        label { display: block; margin: 10px 0; }
+        button { margin-top: 10px; padding: 8px 15px; cursor: pointer; }
+        .correct { color: green; font-weight: bold; }
+        .incorrect { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Questionário Alimentos Funcionais</h1>
+
+    <div id="quiz">
+        <!-- Questão 1 -->
+        <div class="question" data-correct="E">
+            <h3>1. Definição de nutracêutico</h3>
+            <form onsubmit="checkAnswer(event, this)">
+                <label><input type="radio" name="q1" value="A"> Produto concentrado com vitaminas/minerais</label>
+                <label><input type="radio" name="q1" value="B"> Alimento com nutrientes adicionados</label>
+                <label><input type="radio" name="q1" value="C"> Alimento in natura com bioativos</label>
+                <label><input type="radio" name="q1" value="D"> Produto transgênico</label>
+                <label><input type="radio" name="q1" value="E"> Substância extraída em forma farmacêutica</label>
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+
+        <!-- Questão 2 -->
+        <div class="question" data-correct="E">
+            <h3>2. Vitaminas A e D</h3>
+            <form onsubmit="checkAnswer(event, this)">
+                <label><input type="radio" name="q2" value="A"> Síntese D independente de UV</label>
+                <label><input type="radio" name="q2" value="B"> D só atua nos ossos</label>
+                <label><input type="radio" name="q2" value="C"> A sintetizada no fígado</label>
+                <label><input type="radio" name="q2" value="D"> A suficiente para saúde óssea</label>
+                <label><input type="radio" name="q2" value="E"> A integra epitélios, D regula imunidade</label>
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+
+        <!-- Questão 3 -->
+        <div class="question" data-correct="D">
+            <h3>3. Probióticos e simbióticos</h3>
+            <form onsubmit="checkAnswer(event, this)">
+                <label><input type="radio" name="q3" value="A"> I, apenas</label>
+                <label><input type="radio" name="q3" value="B"> II, apenas</label>
+                <label><input type="radio" name="q3" value="C"> III, apenas</label>
+                <label><input type="radio" name="q3" value="D"> I e III, apenas</label>
+                <label><input type="radio" name="q3" value="E"> II e III, apenas</label>
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+
+        <!-- Questão 4 -->
+        <div class="question" data-correct="C">
+            <h3>4. Fibras alimentares</h3>
+            <form onsubmit="checkAnswer(event, this)">
+                <label><input type="radio" name="q4" value="A"> Probióticos somente em lácteos</label>
+                <label><input type="radio" name="q4" value="B"> Fibras insolúveis formam géis</label>
+                <label><input type="radio" name="q4" value="C"> Fibras melhoram microbiota intestinal</label>
+                <label><input type="radio" name="q4" value="D"> Solúveis aumentam volume fecal</label>
+                <label><input type="radio" name="q4" value="E"> Fibras não impactam microbiota</label>
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+
+        <!-- Questão 5 -->
+        <div class="question" data-correct="C">
+            <h3>5. Alimentos funcionais</h3>
+            <form onsubmit="checkAnswer(event, this)">
+                <label><input type="radio" name="q5" value="A"> I, apenas</label>
+                <label><input type="radio" name="q5" value="B"> II, apenas</label>
+                <label><input type="radio" name="q5" value="C"> III, apenas</label>
+                <label><input type="radio" name="q5" value="D"> I e III, apenas</label>
+                <label><input type="radio" name="q5" value="E"> I, II e III</label>
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+
+        <!-- Questão 6 -->
+        <div class="question" data-correct="A">
+            <h3>6. Ácidos graxos ômega-3</h3>
+            <form onsubmit="checkAnswer(event, this)">
+                <label><input type="radio" name="q6" value="A"> I e II verdadeiras</label>
+                <label><input type="radio" name="q6" value="B"> I e II verdadeiras sem relação</label>
+                <label><input type="radio" name="q6" value="C"> I verdadeira, II falsa</label>
+                <label><input type="radio" name="q6" value="D"> I falsa, II verdadeira</label>
+                <label><input type="radio" name="q6" value="E"> Ambas falsas</label>
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+
+        <!-- Questão 7 -->
+        <div class="question" data-correct="A">
+            <h3>7. Fatores antinutricionais</h3>
+            <form onsubmit="checkAnswer(event, this)">
+                <label><input type="radio" name="q7" value="A"> I e II verdadeiras</label>
+                <label><input type="radio" name="q7" value="B"> I e II verdadeiras sem relação</label>
+                <label><input type="radio" name="q7" value="C"> I verdadeira, II falsa</label>
+                <label><input type="radio" name="q7" value="D"> I falsa, II verdadeira</label>
+                <label><input type="radio" name="q7" value="E"> Ambas falsas</label>
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+
+        <!-- Questão 8 -->
+        <div class="question" data-correct="C">
+            <h3>8. Cafeína e adenosina</h3>
+            <form onsubmit="checkAnswer(event, this)">
+                <label><input type="radio" name="q8" value="A"> I e II verdadeiras</label>
+                <label><input type="radio" name="q8" value="B"> I e II verdadeiras sem relação</label>
+                <label><input type="radio" name="q8" value="C"> I verdadeira, II falsa</label>
+                <label><input type="radio" name="q8" value="D"> I falsa, II verdadeira</label>
+                <label><input type="radio" name="q8" value="E"> Ambas falsas</label>
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+
+        <!-- Questão 9 -->
+        <div class="question" data-correct="D">
+            <h3>9. Compostos fenólicos</h3>
+            <form onsubmit="checkAnswer(event, this)">
+                <label><input type="radio" name="q9" value="A"> Promovem inflamação</label>
+                <label><input type="radio" name="q9" value="B"> Fatores termorresistentes</label>
+                <label><input type="radio" name="q9" value="C"> Xantina oxidase protetora</label>
+                <label><input type="radio" name="q9" value="D"> Modulação inflamatória</label>
+                <label><input type="radio" name="q9" value="E"> Inativam superóxidos</label>
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+
+        <!-- Questão 10 -->
+        <div class="question" data-correct="C">
+            <h3>10. Ácidos graxos</h3>
+            <form onsubmit="checkAnswer(event, this)">
+                <label><input type="radio" name="q10" value="A"> EPA saturado</label>
+                <label><input type="radio" name="q10" value="B"> Saturados líquidos</label>
+                <label><input type="radio" name="q10" value="C"> ALA essencial</label>
+                <label><input type="radio" name="q10" value="D"> Oleico ômega-3</label>
+                <label><input type="radio" name="q10" value="E"> Trans benéficos</label>
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function checkAnswer(event, form) {
+            event.preventDefault();
+            const questionDiv = form.parentElement;
+            const correctAnswer = questionDiv.dataset.correct;
+            const selected = form.querySelector('input:checked');
+
+            if (!selected) return;
+
+            // Remove estilos anteriores
+            questionDiv.querySelectorAll('label').forEach(label => {
+                label.classList.remove('correct', 'incorrect');
+            });
+
+            // Marca resposta correta
+            questionDiv.querySelector(`input[value="${correctAnswer}"]`)
+                .parentElement.classList.add('correct');
+
+            // Marca resposta do usuário se errada
+            if (selected.value !== correctAnswer) {
+                selected.parentElement.classList.add('incorrect');
+            }
+
+            // Desabilita inputs após resposta
+            form.querySelectorAll('input').forEach(input => {
+                input.disabled = true;
+            });
+            form.querySelector('button').disabled = true;
+        }
+    </script>
+</body>
+</html>
