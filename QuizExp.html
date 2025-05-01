@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Nutrição Experimental</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            color: #202124;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 500;
+            color: #202124;
+            margin-bottom: 24px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        #score {
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            font-size: 18px;
+            color: #1a73e8;
+            margin-bottom: 24px;
+            display: none;
+            position: sticky;
+            top: 20px;
+            z-index: 10;
+        }
+        .question-container {
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            animation: fadeIn 0.5s ease-in;
+        }
+        .question-container.answered {
+            border-left: 4px solid #1a73e8;
+        }
+        .question {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .options label {
+            display: block;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .options label:hover {
+            background: #f1f3f4;
+            border-color: #1a73e8;
+        }
+        .options input {
+            margin-right: 12px;
+            accent-color: #1a73e8;
+        }
+        .correct {
+            background: #e6f4ea !important;
+            border-color: #34a853 !important;
+        }
+        .incorrect {
+            background: #fce8e6 !important;
+            border-color: #ea4335 !important;
+        }
+        button {
+            display: block;
+            width: 160px;
+            margin: 16px auto 0;
+            padding: 12px;
+            background: #1a73e8;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:disabled {
+            background: #dadce0;
+            cursor: not-allowed;
+        }
+        button:hover:not(:disabled) {
+            background: #174ea6;
+        }
+        .feedback {
+            margin-top: 16px;
+            padding: 16px;
+            background: #f1f3f4;
+            border-radius: 4px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .feedback p {
+            margin: 8px 0;
+        }
+        .feedback .correct-feedback::before {
+            content: '✅ ';
+        }
+        .feedback .incorrect-feedback::before {
+            content: '❌ ';
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .question-container {
+                padding: 16px;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz de Nutrição Experimental</h1>
+        <div id="score"></div>
+        <div id="quiz-container"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "As instalações físicas e as práticas higiênicas em biotérios são aspectos críticos para garantir o bem-estar dos animais de laboratório, a integridade dos experimentos e o cumprimento de padrões éticos. Considere o contexto mencionado e analise as afirmações a seguir que versam sobre características construtivas dos biotérios:<br>I. O teto deve ser feito de concreto liso e plano, não pode conter fundos falsos ou materiais com possíveis frestas ou que possam acumular sujidades.<br>II. As paredes devem ser lisas, sem rachaduras e com revestimento impermeável e resistente a agentes químicos.<br>III. As janelas devem possuir aberturas que permitam a troca de ar com o ambiente externo ao prédio de instalação do biotério.<br>IV. As portas devem ser metálicas ou revestidas com material lavável e resistente a produtos químicos.<br>É correto o que se afirma em:",
+                options: [
+                    "I, apenas.",
+                    "I e II, apenas.",
+                    "II e IV, apenas.",
+                    "I, II e IV, apenas.",
+                    "I, II, III e IV."
+                ],
+                correct: 3,
+                explanations: {
+                    correct: "Correto! As afirmativas I, II e IV estão corretas, pois tetos lisos, paredes impermeáveis e portas resistentes são essenciais para higiene em biotérios. A III é falsa, pois janelas não devem permitir troca de ar externo para evitar contaminação.",
+                    incorrect: [
+                        "Errado. As afirmativas II e IV também estão corretas.",
+                        "Errado. A afirmativa I também está correta.",
+                        "Errado. A afirmativa I também está correta, mas a III é falsa.",
+                        "Errado. A afirmativa III é falsa, pois janelas abertas comprometem a biossegurança."
+                    ]
+                }
+            },
+            {
+                question: "Diversos tipos de animais são utilizados em pesquisas científicas, dependendo dos objetivos específicos do estudo. A escolha dos animais pode variar com base na natureza da pesquisa, nos resultados desejados e em considerações éticas. De acordo com a utilização de diferentes tipos de animais em pesquisa, julgue as afirmativas abaixo:<br>I. Alguns tipos de animais utilizados em pesquisas são ratos, camundongos, porquinhos-da-índia, hamsters, coelhos, cachorros e macacos.<br>II. Cachorros se destacam por ocuparem a maior parte dos estudos realizados no mundo.<br>III. Na área da Nutrição, experimentos utilizando os ratos Wistar são amplamente utilizados.<br>IV. Porquinhos-da-índia são os mais utilizados em pesquisa na área da Nutrição.<br>É correto o que se afirma em:",
+                options: [
+                    "I, apenas.",
+                    "I e III, apenas.",
+                    "I, II e III, apenas.",
+                    "I, II e IV, apenas.",
+                    "I, II, III e IV."
+                ],
+                correct: 1,
+                explanations: {
+                    correct: "Correto! A afirmativa I está correta, pois esses animais são usados em pesquisas. A II é falsa, pois roedores, não cachorros, são os mais usados. A III é verdadeira, mas a IV é falsa, pois ratos Wistar são mais comuns em nutrição do que porquinhos-da-índia.",
+                    incorrect: [
+                        "Errado. A afirmativa III também está correta.",
+                        "Errado. A II é falsa, pois cachorros não são os mais usados.",
+                        "Errado. A II e a IV são falsas.",
+                        "Errado. A II e a IV são falsas."
+                    ]
+                }
+            },
+            {
+                question: "A biossegurança é um conjunto de medidas voltadas para a prevenção, controle e contenção de riscos que possam comprometer a saúde humana, animal e o meio ambiente em ambientes laboratoriais e de pesquisa. Dentre as práticas adotadas, destaca-se a utilização de equipamentos de proteção individual (EPIs), a correta manipulação e descarte de resíduos biológicos, além do emprego de barreiras físicas e químicas. Considerando esses aspectos, qual das seguintes opções representa uma medida eficaz para reduzir a disseminação de patógenos em um laboratório?",
+                options: [
+                    "Limpeza esporádica de bancadas e equipamentos de trabalho.",
+                    "União de resíduos biológicos e comuns para simplificação de processos.",
+                    "Manipulação de microrganismos sem luvas para maior destreza nas atividades.",
+                    "Implementação de barreiras físicas, como lâmpadas UV, para desinfecção de superfícies.",
+                    "Otimização do tempo através do armazenamento de substâncias em recipientes não identificados."
+                ],
+                correct: 3,
+                explanations: {
+                    correct: "Correto! Lâmpadas UV são barreiras físicas eficazes para desinfecção, reduzindo patógenos em superfícies.",
+                    incorrect: [
+                        "Errado. Limpeza esporádica é insuficiente para conter patógenos.",
+                        "Errado. Misturar resíduos aumenta riscos de contaminação.",
+                        "Errado. Não usar luvas compromete a segurança.",
+                        "Errado. Recipientes não identificados podem causar erros e riscos."
+                    ]
+                }
+            },
+            {
+                question: "A utilização de animais em pesquisas científicas é uma prática comum, contudo, a variabilidade biológica entre indivíduos de uma mesma espécie é uma consideração crítica que pode impactar significativamente os resultados experimentais. Essa variabilidade pode surgir de fatores genéticos, ambientais e até mesmo técnicos. Para lidar com essa questão, os pesquisadores empregam estratégias cuidadosas, como o uso de linhagens específicas de animais, controle rigoroso das condições ambientais e a aplicação de métodos estatísticos robustos. Uma dessas possibilidades é a manipulação do status sanitário pela alteração da microbiota do animal. Sobre o assunto mencionado acima, assinale a alternativa que apresenta o nome que se dá ao grupo de animais que são totalmente livres de microrganismos.",
+                options: [
+                    "Germfree.",
+                    "Gnotobióticos.",
+                    "Convencionais.",
+                    "Freemicrorganisms.",
+                    "SPF (specific-pathogen free)."
+                ],
+                correct: 0,
+                explanations: {
+                    correct: "Correto! Animais germfree são totalmente livres de microrganismos, criados em ambientes estéreis.",
+                    incorrect: [
+                        "Errado. Gnotobióticos têm microbiota controlada, mas não são livres de microrganismos.",
+                        "Errado. Convencionais têm microbiota natural, não controlada.",
+                        "Errado. 'Freemicrorganisms' não é um termo científico.",
+                        "Errado. SPF são livres de patógenos específicos, mas podem ter microbiota."
+                    ]
+                }
+            },
+            {
+                question: "Apesar de haver um crescente esforço para desenvolver métodos alternativos sempre que possível, animais são utilizados em pesquisas científicas por diversos motivos. A pesquisa com animais desempenha um papel crucial no avanço científico, permitindo a compreensão de processos biológicos e o desenvolvimento de tratamentos médicos. Sobre as possibilidades de uso de animais em pesquisas, analise as asserções abaixo:<br>I. O uso de roedores em estudos de composição corporal é desencorajado.<br>PORQUE<br>II. O crescimento e ganho de peso desses animais não é linear e ainda não existem métodos para sua avaliação.<br>A respeito dessas asserções, assinale a opção correta.",
+                options: [
+                    "As asserções I e II são proposições verdadeiras e a II é uma justificativa correta da I.",
+                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+                    "A asserção I é uma proposição verdadeira e a II é uma proposição falsa.",
+                    "A asserção I é uma proposição falsa e a II é uma proposição verdadeira.",
+                    "As asserções I e II são proposições falsas."
+                ],
+                correct: 4,
+                explanations: {
+                    correct: "Correto! Ambas são falsas. O uso de roedores é comum em estudos de composição corporal (I é falsa), e existem métodos para avaliar crescimento e peso, como balanças e índices (II é falsa).",
+                    incorrect: [
+                        "Errado. Ambas são falsas.",
+                        "Errado. Ambas são falsas.",
+                        "Errado. A I é falsa.",
+                        "Errado. A II é falsa."
+                    ]
+                }
+            },
+            {
+                question: "Os aspectos de luz, ventilação e ruído são críticos para garantir condições adequadas em biotérios, promovendo o bem-estar dos animais e a validade dos resultados de pesquisa. A temperatura não controlada, por exemplo, causa estresse aos animais comprometendo parâmetros importantes na pesquisa e desrespeitando princípios éticos. Sobre o controle de luz, ventilação e ruído, considere as afirmações a seguir e assinale a correta.",
+                options: [
+                    "As luzes do laboratório devem ser incandescentes, para ajudar na intensidade de calor.",
+                    "A temperatura ideal para a maioria das espécies de modelos experimentais é de 35°C.",
+                    "A quebra abrupta ou aumento importante na temperatura pode causar a morte dos animais.",
+                    "A iluminação do biotério deverá utilizar a iluminação do sol e em caso de dias de pouca iluminação há a necessidade de se utilizar as lâmpadas.",
+                    "A ventilação deve ser realizada por meio de janelas com aberturas suficiente à troca de ar com o ambiente externo ao prédio de instalação do biotério."
+                ],
+                correct: 2,
+                explanations: {
+                    correct: "Correto! Variações abruptas de temperatura podem causar estresse grave ou morte dos animais, comprometendo o bem-estar e os resultados.",
+                    incorrect: [
+                        "Errado. Luzes incandescentes geram calor excessivo, não sendo ideais.",
+                        "Errado. A temperatura ideal para roedores é cerca de 20-26°C, não 35°C.",
+                        "Errado. Iluminação solar não é controlada e pode comprometer a pesquisa.",
+                        "Errado. Ventilação por janelas abertas aumenta o risco de contaminação."
+                    ]
+                }
+            },
+            {
+                question: "Os biotérios são instalações especializadas projetadas para a criação e manutenção de animais de laboratório. Esses animais são frequentemente utilizados em pesquisas científicas nas áreas de biologia, medicina, farmacologia e outras disciplinas. Já o Bioterismo é a ciência envolvida na aplicação e aperfeiçoamento das instalações e estruturas de criação e experimentação de animais. Sobre os objetivos quando da criação do bioterismo, analise as asserções abaixo:<br>I. O bioterismo pretendia resolver conflitos bioéticos no manejo, criação e experimentação de reagentes biológicos.<br>PORQUE<br>II. Na época havia a necessidade de entender as possíveis interferências que o ambiente poderia causar no resultado dos estudos.<br>A respeito dessas asserções, assinale a opção correta.",
+                options: [
+                    "As asserções I e II são proposições verdadeiras e a II é uma justificativa correta da I.",
+                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+                    "A asserção I é uma proposição verdadeira e a II é uma proposição falsa.",
+                    "A asserção I é uma proposição falsa e a II é uma proposição verdadeira.",
+                    "As asserções I e II são proposições falsas."
+                ],
+                correct: 1,
+                explanations: {
+                    correct: "Correto! Ambas são verdadeiras. O bioterismo visa resolver questões éticas (I), e entender interferências ambientais (II) justifica a necessidade de padrões éticos e controlados.",
+                    incorrect: [
+                        "Errado. A II é uma justificativa correta da I.",
+                        "Errado. A II é verdadeira.",
+                        "Errado. A I é verdadeira.",
+                        "Errado. Ambas são verdadeiras."
+                    ]
+                }
+            },
+            {
+                question: "Os métodos científicos desempenham um papel fundamental na busca pelo conhecimento e compreensão do mundo que nos cerca. Eles oferecem um conjunto de técnicas e procedimentos sistemáticos que permitem aos pesquisadores investigar fenômenos, testar hipóteses e validar teorias. A importância dos métodos científicos reside na capacidade de garantir a objetividade, replicabilidade e confiabilidade dos resultados obtidos, contribuindo para a construção de um conhecimento sólido e confiável. Em paralelo, os tipos de pesquisa desempenham papéis específicos nesse processo. Sobre os tipos de pesquisa quanto a sua finalidade, analise as asserções abaixo:<br>I. A pesquisa aplicada é mais adequada quando se busca obter uma compreensão inicial e aprofundada de um fenômeno pouco estudado.<br>PORQUE<br>II. Visa investigar um tema de maneira mais flexível, sem a imposição de hipóteses rígidas, permitindo a descoberta de novos insights.<br>A respeito dessas asserções, assinale a opção correta.",
+                options: [
+                    "As asserções I e II são proposições verdadeiras e a II é uma justificativa correta da I.",
+                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+                    "A asserção I é uma proposição verdadeira e a II é uma proposição falsa.",
+                    "A asserção I é uma proposição falsa e a II é uma proposição verdadeira.",
+                    "As asserções I e II são proposições falsas."
+                ],
+                correct: 4,
+                explanations: {
+                    correct: "Correto! Ambas são falsas. A pesquisa aplicada busca soluções práticas, não compreensão inicial (I é falsa). A II descreve pesquisa exploratória, não aplicada (II é falsa).",
+                    incorrect: [
+                        "Errado. Ambas são falsas.",
+                        "Errado. Ambas são falsas.",
+                        "Errado. A I é falsa.",
+                        "Errado. A II é falsa."
+                    ]
+                }
+            },
+            {
+                question: "A importância das pesquisas é fundamental para o avanço do conhecimento em todas as áreas do saber. Por meio da investigação sistemática e rigorosa, as pesquisas possibilitam a descoberta de novos fatos, a validação de teorias existentes e a busca por soluções inovadoras para desafios contemporâneos. De acordo com os tipos de pesquisas experimental e não experimental, julgue as afirmativas abaixo:<br>I. A pesquisa não experimental é também conhecida como observacional.<br>II. Na pesquisa experimental, o pesquisador não interfere no grupo amostral.<br>III. Na pesquisa experimental existe, pelo menos, uma variável controlada pelo estudo a fim de provocar eventos e observar a resposta dos grupos estudados.<br>IV. A pesquisa experimental pode utilizar materiais biológicos (células, tecidos), animais ou até mesmo seres humanos.<br>É correto o que se afirma em:",
+                options: [
+                    "I, apenas.",
+                    "I e II, apenas.",
+                    "I, III e IV, apenas.",
+                    "III e IV, apenas.",
+                    "I, II, III e IV."
+                ],
+                correct: 2,
+                explanations: {
+                    correct: "Correto! As afirmativas I, III e IV estão corretas: a pesquisa não experimental é observacional, a experimental controla variáveis e pode usar diversos materiais. A II é falsa, pois o pesquisador interfere no grupo experimental.",
+                    incorrect: [
+                        "Errado. As afirmativas III e IV também estão corretas.",
+                        "Errado. A II é falsa.",
+                        "Errado. A I também está correta.",
+                        "Errado. A I é verdadeira, e a II é falsa."
+                    ]
+                }
+            },
+            {
+                question: "Os biotérios são instalações especializadas projetadas para a criação e manutenção de animais de laboratório, além de servirem como ambientes controlados para experimentação. Essas instalações desempenham um papel crucial em pesquisas científicas que envolvem animais, proporcionando condições adequadas para o cuidado, reprodução e utilização ética dos animais. Sobre os cuidados na criação e planejamento das instalações dos biotérios, analise as asserções abaixo:<br>I. Animais que estão em fase de manutenção e criação não podem entrar em contato com os que estão em fase de experimentação.<br>PORQUE<br>II. O biotério de criação pode ser um importante contaminante.<br>A respeito dessas asserções, assinale a opção correta.",
+                options: [
+                    "As asserções I e II são proposições verdadeiras e a II é uma justificativa correta da I.",
+                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+                    "A asserção I é uma proposição verdadeira e a II é uma proposição falsa.",
+                    "A asserção I é uma proposição falsa e a II é uma proposição verdadeira.",
+                    "As asserções I e II são proposições falsas."
+                ],
+                correct: 0,
+                explanations: {
+                    correct: "Correto! Ambas são verdadeiras. A separação evita contaminação cruzada (I), e o biotério de criação pode ser uma fonte de contaminantes (II), justificando a I.",
+                    incorrect: [
+                        "Errado. A II é uma justificativa correta da I.",
+                        "Errado. A II é verdadeira.",
+                        "Errado. A I é verdadeira.",
+                        "Errado. Ambas são verdadeiras."
+                    ]
+                }
+            },
+            {
+                question: "Anteriormente à etapa de coleta dos dados, uma importante etapa é o teste e validação do método do estudo que poderá fornecer informações importantes sobre o número mínimo amostral, evitando desperdícios de materiais e utilização de cobaias desnecessariamente. Assinale a alternativa que apresenta o nome que dá à etapa descrita no texto acima.",
+                options: [
+                    "Redação.",
+                    "Projeto piloto.",
+                    "Planejamento.",
+                    "Coleta de dados.",
+                    "Revisão da literatura."
+                ],
+                correct: 1,
+                explanations: {
+                    correct: "Correto! O projeto piloto testa e valida métodos, ajustando o tamanho amostral e otimizando recursos.",
+                    incorrect: [
+                        "Errado. Redação é a escrita do estudo, não o teste de métodos.",
+                        "Errado. Planejamento é mais amplo, não específico para validação.",
+                        "Errado. Coleta de dados ocorre após a validação do método.",
+                        "Errado. Revisão da literatura é uma etapa inicial, não de teste."
+                    ]
+                }
+            },
+            {
+                question: "Sobre as barreiras físicas e químicas, leia o caso a seguir: Joana, uma pesquisadora de nutrição, ao preparar para iniciar seus experimentos, realizou toda a listagem dos materiais necessários, bem como dos reagentes que utilizaria. Ao mesmo tempo que submeteu as superfícies em que iria trabalhar à luz ultravioleta buscando desinfetá-las e conferir maior confiabilidade de seus resultados. Sobre esta condição apresentada acima, selecione a alternativa que apresenta corretamente o tipo de barreira sanitária e o método aplicado pela pesquisadora:",
+                options: [
+                    "Barreira física, radiação.",
+                    "Barreira física, autoclave.",
+                    "Barreira física, filtro de ar.",
+                    "Barreira química, radiação.",
+                    "Barreira química, autoclave."
+                ],
+                correct: 0,
+                explanations: {
+                    correct: "Correto! A luz ultravioleta é uma barreira física (radiação UV) usada para desinfecção de superfícies.",
+                    incorrect: [
+                        "Errado. Autoclave usa vapor, não radiação UV.",
+                        "Errado. Filtro de ar é uma barreira diferente, não radiação UV.",
+                        "Errado. Radiação UV é física, não química.",
+                        "Errado. Autoclave é um método de esterilização por vapor, não radiação."
+                    ]
+                }
+            },
+            {
+                question: "Os parâmetros ambientais nos laboratórios de criação e experimentação precisam ser cuidadosamente monitorados e mantidos constantes, de acordo com as necessidades específicas de cada espécie, para garantir um padrão sanitário adequado e evitar qualquer fator que possa comprometer os resultados da pesquisa. Sobre isso, avalie as situações propostas e assinale (V) para verdadeiro e (F) para falso:<br>I. A temperatura do ambiente dos roedores em laboratórios deve ser controlada e adequada à espécie, evitando variações extremas.<br>II. A ventilação nos laboratórios é importante, mas a troca de ar do ambiente não precisa ser regulada.<br>III. O ciclo de luminosidade para roedores deve alternar entre períodos claros e escuros, mantendo padrões consistentes.<br>IV. Ruídos elevados ou irregulares podem prejudicar os animais, causando efeitos adversos no seu bem-estar.<br>As afirmações I, II, III e IV são, respectivamente:",
+                options: [
+                    "V, V, F, F.",
+                    "F, V, F, F.",
+                    "V, F, V, V.",
+                    "V, F, V, F.",
+                    "F, V, V, V."
+                ],
+                correct: 2,
+                explanations: {
+                    correct: "Correto! I (V): Temperatura deve ser controlada. II (F): Ventilação precisa de regulação. III (V): Ciclos de luz devem ser consistentes. IV (V): Ruídos prejudicam o bem-estar.",
+                    incorrect: [
+                        "Errado. II é falsa, e IV é verdadeira.",
+                        "Errado. I e III são verdadeiras, e IV é verdadeira.",
+                        "Errado. IV é verdadeira.",
+                        "Errado. I é verdadeira."
+                    ]
+                }
+            },
+            {
+                question: "As tendências centrais são medidas estatísticas utilizadas para representar um conjunto de dados por meio de valores que sintetizam sua distribuição. Sobre as tendências centrais, leia as afirmativas a seguir:<br>I. Resultado da soma de todos os números obtidos em uma coleta de dados pela quantidade de números somados.<br>II. É a medida que indica exatamente o ponto central de um grupo de dados.<br>III. Indica qual o grau de variação dos dados coletados.<br>Assinale a alternativa que apresenta corretamente a sequência dos termos a que os conceitos acima se referem:",
+                options: [
+                    "I - média, II - mediana, III - moda.",
+                    "I - mediana, II - moda, III - média.",
+                    "I - média, II - mediana, III - desvio padrão.",
+                    "I - mediana, II - média, III - desvio padrão.",
+                    "I - desvio padrão, II - moda, III - mediana."
+                ],
+                correct: 2,
+                explanations: {
+                    correct: "Correto! I: Média (soma dividida pela quantidade). II: Mediana (valor central). III: Desvio padrão (variação dos dados).",
+                    incorrect: [
+                        "Errado. III não é moda, mas desvio padrão.",
+                        "Errado. I é média, não mediana; II é mediana, não moda.",
+                        "Errado. I é média, mas II é mediana, não média.",
+                        "Errado. I é média, não desvio padrão."
+                    ]
+                }
+            },
+            {
+                question: "O ambiente em que os animais de experimentação são mantidos, desde o nascimento até o final dos experimentos, precisa ser adequado devido ao fato de que as espécies utilizadas são seres vivos sensíveis a interferentes internos e externos. Qual é a principal razão para garantir um ambiente adequado para os animais utilizados em experimentos científicos?",
+                options: [
+                    "Para evitar a necessidade de repetir experimentos devido à falta de supervisão técnica.",
+                    "Para evitar a proliferação de doenças transmissíveis entre os animais e os pesquisadores.",
+                    "Para aumentar a produtividade dos experimentos e reduzir os custos operacionais do estudo.",
+                    "Para garantir que os animais possam reproduzir comportamentos naturais observados em seus habitats originais.",
+                    "Para assegurar que os resultados da pesquisa não sejam comprometidos por alterações fisiológicas causadas pelo ambiente inadequado."
+                ],
+                correct: 4,
+                explanations: {
+                    correct: "Correto! Um ambiente adequado evita alterações fisiológicas que comprometam os resultados, garantindo a validade científica.",
+                    incorrect: [
+                        "Errado. Supervisão técnica é secundária à qualidade do ambiente.",
+                        "Errado. Doenças são um risco, mas não a razão principal.",
+                        "Errado. Custos não são o foco principal, mas a validade dos dados.",
+                        "Errado. Comportamentos naturais não são prioritários em biotérios."
+                    ]
+                }
+            },
+            {
+                question: "São ambientes criados para criar, manter e realizar experimentos com animais, são locais onde as espécies não estão em seu habitat natural e dependem sua saúde, bem-estar e segurança exclusivamente dos humanos responsáveis. Neste sentido, é uma obrigação dos pesquisadores manter o ambiente em condições adequadas de ventilação, iluminação, temperatura e espaço. Assinale a alternativa que apresenta o nome que se dá a etapa descrita no texto acima:",
+                options: [
+                    "Biotério.",
+                    "Habitat natural.",
+                    "Sala de incubação.",
+                    "Estação experimental.",
+                    "Laboratório de campo."
+                ],
+                correct: 0,
+                explanations: {
+                    correct: "Correto! Biotério é o ambiente controlado para criação e experimentação de animais de laboratório.",
+                    incorrect: [
+                        "Errado. Habitat natural é o ambiente selvagem, não controlado.",
+                        "Errado. Sala de incubação é para culturas, não animais.",
+                        "Errado. Estação experimental é para estudos de campo, não biotérios.",
+                        "Errado. Laboratório de campo não é um ambiente fechado para animais."
+                    ]
+                }
+            },
+            {
+                question: "O controle higiênico-sanitário em biotérios é essencial para garantir a saúde dos animais e a confiabilidade dos resultados experimentais. Isso envolve práticas rigorosas de limpeza e desinfecção, controle de infestação de pragas, além de monitoramento constante das condições ambientais. Sobre tal controle, analise as seguintes asserções:<br>I. O controle de vírus, bactérias ou parasitas no corpo dos animais de experimentação não pode ser realizado.<br>PORQUE<br>II. Animais de laboratório têm tempo de vida curto e não permite que essas análises sejam realizadas.<br>Assinale a alternativa correta:",
+                options: [
+                    "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+                    "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+                    "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+                    "As asserções I e II são proposições falsas."
+                ],
+                correct: 4,
+                explanations: {
+                    correct: "Correto! Ambas são falsas. O controle de microrganismos é possível com técnicas como PCR e culturas (I é falsa). O tempo de vida dos animais não impede análises (II é falsa).",
+                    incorrect: [
+                        "Errado. Ambas são falsas.",
+                        "Errado. Ambas são falsas.",
+                        "Errado. A I é falsa.",
+                        "Errado. A II é falsa."
+                    ]
+                }
+            },
+            {
+                question: "Para garantir o bem-estar e a integridade dos animais de laboratório, é fundamental oferecer condições de alojamento ideais. Ambientes com controle preciso de temperatura e umidade, juntamente com uma iluminação ajustada às necessidades da espécie, promovem um ambiente saudável. Sobre o assunto mencionado acima, assinale a alternativa que apresenta corretamente uma prática recomendada aos parâmetros ambientais.",
+                options: [
+                    "O controle de ventilação é recomendado, mas não é uma obrigação do pesquisador.",
+                    "A criação de diferentes espécies no mesmo ambiente é vantajosa para proporcionar maior conforto aos animais.",
+                    "O ambiente de criação e o ambiente de experimentação devem ser compartilhados evitando o transporte dos animais.",
+                    "Uma forma de melhorar a qualidade dos animais é criando espaços de enriquecimento ambiental como túneis e rodas.",
+                    "No microambiente de um biotério está toda a estrutura fora das gaiolas dos animais, como instalações, temperatura, luz, ventilação e umidade."
+                ],
+                correct: 3,
+                explanations: {
+                    correct: "Correto! Enriquecimento ambiental, como túneis e rodas, melhora o bem-estar dos animais, reduzindo estresse.",
+                    incorrect: [
+                        "Errado. Ventilação é obrigatória para manter a qualidade do ar.",
+                        "Errado. Misturar espécies pode causar estresse e contaminação.",
+                        "Errado. Ambientes separados evitam interferências nos experimentos.",
+                        "Errado. Microambiente refere-se ao interior das gaiolas, não à estrutura externa."
+                    ]
+                }
+            },
+            {
+                question: "As pesquisas são essenciais para o avanço do conhecimento, pois permitem a descoberta de novas informações, o desenvolvimento de soluções para problemas, e a validação de hipóteses. Sobre pesquisas, suas classificações e etapas, leia as asserções a seguir:<br>I. O mais importante em uma pesquisa quantitativa é demonstrar o quanto os resultados do estudo tiveram representatividade estatística.<br>PORQUE<br>II. Existem diversas metodologias que podem ser utilizadas para a coleta de dados. E estas vão depender dos objetivos do estudo, tipo de pesquisa, quais cobaias utilizadas, número amostral e outros contextos que podem interferir na decisão do método de coleta.<br>Assinale a alternativa correta:",
+                options: [
+                    "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+                    "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+                    "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+                    "As asserções I e II são proposições falsas."
+                ],
+                correct: 1,
+                explanations: {
+                    correct: "Correto! A I é verdadeira, pois a representatividade estatística é crucial em pesquisas quantitativas. A II é verdadeira e justifica a I, pois a escolha de metodologias adequadas garante resultados representativos.",
+                    incorrect: [
+                        "Errado. A II é uma justificativa correta da I.",
+                        "Errado. A II é verdadeira.",
+                        "Errado. A I é verdadeira.",
+                        "Errado. Ambas são verdadeiras."
+                    ]
+                }
+            },
+            {
+                question: "Ao elaborar um trabalho acadêmico de acordo com diretrizes brasileiras, é necessário seguir um conjunto de normas que padronizam aspectos como formatação, referências bibliográficas, citações, entre outros. Considerando a situação apresentada, qual é o nome da instituição responsável por essas normas?",
+                options: [
+                    "ISO.",
+                    "APA.",
+                    "ABNT.",
+                    "IEEE.",
+                    "Vancouver."
+                ],
+                correct: 2,
+                explanations: {
+                    correct: "Correto! A ABNT (Associação Brasileira de Normas Técnicas) define as normas para trabalhos acadêmicos no Brasil.",
+                    incorrect: [
+                        "Errado. ISO é para padrões internacionais, não acadêmicos brasileiros.",
+                        "Errado. APA é um estilo americano, não brasileiro.",
+                        "Errado. IEEE é usado em engenharia, não é padrão brasileiro.",
+                        "Errado. Vancouver é para ciências da saúde, não padrão brasileiro."
+                    ]
+                }
+            }
+        ];
+
+        let correctAnswers = 0;
+        const selectedAnswers = new Array(questions.length).fill(null);
+
+        function loadQuestions() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = questions.map((question, index) => `
+                <div class="question-container" id="question-${index}">
+                    <div class="question">${index + 1}ª Questão<br>${question.question}</div>
+                    <div class="options">
+                        ${question.options.map((option, i) => `
+                            <label>
+                                <input type="radio" name="answer-${index}" value="${i}" onchange="selectAnswer(${index}, ${i})">
+                                ${option}
+                            </label>
+                        `).join('')}
+                    </div>
+                    <button id="submit-btn-${index}" onclick="checkAnswer(${index})" disabled>Enviar</button>
+                    <div class="feedback" id="feedback-${index}"></div>
+                </div>
+            `).join('');
+        }
+
+        function selectAnswer(questionIndex, answerIndex) {
+            selectedAnswers[questionIndex] = answerIndex;
+            document.getElementById(`submit-btn-${questionIndex}`).disabled = false;
+        }
+
+        function checkAnswer(questionIndex) {
+            const question = questions[questionIndex];
+            const container = document.getElementById(`question-${questionIndex}`);
+            container.classList.add('answered');
+            const labels = document.querySelectorAll(`#question-${questionIndex} .options label`);
+            labels.forEach((label, i) => {
+                if (i === question.correct) {
+                    label.classList.add('correct');
+                } else if (i === selectedAnswers[questionIndex]) {
+                    label.classList.add('incorrect');
+                }
+            });
+            const isCorrect = selectedAnswers[questionIndex] === question.correct;
+            if (isCorrect) {
+                correctAnswers++;
+            }
+            const feedback = `
+                <p class="${isCorrect ? 'correct-feedback' : 'incorrect-feedback'}">${isCorrect ? 'Correto!' : 'Incorreto.'} ${question.explanations.correct}</p>
+                ${isCorrect ? '' : `<p>Sua escolha: ${question.explanations.incorrect[selectedAnswers[questionIndex]]}</p>`}
+                <p><strong>Por que as outras estão erradas:</strong></p>
+                ${question.options.map((option, i) => i !== question.correct ? `<p>- ${option}: ${question.explanations.incorrect[i]}</p>` : '').join('')}
+            `;
+            document.getElementById(`submit-btn-${questionIndex}`).disabled = true;
+            document.getElementById(`feedback-${questionIndex}`).innerHTML = feedback;
+            checkAllAnswered();
+        }
+
+        function checkAllAnswered() {
+            const allAnswered = selectedAnswers.every(answer => answer !== null);
+            if (allAnswered) {
+                const scoreDiv = document.getElementById('score');
+                scoreDiv.innerHTML = `Você acertou ${correctAnswers} de ${questions.length} questões.`;
+                scoreDiv.style.display = 'block';
+            }
+        }
+
+        // Carregar todas as questões
+        loadQuestions();
+    </script>
+</body>
+</html>
