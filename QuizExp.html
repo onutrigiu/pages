@@ -27,6 +27,32 @@
             margin-bottom: 24px;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            position: sticky;
+            top: 20px;
+            z-index: 10;
+        }
+        #timer {
+            font-size: 16px;
+            color: #5f6368;
+        }
+        #motivational-message {
+            font-size: 14px;
+            color: #34a853;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #motivational-message.show {
+            opacity: 1;
+        }
         #score {
             background: #ffffff;
             border: 1px solid #dadce0;
@@ -129,6 +155,11 @@
             body {
                 padding: 10px;
             }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
             .question-container {
                 padding: 16px;
             }
@@ -141,6 +172,10 @@
 <body>
     <div class="container">
         <h1>Quiz de Nutrição Experimental</h1>
+        <div class="header">
+            <div id="timer">Tempo: 00:00</div>
+            <div id="motivational-message"></div>
+        </div>
         <div id="score"></div>
         <div id="quiz-container"></div>
     </div>
@@ -551,6 +586,35 @@
 
         let correctAnswers = 0;
         const selectedAnswers = new Array(questions.length).fill(null);
+        let secondsElapsed = 0;
+
+        // Temporizador
+        function updateTimer() {
+            const minutes = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+            const seconds = (secondsElapsed % 60).toString().padStart(2, '0');
+            document.getElementById('timer').textContent = `Tempo: ${minutes}:${seconds}`;
+            secondsElapsed++;
+            setTimeout(updateTimer, 1000);
+        }
+
+        // Mensagens motivadoras
+        const motivationalMessages = [
+            "Parabéns, continue assim!",
+            "Você já acertou ${correctAnswers}, vamos lá!",
+            "Muito bem, siga em frente!",
+            "Ótimo trabalho, mais uma certa!",
+            "Você está indo bem, continue!"
+        ];
+
+        function showMotivationalMessage() {
+            const messageDiv = document.getElementById('motivational-message');
+            const message = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)].replace('${correctAnswers}', correctAnswers);
+            messageDiv.textContent = message;
+            messageDiv.classList.add('show');
+            setTimeout(() => {
+                messageDiv.classList.remove('show');
+            }, 3000);
+        }
 
         function loadQuestions() {
             const container = document.getElementById('quiz-container');
@@ -591,6 +655,7 @@
             const isCorrect = selectedAnswers[questionIndex] === question.correct;
             if (isCorrect) {
                 correctAnswers++;
+                showMotivationalMessage();
             }
             const feedback = `
                 <p class="${isCorrect ? 'correct-feedback' : 'incorrect-feedback'}">${isCorrect ? 'Correto!' : 'Incorreto.'} ${question.explanations.correct}</p>
@@ -612,7 +677,8 @@
             }
         }
 
-        // Carregar todas as questões
+        // Iniciar temporizador e carregar questões
+        updateTimer();
         loadQuestions();
     </script>
 </body>
