@@ -4,129 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Nutrição Hospitalar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #4285F4; /* Google Blue */
+            --primary-hover-color: #357ae8;
+            --correct-color: #34A853; /* Google Green */
+            --correct-bg-color: #e6f4ea;
+            --incorrect-color: #EA4335; /* Google Red */
+            --incorrect-bg-color: #fce8e6;
+            --neutral-bg-color: #f8f9fa;
+            --text-color: #3c4043;
+            --light-text-color: #5f6368;
+            --border-color: #dadce0;
+            --card-bg-color: #ffffff;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #f4f7fa;
-            margin: 20px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-            color: #333;
+            background-color: var(--neutral-bg-color);
+            margin: 0;
+            padding: 20px;
+            padding-top: 80px; /* Space for the fixed timer */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-color);
         }
+
+        #timer-container {
+            width: 100%;
+            background-color: var(--card-bg-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60px;
+        }
+
+        #timer {
+            font-size: 1.2em;
+            font-weight: 500;
+            color: var(--primary-color);
+            background-color: #e8f0fe;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .main-content {
+            width: 100%;
+            max-width: 800px;
+        }
+
         h1 {
             text-align: center;
-            color: #1a3c6d;
-            font-size: 2.2em;
-            margin-bottom: 20px;
+            color: var(--text-color);
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
         }
+
         h2 {
             text-align: center;
-            color: #2c5282;
+            color: var(--light-text-color);
             font-size: 1.5em;
-            margin: 30px 0;
-        }
-        .question-container {
-            background: #fff;
-            border-radius: 10px;
-            padding: 20px;
+            font-weight: 400;
+            margin-top: 40px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
         }
+
+        .question-container {
+            background: var(--card-bg-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: box-shadow 0.3s ease;
+        }
+
         .question-container:hover {
-            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.08);
         }
+
         .question {
             font-weight: 500;
-            font-size: 1.1em;
-            margin-bottom: 15px;
-            color: #2d3748;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: var(--text-color);
             line-height: 1.6;
         }
+
         .options label {
             display: flex;
             align-items: center;
-            margin: 8px 0;
-            padding: 12px;
-            border: 1px solid #e2e8f0;
+            margin: 10px 0;
+            padding: 15px;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            background: #f7fafc;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
             line-height: 1.5;
         }
+
         .options label:hover {
-            background: #edf2f7;
+            background: var(--neutral-bg-color);
+            border-color: #c4c8cc;
         }
+
         .options input {
-            margin-right: 10px;
-            accent-color: #007bff;
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
         }
+
         .correct {
-            background: #d4edda !important;
-            border-color: #28a745 !important;
+            background: var(--correct-bg-color) !important;
+            border-color: var(--correct-color) !important;
+            font-weight: 500;
         }
+
         .incorrect {
-            background: #f8d7da !important;
-            border-color: #dc3545 !important;
+            background: var(--incorrect-bg-color) !important;
+            border-color: var(--incorrect-color) !important;
+            font-weight: 500;
         }
+
         button {
             display: block;
-            width: 200px;
-            margin: 15px auto 0;
-            padding: 12px;
-            background: #007bff;
+            width: 220px;
+            margin: 25px auto 0;
+            padding: 12px 20px;
+            background: var(--primary-color);
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 1em;
+            font-weight: 500;
             cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
+            transition: background-color 0.2s ease, transform 0.2s ease;
         }
+
         button:disabled {
-            background: #6c757d;
+            background: #9e9e9e;
             cursor: not-allowed;
         }
+
         button:hover:not(:disabled) {
-            background: #0056b3;
-            transform: scale(1.05);
+            background: var(--primary-hover-color);
+            transform: translateY(-2px);
         }
+
         .feedback {
-            margin-top: 15px;
-            font-size: 0.9em;
-            line-height: 1.5;
-            background: #f1f5f9;
-            padding: 15px;
+            margin-top: 20px;
+            font-size: 1em;
+            line-height: 1.7;
+            background: var(--neutral-bg-color);
+            padding: 20px;
             border-radius: 8px;
+            border-left: 4px solid var(--border-color);
         }
-        .feedback p {
-            margin: 8px 0;
-        }
+        
         .feedback .correct-feedback::before {
             content: '✅ ';
         }
+        
         .feedback .incorrect-feedback::before {
             content: '❌ ';
         }
+
         #score {
             text-align: center;
-            font-size: 1.3em;
-            color: #2c5282;
+            font-size: 1.5em;
+            color: var(--text-color);
             margin: 20px 0;
-            background: #e6fffa;
-            padding: 15px;
-            border-radius: 8px;
+            background: var(--card-bg-color);
+            padding: 25px;
+            border-radius: 12px;
             display: none;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
         }
-        hr {
-            margin: 40px 0;
-            border: 1px solid #e2e8f0;
+        
+        #score span {
+            font-weight: 700;
+            color: var(--primary-color);
         }
+
         @media (max-width: 600px) {
             body {
-                margin: 10px;
+                padding: 10px;
+                padding-top: 70px; /* Keep space for timer */
+            }
+            h1 {
+                font-size: 2em;
             }
             .question-container {
                 padding: 15px;
@@ -138,12 +219,41 @@
     </style>
 </head>
 <body>
-    <h1>Quiz Nutrição Hospitalar</h1>
-    <div id="score"></div>
-    <h2>Questões dos PDFs</h2>
-    <div id="quiz-container"></div>
+    <div id="timer-container">
+        <div id="timer">Tempo: 00:00</div>
+    </div>
+
+    <div class="main-content">
+        <h1>Quiz de Nutrição Hospitalar</h1>
+        <div id="score"></div>
+        <h2>Questões</h2>
+        <div id="quiz-container"></div>
+    </div>
 
     <script>
+        // --- TIMER LOGIC ---
+        const timerElement = document.getElementById('timer');
+        let seconds = 0;
+        let minutes = 0;
+        
+        function updateTimer() {
+            seconds++;
+            if (seconds >= 60) {
+                seconds = 0;
+                minutes++;
+            }
+            
+            const formattedMinutes = String(minutes).padStart(2, '0');
+            const formattedSeconds = String(seconds).padStart(2, '0');
+            
+            timerElement.textContent = `Tempo: ${formattedMinutes}:${formattedSeconds}`;
+        }
+        
+        // Start the timer
+        setInterval(updateTimer, 1000);
+
+
+        // --- QUIZ DATA AND LOGIC ---
         const questions = [
             {
                 question: "Com base na definição do nível assistencial no acompanhamento nutricional, analise as afirmativas a seguir:<br>I. Os pacientes em nível primário têm visitas de retorno a cada 7 dias, enquanto aqueles em nível secundário têm retornos a cada 4 dias, e no nível terciário, os retornos são feitos em até 2 dias.<br>II. O nível assistencial visa garantir uma abordagem uniforme nos atendimentos, priorizando pacientes com maior risco nutricional, permitindo mudanças entre os níveis conforme a evolução do quadro clínico.<br>III. A sistematização dos níveis assistenciais facilita a logística do serviço de nutrição, mas é necessário considerar que pacientes podem mudar de nível durante a internação, exigindo avaliações periódicas.<br>IV. Durante o primeiro contato com o paciente, é essencial avaliar aspectos como apetite, aceitação da dieta e mudanças nos hábitos alimentares e intestinais para determinar o nível assistencial adequado.<br>V. Identificar riscos nutricionais é de extrema importância, considerando que quase 50% dos pacientes internados são classificados com algum grau de desnutrição.<br>É correto o que se afirma em:",
@@ -176,7 +286,7 @@
                 ],
                 correct: 2,
                 explanations: {
-                    correct: "A afirmativa IV está incorreta. A suplementação pós-bariátrica frequentemente utiliza altas doses que estão além do Nível Máximo de Ingestão Tolerável (UL) e, por isso, são de prescrição médica, exigindo acompanhamento criterioso. As demais afirmativas (I, II, III e V) descrevem corretamente os cuidados nutricionais padrão no perioperatório da cirurgia bariátrica, conforme as páginas 122.",
+                    correct: "A afirmativa IV está incorreta. A suplementação pós-bariátrica frequentemente utiliza altas doses que estão além do Nível Máximo de Ingestão Tolerável (UL) e, por isso, são de prescrição médica, exigindo acompanhamento criterioso. As demais afirmativas (I, II, III e V) descrevem corretamente os cuidados nutricionais padrão no perioperatório da cirurgia bariátrica, conforme a página 122.",
                     incorrect: [
                         "Incorreto. A afirmativa V também está correta.",
                         "Incorreto. A afirmativa IV é falsa, e a I e III são verdadeiras.",
@@ -186,7 +296,7 @@
                 }
             },
             {
-                question: "Sobre as dietas hospitalares, analise as afirmativas a seguir:<br>I. A dieta líquida restrita é indicada para preparo de exames ou jejum, sendo nutricionalmente incompleta.<br>II. A dieta pastosa é destinada a pacientes com dificuldade de mastigação e/ou deglutição.<br>III. A dieta branda deve ser utilizada exclusivamente por pacientes pediátricos.<br>IV. A dieta geral é a mais completa, indicada para pacientes sem restrições que não necessitem alteração na alimentação.<br>É correto o que se afirma em:",
+                question: "Sobre as dietas hospitalares, analise as afirmativas a seguir:<br>I. A dieta líquida restrita é indicada para preparo de exames ou jejum, sendo nutricionalmente incompleta.<br>II. A dieta pastosa é destinada a pacientes com dificuldade de mastigação/deglutição.<br>III. A dieta branda deve ser utilizada exclusivamente por pacientes pediátricos.<br>IV. A dieta geral é a mais completa, indicada para pacientes sem restrições que não necessitem alteração na alimentação.<br>É correto o que se afirma em:",
                 options: [
                     "I e IV, apenas.",
                     "II, III e IV, apenas.",
@@ -238,7 +348,7 @@
                 explanations: {
                     correct: "Esta alternativa está correta e é diretamente suportada pelo texto na página 23, que afirma: 'o ideal é que a equipe de nutrição clínica e a da produção trabalhem em conjunto ajustando opções a serem oferecidas, a ponto que todas as prescrições dietéticas possam ser cumpridas'.",
                     incorrect: [
-                        "Incorreto. A prescrição dietética é uma atribuição do nutricionista.",
+                        "Incorreto. A prescrição dietética é uma atribuição legal do nutricionista.",
                         "Incorreto. O nutricionista atua em todos os níveis de complexidade, dando maior atenção aos de maior risco.",
                         "Incorreto. A avaliação nutricional deve ser um processo contínuo durante toda a internação.",
                         "Incorreto. Os planos devem ser individualizados, respeitando a situação clínica e as necessidades de cada paciente."
@@ -306,7 +416,7 @@
                 }
             },
             {
-                question: "Sobre as dietas modificadas em consistência, analise as afirmativas a seguir:<br>I. A dieta líquida restrita é indicada para pré-cirúrgicos ou preparo de exames, composta por líquidos de baixa densidade calórica.<br>II. A dieta líquida-pastosa é recomendada para evolução dietética ou disfagia, com alimentos que se transformam em líquidos ou cremes.<br>III. A dieta pastosa/cremosa é utilizada para desmame de terapia nutricional enteral e para pacientes com risco de aspiração, tendo composição completa.<br>É correto o que se afirma em:",
+                question: "Sobre as dietas modificadas em consistência, analise as afirmativas a seguir:<br>I. A dieta líquida restrita é indicada para pré-cirúrgicos ou preparo de exames, composta por líquidos de baixa densidade calórica.<br>II. A dieta líquida-pastosa é recomendada para evolução dietética ou disfagia, com alimentos que se transformam em líquidos ou cremosos.<br>III. A dieta pastosa/cremosa é utilizada para desmame de terapia nutricional enteral e para pacientes com risco de aspiração, tendo composição completa.<br>É correto o que se afirma em:",
                 options: [
                     "I, apenas.",
                     "I e II, apenas.",
@@ -500,4 +610,131 @@
                     incorrect: [
                         "Incorreto. O texto sugere evitar alimentos muito doces em caso de náuseas.",
                         "Incorreto. O texto não faz essa recomendação; suplementos industrializados passam por controle de qualidade e podem ser mais práticos e seguros.",
-                        "Incorreto. A escolha deve ser baseada na necessidade do paciente, como fórmulas hipercalóricas, hiperproteicas ou
+                        "Incorreto. A escolha deve ser baseada na necessidade do paciente, como fórmulas hipercalóricas, hiperproteicas ou com imunonutrientes.",
+                        "Incorreto. O uso de suplementos é uma estratégia para atingir as metas nutricionais quando a via oral é insuficiente."
+                    ]
+                }
+            },
+            {
+                question: "Um paciente relata um período significativo de baixa ingestão alimentar e perda de peso involuntária. Assinale a alternativa que corresponde ao método que fornece informações mais precisas sobre as deficiências nutricionais específicas e outras condições de saúde desse paciente:",
+                options: [
+                    "Recordatório alimentar de 24 horas.",
+                    "Medida da circunferência do braço.",
+                    "Análise de exames laboratoriais.",
+                    "Avaliação subjetiva global.",
+                    "Questionário de frequência alimentar."
+                ],
+                correct: 2,
+                explanations: {
+                    correct: "Embora todos os métodos sejam importantes, os exames laboratoriais conseguem perceber deficiências e excessos nutricionais e condições de saúde que por vezes não seriam compreendidas apenas com a avaliação física e antropométrica. Eles podem identificar deficiências específicas de vitaminas e minerais.",
+                    incorrect: [
+                        "Incorreto. Fornece uma estimativa da ingestão, mas não mede o estado nutricional bioquímico.",
+                        "Incorreto. É uma medida antropométrica que estima a reserva de tecido muscular, mas não identifica deficiências específicas de micronutrientes.",
+                        "Incorreto. É uma excelente ferramenta de triagem de risco nutricional, mas não quantifica deficiências bioquímicas.",
+                        "Incorreto. Avalia o padrão alimentar habitual, mas não o estado nutricional atual ou deficiências."
+                    ]
+                }
+            },
+            {
+                question: "Considerando a importância da avaliação nutricional em pacientes com Doença Pulmonar Obstrutiva Crônica (DPOC), analise as afirmações a seguir:<br>I. A desnutrição é considerada uma das principais condições a serem acompanhadas nos pacientes com DPOC, devido à sua associação negativa com a morbidade e mortalidade da doença.<br>II. A desnutrição energético-proteica é um dos preditores do diagnóstico da DPOC, estando relacionada com o aumento do risco para infecções e diminuição da qualidade de vida.<br>III. A triagem nutricional é recomendada para todos os pacientes com DPOC, independentemente da gravidade, para identificar precocemente o risco de desnutrição.<br>IV. A avaliação nutricional completa é indicada apenas para pacientes com DPOC em estado crítico.<br>É correto o que se afirma em:",
+                options: [
+                    "I e II, apenas.",
+                    "III e IV, apenas.",
+                    "I, II e III, apenas.",
+                    "II, III e IV, apenas.",
+                    "Todas as afirmativas estão corretas."
+                ],
+                correct: 2,
+                explanations: {
+                    correct: "A afirmativa IV é falsa. A avaliação nutricional completa é indicada para todos os pacientes com DPOC, não se limitando aos críticos, a fim de garantir uma ação precoce da equipe de nutrição. As afirmativas I e II são diretamente suportadas pelo texto. A afirmativa III, sobre a triagem para todos, está alinhada com o espírito do texto, que enfatiza a detecção precoce devido à alta prevalência de desnutrição (25-40%) nesses pacientes.",
+                    incorrect: [
+                        "Incorreto. A afirmativa III também está correta.",
+                        "Incorreto. A afirmativa IV é falsa.",
+                        "Incorreto. A afirmativa IV é falsa.",
+                        "Incorreto. A afirmativa IV é falsa."
+                    ]
+                }
+            }
+        ];
+
+        let correctAnswers = 0;
+        const selectedAnswers = new Array(questions.length).fill(null);
+
+        function loadQuestions() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = questions.map((question, index) => `
+                <div class="question-container" id="question-${index}">
+                    <div class="question"><strong>${index + 1}ª Questão</strong><br>${question.question}</div>
+                    <div class="options">
+                        ${question.options.map((option, i) => `
+                            <label>
+                                <input type="radio" name="answer-${index}" value="${i}" onchange="selectAnswer(${index}, ${i})">
+                                <span>${option}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <button id="submit-btn-${index}" onclick="checkAnswer(${index})" disabled>Verificar Resposta</button>
+                    <div class="feedback" id="feedback-${index}" style="display: none;"></div>
+                </div>
+            `).join('');
+        }
+
+        function selectAnswer(questionIndex, answerIndex) {
+            selectedAnswers[questionIndex] = answerIndex;
+            document.getElementById(`submit-btn-${questionIndex}`).disabled = false;
+        }
+
+        function checkAnswer(questionIndex) {
+            const question = questions[questionIndex];
+            const labels = document.querySelectorAll(`#question-${questionIndex} .options label`);
+            let selectedLabelContent = '';
+            
+            labels.forEach((label, i) => {
+                if (i === question.correct) {
+                    label.classList.add('correct');
+                } else if (i === selectedAnswers[questionIndex]) {
+                    label.classList.add('incorrect');
+                }
+                if(i === selectedAnswers[questionIndex]){
+                    selectedLabelContent = question.options[i];
+                }
+            });
+
+            const isCorrect = selectedAnswers[questionIndex] === question.correct;
+            const feedbackDiv = document.getElementById(`feedback-${questionIndex}`);
+            
+            if (isCorrect) {
+                if (!feedbackDiv.hasAttribute('data-answered')) {
+                    correctAnswers++;
+                }
+                feedbackDiv.innerHTML = `<p class="correct-feedback"><strong>Correto!</strong> ${question.explanations.correct}</p>`;
+                feedbackDiv.style.borderLeftColor = "var(--correct-color)";
+
+            } else {
+                feedbackDiv.innerHTML = `<p class="incorrect-feedback"><strong>Incorreto.</strong></p><p>${question.explanations.correct}</p>`;
+                feedbackDiv.style.borderLeftColor = "var(--incorrect-color)";
+            }
+
+            document.getElementById(`submit-btn-${questionIndex}`).style.display = 'none'; // Hide button after answer
+            feedbackDiv.style.display = 'block';
+            feedbackDiv.setAttribute('data-answered', 'true');
+            
+            const radios = document.querySelectorAll(`input[name="answer-${questionIndex}"]`);
+            radios.forEach(radio => radio.disabled = true);
+
+            checkAllAnswered();
+        }
+
+        function checkAllAnswered() {
+            const allAnswered = selectedAnswers.every(answer => answer !== null);
+            if (allAnswered) {
+                const scoreDiv = document.getElementById('score');
+                scoreDiv.innerHTML = `Quiz finalizado! Você acertou <span>${correctAnswers} de ${questions.length}</span> questões.`;
+                scoreDiv.style.display = 'block';
+            }
+        }
+
+        loadQuestions();
+    </script>
+</body>
+</html>
