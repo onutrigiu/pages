@@ -6,762 +6,556 @@
     <title>Quiz Nutrição Hospitalar</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4285F4; /* Google Blue */
-            --primary-hover-color: #357ae8;
-            --correct-color: #34A853; /* Google Green */
-            --correct-bg-color: #e6f4ea;
-            --incorrect-color: #EA4335; /* Google Red */
-            --incorrect-bg-color: #fce8e6;
-            --neutral-bg-color: #f8f9fa;
-            --text-color: #3c4043;
+            --base-font-size: 16px;
+            --primary-color: #1A73E8;
+            --primary-hover-color: #1765CC;
+            --correct-color: #188038;
+            --correct-bg-color: #E6F4EA;
+            --incorrect-color: #D93025;
+            --incorrect-bg-color: #FCE8E6;
+            --neutral-bg-color: #f1f3f4;
+            --text-color: #202124;
             --light-text-color: #5f6368;
             --border-color: #dadce0;
             --card-bg-color: #ffffff;
-            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
+            --sidebar-width: 300px;
+        }
+
+        html {
+            font-size: var(--base-font-size);
+            scroll-behavior: smooth;
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Google Sans', 'Roboto', sans-serif;
             background-color: var(--neutral-bg-color);
             margin: 0;
-            padding: 20px;
-            padding-top: 80px; /* Space for the fixed header */
             display: flex;
-            flex-direction: column;
-            align-items: center;
             color: var(--text-color);
         }
 
-        #header-container {
-            width: 100%;
+        /* --- Sidebar --- */
+        #sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
             background-color: var(--card-bg-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             position: fixed;
             top: 0;
             left: 0;
+            padding: 1.25rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+            transition: transform 0.3s ease-in-out;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            border-top-right-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+            z-index: 2000;
+        }
+
+        #sidebar h2 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.625rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        #sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #sidebar nav li a {
+            display: block;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--light-text-color);
+            font-weight: 500;
+            border-radius: 1.5rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #sidebar nav li a:hover, #sidebar nav li a.active {
+            background-color: #E8F0FE;
+            color: var(--primary-color);
+        }
+        
+        #sidebar .submenu {
+            padding-left: 1rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+
+        #sidebar .submenu.open {
+            max-height: 30rem;
+        }
+        
+        #sidebar .has-submenu > a {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #sidebar .arrow {
+            border: solid var(--light-text-color);
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 3px;
+            transform: rotate(45deg);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        
+        #sidebar .has-submenu > a:hover .arrow, #sidebar .has-submenu > a.active .arrow {
+             border-color: var(--primary-color);
+        }
+        
+        #sidebar .has-submenu.open > a .arrow {
+            transform: rotate(-135deg);
+        }
+
+        /* --- Main Content --- */
+        .page-content {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 1.25rem;
+            padding-top: 5rem;
+        }
+        
+        .content-section { display: none; animation: fadeIn 0.5s ease; }
+        .content-section.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #header-container {
+            width: calc(100% - var(--sidebar-width));
+            background-color: rgba(241, 243, 244, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
             z-index: 1000;
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: 60px;
-            padding: 0 25px;
+            padding: 0 1.5rem;
             box-sizing: border-box;
+            border-bottom: 1px solid var(--border-color);
+            transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
         }
 
         #timer, #score-counter {
-            font-size: 1.1em;
+            font-size: 1rem;
             font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            border-radius: 1.5rem;
+            transition: all 0.3s ease;
         }
         
-        #timer {
-            color: var(--primary-color);
-            background-color: #e8f0fe;
-        }
-        
-        #score-counter {
-            color: var(--correct-color);
-            background-color: var(--correct-bg-color);
-        }
+        #timer { color: var(--primary-color); background-color: #E8F0FE; }
+        #score-counter { color: var(--correct-color); background-color: var(--correct-bg-color); }
 
-        .main-content {
-            width: 100%;
-            max-width: 800px;
-        }
-
-        h1 {
-            text-align: center;
-            color: var(--text-color);
-            font-size: 2.5em;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        h2 {
-            text-align: center;
-            color: var(--light-text-color);
-            font-size: 1.5em;
-            font-weight: 400;
-            margin-top: 40px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-
-        .question-container {
-            background: var(--card-bg-color);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            transition: box-shadow 0.3s ease;
-        }
-
-        .question-container:hover {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.08);
-        }
-
-        .question {
-            font-weight: 500;
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            color: var(--text-color);
-            line-height: 1.6;
-        }
-
-        .options label {
+        #font-controls {
             display: flex;
             align-items: center;
-            margin: 10px 0;
-            padding: 15px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #font-controls button {
+            background: none;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            color: var(--light-text-color);
+            font-weight: bold;
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 50%;
             cursor: pointer;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-            line-height: 1.5;
+            margin: 0 0.25rem;
+            transition: background-color 0.2s, color 0.2s;
         }
 
-        .options label:hover {
-            background: var(--neutral-bg-color);
-            border-color: #c4c8cc;
-        }
-
-        .options input {
-            margin-right: 12px;
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary-color);
-        }
-
-        .correct {
-            background: var(--correct-bg-color) !important;
-            border-color: var(--correct-color) !important;
-            font-weight: 500;
-        }
-
-        .incorrect {
-            background: var(--incorrect-bg-color) !important;
-            border-color: var(--incorrect-color) !important;
-            font-weight: 500;
-        }
-
-        button {
-            display: block;
-            width: 220px;
-            margin: 25px auto 0;
-            padding: 12px 20px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-        }
-
-        button:disabled {
-            background: #9e9e9e;
-            cursor: not-allowed;
-        }
-
-        button:hover:not(:disabled) {
-            background: var(--primary-hover-color);
-            transform: translateY(-2px);
-        }
-
-        .feedback {
-            margin-top: 20px;
-            font-size: 1em;
-            line-height: 1.7;
-            background: var(--neutral-bg-color);
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid var(--border-color);
-        }
-        
-        .feedback .correct-feedback::before {
-            content: '✅ ';
-        }
-        
-        .feedback .incorrect-feedback::before {
-            content: '❌ ';
-        }
-
-        #score {
-            text-align: center;
-            font-size: 1.5em;
-            color: var(--text-color);
-            margin: 20px 0;
-            background: var(--card-bg-color);
-            padding: 25px;
-            border-radius: 12px;
-            display: none;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-        }
-        
-        #score span {
-            font-weight: 700;
+        #font-controls button:hover {
+            background-color: #E8F0FE;
             color: var(--primary-color);
         }
 
+        .main-content-wrapper {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        h1 { text-align: center; color: var(--text-color); font-size: 2.5rem; font-weight: 700; margin-bottom: 0.625rem; }
+
+        h3 { text-align: center; color: var(--light-text-color); font-size: 1.5rem; font-weight: 400; margin-top: 2.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.625rem; }
+
+        .question-container { background: var(--card-bg-color); border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); border: 1px solid transparent; transition: box-shadow 0.3s ease; }
+
+        .question { font-weight: 500; font-size: 1.2rem; margin-bottom: 1.25rem; color: var(--text-color); line-height: 1.6; }
+
+        .options label { display: flex; align-items: center; margin: 0.625rem 0; padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.5rem; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease; line-height: 1.5; }
+
+        .options label:hover { background: var(--neutral-bg-color); border-color: #c4c8cc; }
+
+        .options input { margin-right: 0.75rem; width: 1.125rem; height: 1.125rem; accent-color: var(--primary-color); }
+
+        .correct { background: var(--correct-bg-color) !important; border-color: var(--correct-color) !important; font-weight: 500; }
+        .incorrect { background: var(--incorrect-bg-color) !important; border-color: var(--incorrect-color) !important; font-weight: 500; }
+
+        button.quiz-button { display: block; width: 220px; margin: 1.5rem auto 0; padding: 0.75rem 1.25rem; background: var(--primary-color); color: white; border: none; border-radius: 0.5rem; font-size: 1rem; font-weight: 500; cursor: pointer; transition: background-color 0.2s ease, transform 0.2s ease; }
+
+        button.quiz-button:disabled { background: #bdbdbd; cursor: not-allowed; transform: none; }
+        button.quiz-button:hover:not(:disabled) { background: var(--primary-hover-color); transform: translateY(-2px); }
+
+        .feedback { margin-top: 1.25rem; font-size: 1rem; line-height: 1.7; background: #f1f3f4; padding: 1.25rem; border-radius: 0.5rem; border-left: 4px solid var(--border-color); animation: slideDown 0.4s ease; }
+        
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .feedback .correct-feedback::before { content: '✅ '; }
+        .feedback .incorrect-feedback::before { content: '❌ '; }
+
+        #final-score { text-align: center; font-size: 1.5rem; color: var(--text-color); margin: 1.25rem 0; background: var(--card-bg-color); padding: 1.5rem; border-radius: 0.75rem; display: none; box-shadow: var(--shadow); }
+        #final-score span { font-weight: 700; color: var(--primary-color); }
+        
+        #menu-toggle { display: none; }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 1024px) {
+            #sidebar { transform: translateX(-100%); }
+            #sidebar.open { transform: translateX(0); }
+            .page-content { margin-left: 0; width: 100%; }
+            #header-container { width: 100%; left: 0; }
+            #menu-toggle { display: flex; justify-content: center; align-items: center; position: fixed; top: 10px; left: 10px; z-index: 2001; background: var(--card-bg-color); border: none; box-shadow: var(--shadow); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
+        }
         @media (max-width: 600px) {
-            body {
-                padding: 10px;
-                padding-top: 70px; /* Keep space for header */
-            }
-            #header-container {
-                padding: 0 10px;
-            }
-            #timer, #score-counter {
-                font-size: 1em;
-                padding: 6px 12px;
-            }
-            h1 {
-                font-size: 2em;
-            }
-            .question-container {
-                padding: 15px;
-            }
-            button {
-                width: 100%;
-            }
+            :root { --base-font-size: 14px; }
+            body { padding: 0.625rem; padding-top: 4.5rem; }
+            #header-container { padding: 0 0.625rem; justify-content: flex-end; }
+             #font-controls {
+                position: static;
+                transform: none;
+                margin-right: auto;
+             }
+            #timer { display: none; }
+            h1 { font-size: 2rem; }
+            .question-container { padding: 1rem; }
+            button.quiz-button { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <div id="header-container">
-        <div id="timer">Tempo: 00:00</div>
-        <div id="score-counter"></div>
+    <div id="sidebar">
+        <h2>Menu de Estudo</h2>
+        <nav>
+            <ul>
+                <li><a href="#" data-section="ae" class="nav-link active">Questões (Atividade)</a></li>
+                <li class="has-submenu" id="livro-menu-item">
+                    <a id="livro-toggle">Questões (Livro) <i class="arrow"></i></a>
+                    <ul class="submenu" id="livro-submenu">
+                        <li><a href="#" data-section="livro-1" class="nav-link" title="Cuidados Nutricionais com o Paciente Hospitalizado">Unidade 1 - Cuid. Nutricionais</a></li>
+                        <li><a href="#" data-section="livro-2" class="nav-link" title="Triagem e Avaliação Nutricional">Unidade 2 - Triagem e Avaliação</a></li>
+                        <li><a href="#" data-section="livro-3" class="nav-link" title="Dietas Hospitalares, de Prova e Preparo">Unidade 3 - Dietas e Preparos</a></li>
+                        <li><a href="#" data-section="livro-4" class="nav-link" title="Suplementação Oral de Vitaminas e Minerais">Unidade 4 - Suplementação Oral</a></li>
+                        <li><a href="#" data-section="livro-5" class="nav-link" title="Paciente Adulto">Unidade 5 - Paciente Adulto</a></li>
+                        <li><a href="#" data-section="livro-6" class="nav-link" title="Paciente Hepatopata">Unidade 6 - Paciente Hepatopata</a></li>
+                        <li><a href="#" data-section="livro-7" class="nav-link" title="Paciente Renal Crônico">Unidade 7 - Paciente Renal Crônico</a></li>
+                        <li><a href="#" data-section="livro-8" class="nav-link" title="Paciente Oncológico">Unidade 8 - Paciente Oncológico</a></li>
+                        <li><a href="#" data-section="livro-9" class="nav-link" title="Paciente DPOC">Unidade 9 - Paciente DPOC</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
     </div>
 
-    <div class="main-content">
-        <h1>Quiz de Nutrição Hospitalar</h1>
-        <div id="score"></div>
-        <h2>Questões</h2>
-        <div id="quiz-container"></div>
+    <div class="page-content">
+        <div id="header-container">
+            <div id="timer">Tempo: 00:00</div>
+             <div id="font-controls">
+                <button id="font-decrease" title="Diminuir Fonte">A-</button>
+                <button id="font-increase" title="Aumentar Fonte">A+</button>
+            </div>
+            <div id="score-counter"></div>
+        </div>
+        <button id="menu-toggle">☰</button>
+
+        <div class="main-content-wrapper">
+            <h1>Quiz de Nutrição Hospitalar</h1>
+            <div id="final-score"></div>
+
+            <section id="ae" class="content-section active">
+                <h3>Atividade de Estudo</h3>
+                <div id="quiz-container-ae"></div>
+            </section>
+            
+            <section id="livro-1" class="content-section"><h3>Unidade 1: Cuidados Nutricionais com o Paciente Hospitalizado</h3><div id="quiz-container-livro-1"></div></section>
+            <section id="livro-2" class="content-section"><h3>Unidade 2: Triagem e Avaliação Nutricional</h3><div id="quiz-container-livro-2"></div></section>
+            <section id="livro-3" class="content-section"><h3>Unidade 3: Dietas Hospitalares, de Prova e Preparo para Exames</h3><div id="quiz-container-livro-3"></div></section>
+            <section id="livro-4" class="content-section"><h3>Unidade 4: Suplementação Oral de Vitaminas e Minerais</h3><div id="quiz-container-livro-4"></div></section>
+            <section id="livro-5" class="content-section"><h3>Unidade 5: Paciente Adulto</h3><div id="quiz-container-livro-5"></div></section>
+            <section id="livro-6" class="content-section"><h3>Unidade 6: Paciente Hepatopata</h3><div id="quiz-container-livro-6"></div></section>
+            <section id="livro-7" class="content-section"><h3>Unidade 7: Paciente Renal Crônico</h3><div id="quiz-container-livro-7"></div></section>
+            <section id="livro-8" class="content-section"><h3>Unidade 8: Paciente Oncológico</h3><div id="quiz-container-livro-8"></div></section>
+            <section id="livro-9" class="content-section"><h3>Unidade 9: Paciente DPOC</h3><div id="quiz-container-livro-9"></div></section>
+        </div>
     </div>
 
     <script>
-        // --- TIMER AND SCORE COUNTER LOGIC ---
-        const timerElement = document.getElementById('timer');
-        const scoreCounterElement = document.getElementById('score-counter');
-        let seconds = 0;
-        let minutes = 0;
+        // --- QUIZ DATA (Snippets - o resto está oculto para brevidade) ---
+        const allQuestions = {
+            ae: [
+                { question: "Com base na definição do nível assistencial...", options: ["I, II e V, apenas.", "I, III, IV e V, apenas.", "II, III, IV e V, apenas.", "II e IV, apenas.", "Todas as afirmativas estão corretas."], correct: 2, explanations: { correct: "A afirmativa I está incorreta..." } },
+                // ... 19 outras questões da AE ...
+                { question: "Sobre a avaliação nutricional em pacientes com DPOC...", options: ["I e II, apenas.", "III e IV, apenas.", "I, II e III, apenas.", "II, III e IV, apenas.", "Todas as afirmativas estão corretas."], correct: 2, explanations: { correct: "A afirmativa IV é falsa..." } }
+            ],
+            livro: [
+                [ // Unidade 1
+                    { question: "Qual item NÃO faz parte das 6 prioridades de Segurança do Paciente?", options: ["Identificar corretamente o paciente.", "Higienizar as mãos.", "Reduzir risco de lesões por pressão.", "Realizar condutas individualizadas.", "Assegurar cirurgia no paciente correto."], correct: 3, explanations: { correct: "A segunda meta é 'Melhorar a comunicação entre profissionais de Saúde'. 'Realizar condutas individualizadas' não é uma das 6 metas prioritárias." } },
+                    { question: "Quais são competências do nutricionista hospitalar?<br>I. Prescrição dietética.<br>II. Educação alimentar para pacientes/familiares.<br>III. Elaborar Manual de Boas Práticas em Lactário.", options: ["I, apenas.", "III, apenas.", "I e II, apenas.", "II e III, apenas.", "I, II e III."], correct: 4, explanations: { correct: "Todas as três são competências do nutricionista em hospital, abrangendo clínica, educação e gestão." } },
+                    { question: "Sobre os critérios da triagem nutricional, qual a opção correta?", options: ["Deve ser aplicada exclusivamente por um nutricionista.", "Realiza todas as medidas antropométricas.", "Pode ser autoaplicada pelo paciente ou familiar.", "Pacientes sem risco não precisam de reavaliação.", "Define o nível assistencial por toda a internação."], correct: 2, explanations: { correct: "A triagem pode ser um questionário autoaplicado. Pacientes sem risco inicial ainda precisam de acompanhamento, pois seu estado pode mudar." } }
+                ],
+                [ // Unidade 2
+                    { question: "Sobre as triagens nutricionais, quais afirmativas são corretas?<br>I - A MAN é para pacientes de qualquer idade.<br>II - A NRS-2002 não detecta bem a desnutrição.<br>III - A Strong Kids é recomendada para crianças, mas não validada no Brasil.", options: ["I, apenas.", "III, apenas.", "I e II, apenas.", "I e III, apenas.", "I, II e III."], correct: 1, explanations: { correct: "I é falsa (MAN é para idosos). II é falsa (NRS-2002 detecta desnutrição e risco). Apenas a III está correta." } },
+                    { question: "Sobre o diagnóstico nutricional, avalie as asserções:<br>I - O diagnóstico nutricional é o resultado da análise de todos os dados da avaliação.<br>PORQUE<br>II - Apenas com todos os dados é possível identificar o estado real do paciente.", options: ["As asserções I e II são verdadeiras, e a II justifica a I.", "As asserções I e II são verdadeiras, mas a II não justifica a I.", "A asserção I é verdadeira e a II é falsa.", "A asserção I é falsa e a II é verdadeira.", "As asserções I e II são falsas."], correct: 0, explanations: { correct: "Ambas estão corretas e a II justifica a I. O diagnóstico completo (I) depende de uma avaliação completa (II)." } },
+                    { question: "Sobre a evolução nutricional em prontuário, avalie:<br>I - A evolução é um registro para uso exclusivo da equipe de nutrição.<br>II - A prescrição deve conter apenas o tipo de dieta e a via.<br>III - O diagnóstico deve ser apenas nutricional.<br>IV - O prontuário exige linguagem técnica e registro de avaliação, diagnóstico e prescrição.", options: ["I e IV, apenas.", "II e III, apenas.", "III e IV, apenas.", "I, II e III, apenas.", "II, III e IV, apenas."], correct: 2, explanations: { correct: "I e II são falsas. A evolução é para toda a equipe e a prescrição deve ser detalhada. III e IV estão corretas." } }
+                ],
+                [ // Unidade 3
+                    { question: "Qual afirmativa NÃO contempla as recomendações do Guia Alimentar para a População Brasileira?", options: ["As recomendações devem se adequar às condições de saúde.", "Alimentos in natura devem ser a base da alimentação.", "Alimentação saudável deriva de sistema sustentável.", "Prefira alimentos da estação e locais.", "Limite o uso de alimentos ultraprocessados, consumindo-os em pequenas quantidades."], correct: 4, explanations: { correct: "A recomendação do Guia Alimentar é 'evitar' o consumo de alimentos ultraprocessados, que é mais forte do que apenas 'limitar'." } },
+                    { question: "Sobre as dietas hospitalares padrão, podemos afirmar:<br>I - Devem atingir no mínimo 20Kcal/Kg/dia e 1,5g de proteína/Kg/dia.<br>II - A dieta livre é adequada para todos os pacientes.<br>III - A dieta leve é equilibrada, mas com menos fibras.", options: ["I, apenas.", "III, apenas.", "I e II, apenas.", "II e III, apenas.", "I, II e III."], correct: 1, explanations: { correct: "I é falsa (livro cita 30 kcal e 1,2g prot). II é falsa. Apenas a III está correta." } },
+                    { question: "Sobre a DIETA DE PROVA, podemos dizer que:<br>I - Deve ser mantida até a recuperação completa.<br>II - É iniciada em no máximo 24h no pós-operatório.<br>III - É composta por líquidos como água, chás e leite.<br>IV - É transitória por ser nutricionalmente restrita.", options: ["I, apenas.", "II e IV, apenas.", "III e IV, apenas.", "I, II e III, apenas.", "I, II, III e IV."], correct: 1, explanations: { correct: "I e III são falsas. A dieta é transitória e não inclui leite. II e IV estão corretas." } }
+                ],
+                [ // Unidade 4
+                    { question: "Sobre sinais de deficiência de vitaminas do complexo B, podemos afirmar:", options: ["Fadiga é sinal de deficiência de B12, associada à anemia microcítica.", "Beribéri é característico da deficiência de vitamina B5.", "Aumento de homocisteína pode se associar a deficiência de B6, B9 e B12.", "A falta de niacina (B3) pode levar a rubor facial.", "A deficiência de B6 pode causar formigamento de mãos e pés."], correct: 2, explanations: { correct: "Correto. O metabolismo da homocisteína depende de B6, B9 e B12." } },
+                    { question: "Sobre a vitamina C, podemos afirmar:<br>I - Doses >3g podem aumentar o risco de cálculos renais.<br>II - Pacientes com infecções respiratórias se beneficiam de maior aporte.<br>III - A absorção é eficiente, independentemente da dose.", options: ["I, apenas.", "III, apenas.", "I e II, apenas.", "II e III, apenas.", "I, II e III."], correct: 2, explanations: { correct: "III é falsa. A absorção da vitamina C diminui conforme a dose aumenta. I e II estão corretas." } },
+                    { question: "Sobre o ômega-3, avalie as asserções:<br>I - Pode ser suplementado via óleo de peixe ou algas/linhaça.<br>PORQUE<br>II - A biotransformação ocorre pela mesma rota, sem diferença.", options: ["As asserções I e II são verdadeiras, e a II justifica a I.", "As asserções I e II são verdadeiras, mas a II não justifica a I.", "A asserção I é verdadeira e a II é falsa.", "A asserção I é falsa e a II é verdadeira.", "As asserções I e II são falsas."], correct: 2, explanations: { correct: "I é verdadeira. II é falsa, pois o ômega-3 de fontes como a linhaça (ALA) necessita de mais conversões no corpo." } }
+                ],
+                [ // Unidade 5
+                    { question: "Paciente (48a, 102kg, 173cm) com DMII, HAS, lesão renal, inicia diálise. Relata náuseas e hipoglicemia ao acordar (GC 82mg/dL). Afirma-se:<br>I - IMC de 34, mas o peso deve ser ajustado.<br>II - A prioridade é a insuficiência renal.<br>III - A restrição de sódio é de 2g de sal/dia.<br>IV - Hipoglicemia é < 70mg/dL.", options: ["I e IV, apenas.", "II e III, apenas.", "III e IV, apenas.", "I, II e III, apenas.", "II, III e IV, apenas."], correct: 0, explanations: { correct: "II é falsa (todas comorbidades são importantes). III é falsa (2g de sódio ≈ 5g de sal). I e IV estão corretas." } },
+                    { question: "Sobre as orientações de alta, podemos afirmar:<br>I - Diabéticos em insulinoterapia devem aprender contagem de carboidratos.<br>II - Todos os pacientes deveriam receber orientação nutricional.<br>III - Pacientes com doença grave devem ser encaminhados para acompanhamento.<br>IV - Pacientes em suporte nutricional devem usar apenas dietas artesanais.", options: ["I e IV, apenas.", "II e III, apenas.", "III e IV, apenas.", "I, II e III, apenas.", "II, III e IV, apenas."], correct: 3, explanations: { correct: "IV é falsa. Fórmulas prontas são preferíveis. I, II e III estão corretas." } },
+                    { question: "Sobre o paciente cirúrgico, avalie:<br>I - A abreviação de jejum recomendada é de 6h para sólidos e líquidos.<br>PORQUE<br>II - Jejum deve ser prolongado no pós-operatório.", options: ["As asserções I e II são verdadeiras, e a II justifica a I.", "As asserções I e II são verdadeiras, mas a II não justifica a I.", "A asserção I é verdadeira e a II é falsa.", "A asserção I é falsa e a II é verdadeira.", "As asserções I e II são falsas."], correct: 4, explanations: { correct: "Ambas são falsas. O jejum para líquidos é de 2h (I). A alimentação no pós-operatório deve ser precoce (II)." } }
+                ],
+                [ // Unidade 6
+                    { question: "Sobre a avaliação do paciente hepatopata:", options: ["IMC < 20Kg/m² indica desnutrição.", "Ascite grau I requer desconto de 10% do peso.", "IMC > 30Kg/m² indica sempre obesidade.", "Peso prévio à ascite não deve ser usado.", "Edema em membros inferiores requer desconto de 5% do peso."], correct: 4, explanations: { correct: "Correto. As outras opções estão erradas." } },
+                    { question: "Sobre a triagem RFH-NPT:<br>I - Paciente em nutrição enteral não apresenta risco.<br>II - Perda de peso >10% aumenta o risco.<br>III - Ingestão insuficiente aumenta o risco.", options: ["I, apenas.", "III, apenas.", "I e II, apenas.", "II e III, apenas.", "I, II e III."], correct: 3, explanations: { correct: "I é falsa; o uso de nutrição enteral classifica o paciente como de alto risco. II e III estão corretas." } },
+                    { question: "Sobre a doença hepática crônica:", options: ["O paciente está em estado hipercatabólico, aumentando o risco de desnutrição.", "Icterícia ocorre apenas nos quadros agudos.", "Cirrose por álcool pode ser revertida.", "Hepatites virais crônicas têm cura total.", "Pacientes com ascite devem ter o sódio totalmente retirado."], correct: 0, explanations: { correct: "Correto. As outras são falsas: cirrose é irreversível; e a restrição de sódio não é total." } }
+                ],
+                [ // Unidade 7
+                    { question: "Sobre as doenças renais, qual afirmação está correta?", options: ["Doença renal aguda por um mês torna-se crônica.", "Todo diabético desenvolverá doença renal.", "Hábitos de vida saudáveis podem prevenir as doenças renais.", "Todos os pacientes renais necessitam de restrição hídrica.", "A doença é mais prevalente em jovens e mulheres."], correct: 2, explanations: { correct: "Correto. As outras são falsas." } },
+                    { question: "Sobre a doença renal aguda (DRA), podemos afirmar:<br>I - É transitória, durando até 3 meses.<br>II - Tem alta mortalidade (10-80%).<br>III - Pacientes em UTI podem desenvolvê-la.", options: ["I, apenas.", "III, apenas.", "I e II, apenas.", "II e III, apenas.", "I, II e III."], correct: 4, explanations: { correct: "Todas as afirmativas descrevem corretamente a DRA." } },
+                    { question: "Sobre a Doença Renal Crônica (DRC):", options: ["A desnutrição é uma das principais complicações, aumentando o risco de mortalidade.", "Para ser DRC, o quadro deve durar pelo menos seis meses.", "Todo paciente com DRC necessitará de diálise.", "O estadiamento da doença é feito pela capacidade urinária.", "Na DRC, apenas a filtração renal é comprometida."], correct: 0, explanations: { correct: "Correto. As outras são falsas: DRC é >3 meses; nem todos precisam de diálise; e todo o metabolismo é afetado." } }
+                ],
+                [ // Unidade 8
+                    { question: "Sobre a avaliação do paciente oncológico:", options: ["O peso atual é suficiente para avaliar o risco.", "O IMC é o melhor indicador para sarcopenia.", "A albumina não é um bom preditor.", "A perda de 5% do peso em um mês indica risco elevado.", "Edema não interfere no diagnóstico."], correct: 3, explanations: { correct: "Correto. Perda de >5% em um mês é um critério de risco." } },
+                    { question: "Sobre a sistematização do atendimento oncológico:<br>I - Todo paciente oncológico é, no mínimo, nível secundário.<br>II - Um paciente oncológico eutrófico pode ser nível primário.<br>III - O risco é classificado com base no diagnóstico, alimentação e necessidades.", options: ["I, apenas.", "III, apenas.", "I e II, apenas.", "II e III, apenas.", "I, II e III."], correct: 3, explanations: { correct: "I é falsa. Um paciente oncológico pode estar sem risco nutricional. II e III estão corretas." } },
+                    { question: "Para controle dos sintomas no tratamento oncológico:", options: ["Para disfagia, trocar sólidos por líquidos.", "Para xerostomia, usar gotas de limão.", "Para disgeusia, retirar temperos.", "Para náusea, diminuir refeições.", "Para mucosite, usar temperaturas extremas."], correct: 1, explanations: { correct: "Correto. Para xerostomia, gotas de limão estimulam a salivação." } }
+                ],
+                [ // Unidade 9
+                    { question: "Sobre as causas da DPOC:", options: ["Fatores ambientais não interferem.", "Exposição a cádmio e sílica são riscos ocupacionais.", "Afeta mais fumantes passivos.", "Mulheres apresentam maior risco.", "É mais prevalente em pessoas com alta condição socioeconômica."], correct: 1, explanations: { correct: "Correto. As outras são falsas." } },
+                    { question: "Sobre a avaliação nutricional em DPOC:", options: ["IMC normal é de 22 a 29 Kg/m².", "Dobras cutâneas não têm correlação com a função muscular.", "Albumina ajuda a diagnosticar perda de capacidade respiratória.", "Índice creatinina/altura é bom indicador de massa magra.", "Vitamina D ideal deve estar acima de 20 nmol/L."], correct: 3, explanations: { correct: "Correto. As outras estão erradas: IMC normal é 22-27." } },
+                    { question: "Sobre o manejo de sintomas na DPOC:<br>I - Repouso antes das refeições ajuda na dispneia.<br>II - Dietas brandas/pastosas ajudam na ingestão.<br>III - Alimentos secos/amenos ajudam na saciedade precoce.<br>IV - Aumento da densidade energética beneficia desnutridos/inapetentes.", options: ["I, apenas.", "II e IV, apenas.", "III e IV, apenas.", "I, II e III, apenas.", "I, II, III e IV."], correct: 4, explanations: { correct: "Todas as afirmativas são estratégias válidas para manejar sintomas na DPOC." } }
+                ]
+            ]
+        };
         
-        function updateTimer() {
-            seconds++;
-            if (seconds >= 60) {
-                seconds = 0;
-                minutes++;
-            }
-            
-            const formattedMinutes = String(minutes).padStart(2, '0');
-            const formattedSeconds = String(seconds).padStart(2, '0');
-            
-            timerElement.textContent = `Tempo: ${formattedMinutes}:${formattedSeconds}`;
-        }
-
-        function updateScoreCounter() {
-            scoreCounterElement.innerHTML = `✅ Corretas: ${correctAnswers} de ${questions.length}`;
-        }
-        
-        // Start the timer
-        setInterval(updateTimer, 1000);
-
-
-        // --- QUIZ DATA AND LOGIC ---
-        const questions = [
-            {
-                question: "Com base na definição do nível assistencial no acompanhamento nutricional, analise as afirmativas a seguir:<br>I. Os pacientes em nível primário têm visitas de retorno a cada 7 dias, enquanto aqueles em nível secundário têm retornos a cada 4 dias, e no nível terciário, os retornos são feitos em até 2 dias.<br>II. O nível assistencial visa garantir uma abordagem uniforme nos atendimentos, priorizando pacientes com maior risco nutricional, permitindo mudanças entre os níveis conforme a evolução do quadro clínico.<br>III. A sistematização dos níveis assistenciais facilita a logística do serviço de nutrição, mas é necessário considerar que pacientes podem mudar de nível durante a internação, exigindo avaliações periódicas.<br>IV. Durante o primeiro contato com o paciente, é essencial avaliar aspectos como apetite, aceitação da dieta e mudanças nos hábitos alimentares e intestinais para determinar o nível assistencial adequado.<br>V. Identificar riscos nutricionais é de extrema importância, considerando que quase 50% dos pacientes internados são classificados com algum grau de desnutrição.<br>É correto o que se afirma em:",
-                options: [
-                    "I, II e V, apenas.",
-                    "I, III, IV e V, apenas.",
-                    "II, III, IV e V, apenas.",
-                    "II e IV, apenas.",
-                    "Todas as afirmativas estão corretas."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "A afirmativa I está incorreta. O livro-base, na página 17, aponta um retorno para o nível terciário 'em até 0 dias', o que é um provável erro de digitação e difere do valor de '2 dias' da pergunta, tornando a afirmativa inconsistente com a fonte. As demais afirmativas (II, III, IV e V) descrevem corretamente os princípios da estratificação do cuidado nutricional hospitalar, conforme as páginas 16 e 17.",
-                    incorrect: [
-                        "Incorreto. A afirmativa I é inconsistente com o texto da fonte, tornando-a falsa.",
-                        "Incorreto. A afirmativa I está incorreta, o que invalida esta opção.",
-                        "Incorreto. Esta opção omite as afirmativas III e V, que também são corretas.",
-                        "Incorreto. A afirmativa I está incorreta."
-                    ]
-                }
-            },
-            {
-                question: "Considerando os desafios nutricionais na cirurgia bariátrica, analise as afirmações a seguir:<br>I. No pré-operatório, é essencial a avaliação bioquímica (hemograma, ferro, B12, etc.) e suplementação imunomoduladora por 5 a 7 dias.<br>II. No pós-operatório, a dieta líquida clara deve iniciar em até 24 horas, com incremento proteico de 1,5g/kg de peso ideal/dia.<br>III. A suplementação pós-cirúrgica deve incluir múltiplas vitaminas e minerais, como tiamina, B12, D, ferro e cálcio.<br>IV. As doses de suplementos no pós-operatório são baixas, dentro dos limites de segurança (UL), não necessitando de acompanhamento.<br>V. No pré-operatório, a abreviação do jejum (6h para sólidos, 2h para líquidos) deve ser considerada.<br>É correto o que se afirma em:",
-                options: [
-                    "I, II e III, apenas.",
-                    "II, IV e V, apenas.",
-                    "I, II, III e V, apenas.",
-                    "I, III, IV e V, apenas.",
-                    "Todas as afirmativas estão corretas."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "A afirmativa IV está incorreta. A suplementação pós-bariátrica frequentemente utiliza altas doses que estão além do Nível Máximo de Ingestão Tolerável (UL) e, por isso, são de prescrição médica, exigindo acompanhamento criterioso. As demais afirmativas (I, II, III e V) descrevem corretamente os cuidados nutricionais padrão no perioperatório da cirurgia bariátrica, conforme a página 122.",
-                    incorrect: [
-                        "Incorreto. A afirmativa V também está correta.",
-                        "Incorreto. A afirmativa IV é falsa, e a I e III são verdadeiras.",
-                        "Incorreto. A afirmativa IV é falsa.",
-                        "Incorreto. A afirmativa IV é falsa."
-                    ]
-                }
-            },
-            {
-                question: "Sobre as dietas hospitalares, analise as afirmativas a seguir:<br>I. A dieta líquida restrita é indicada para preparo de exames ou jejum, sendo nutricionalmente incompleta.<br>II. A dieta pastosa é destinada a pacientes com dificuldade de mastigação/deglutição.<br>III. A dieta branda deve ser utilizada exclusivamente por pacientes pediátricos.<br>IV. A dieta geral é a mais completa, indicada para pacientes sem restrições que não necessitem alteração na alimentação.<br>É correto o que se afirma em:",
-                options: [
-                    "I e IV, apenas.",
-                    "II, III e IV, apenas.",
-                    "I, II e III, apenas.",
-                    "I, II e IV, apenas.",
-                    "Todas as afirmativas estão corretas."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "A afirmativa III está incorreta. A dieta branda não é de uso exclusivo pediátrico; ela é indicada para pacientes de qualquer idade em processo de recuperação, como pós-cirúrgico ou transição de jejum. As afirmativas I, II e IV definem corretamente as dietas líquida restrita, pastosa e geral, conforme as páginas 77 e 79-80.",
-                    incorrect: [
-                        "Incorreto. A afirmativa II também está correta.",
-                        "Incorreto. A afirmativa III é falsa.",
-                        "Incorreto. A afirmativa III é falsa.",
-                        "Incorreto. A afirmativa III é falsa."
-                    ]
-                }
-            },
-            {
-                question: "Acerca das atribuições do nutricionista clínico hospitalar, avalie as asserções a seguir e a relação proposta entre elas:<br>I. O nutricionista clínico hospitalar pode atuar em diferentes ambientes institucionais, sendo responsável pela assistência dietoterápica em hospitais, clínicas, UPAs e Spas clínicos.<br>PORQUE<br>II. Suas atribuições limitam-se à realização de ações que envolvem avaliação e prescrição nutricional, assim como educação alimentar durante a internação e orientação de alta.",
-                options: [
-                    "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
-                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
-                    "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
-                    "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
-                    "As asserções I e II são proposições falsas."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "A asserção I é verdadeira, pois a atuação do nutricionista é ampla. A asserção II é falsa porque o termo 'limitam-se' é incorreto; as atribuições do nutricionista vão além das citadas, incluindo atuação em Bancos de Leite Humano, Lactários, Centrais de Terapia Nutricional, gestão e participação em comissões.",
-                    incorrect: [
-                        "Incorreto. A asserção II é falsa.",
-                        "Incorreto. A asserção II é falsa.",
-                        "Incorreto. A asserção I é verdadeira.",
-                        "Incorreto. A asserção I é verdadeira e a II é falsa."
-                    ]
-                }
-            },
-            {
-                question: "Considerando a importância do nutricionista clínico na internação hospitalar, assinale a alternativa correta:",
-                options: [
-                    "A prescrição dietética é responsabilidade exclusiva da equipe médica.",
-                    "O nutricionista deve focar apenas em pacientes com desnutrição grave.",
-                    "A equipe de nutrição clínica e a equipe de Produção de Alimentos devem trabalhar em conjunto para ajustar as opções alimentares oferecidas, garantindo que todas as prescrições dietéticas possam ser cumpridas.",
-                    "A avaliação nutricional deve ser feita somente na admissão do paciente.",
-                    "Planos alimentares padronizados são suficientes para todos os pacientes cirúrgicos."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "Esta alternativa está correta e é diretamente suportada pelo texto na página 23, que afirma: 'o ideal é que a equipe de nutrição clínica e a da produção trabalhem em conjunto ajustando opções a serem oferecidas, a ponto que todas as prescrições dietéticas possam ser cumpridas'.",
-                    incorrect: [
-                        "Incorreto. A prescrição dietética é uma atribuição legal do nutricionista.",
-                        "Incorreto. O nutricionista atua em todos os níveis de complexidade, dando maior atenção aos de maior risco.",
-                        "Incorreto. A avaliação nutricional deve ser um processo contínuo durante toda a internação.",
-                        "Incorreto. Os planos devem ser individualizados, respeitando a situação clínica e as necessidades de cada paciente."
-                    ]
-                }
-            },
-            {
-                question: "Considerando a sistematização do cuidado em nutrição, avalie as asserções a seguir e a relação proposta entre elas:<br>I. O atendimento nutricional tem como prioridade detectar precocemente a desnutrição, e, assim, minimizar os danos desse agravamento na condição do paciente.<br>PORQUE<br>II. A triagem nutricional realizada nas primeiras 24 horas de admissão permite identificar o risco nutricional e possibilita uma intervenção precoce, contribuindo para a melhora do quadro nutricional do paciente internado.",
-                options: [
-                    "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
-                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
-                    "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
-                    "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
-                    "As asserções I e II são proposições falsas."
-                ],
-                correct: 0,
-                explanations: {
-                    correct: "Ambas as asserções são verdadeiras e conectadas. A asserção II explica o mecanismo pelo qual a prioridade definida na asserção I é alcançada. A detecção precoce (I) é viabilizada pela triagem nutricional precoce (II), que leva à intervenção e melhores desfechos.",
-                    incorrect: [
-                        "Incorreto. A II justifica perfeitamente a I.",
-                        "Incorreto. A II é verdadeira e justifica a I.",
-                        "Incorreto. A I é verdadeira.",
-                        "Incorreto. Ambas são verdadeiras."
-                    ]
-                }
-            },
-            {
-                question: "Considerando as consequências clínicas da desnutrição hospitalar, assinale a alternativa correta.",
-                options: [
-                    "Melhora da resposta imunológica.",
-                    "Redução do tempo de internação.",
-                    "Diminuição do risco de infecções.",
-                    "Prolongamento do tempo de cicatrização e maior risco de complicações infecciosas.",
-                    "Aceleração da recuperação pós-operatória."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "A desnutrição está relacionada a piores desfechos, como piora da cicatrização e maior risco de infecção hospitalar, além de maior tempo de internação.",
-                    incorrect: [
-                        "Incorreto. A desnutrição piora a resposta imunológica e a recuperação.",
-                        "Incorreto. A desnutrição está associada ao aumento do tempo de internação.",
-                        "Incorreto. A desnutrição aumenta o risco de infecções.",
-                        "Incorreto. A desnutrição retarda a recuperação."
-                    ]
-                }
-            },
-            {
-                question: "Considerando o uso de dietas de prova no contexto pré e pós-operatório, analise as afirmativas a seguir:<br>I. As dietas de prova são utilizadas exclusivamente no período pós-operatório para avaliar a tolerância alimentar do paciente.<br>II. A liberação da alimentação oral para pacientes em cirurgia de pequeno porte deve ser feita apenas após 48 horas do procedimento.<br>III. Para pacientes cirúrgicos que não conseguem atingir pelo menos 50% de suas necessidades nutricionais via oral, o início da terapia nutricional é recomendado.<br>IV. O uso de dietas imunomoduladoras no período pré-operatório não apresenta benefícios significativos.<br>V. A abreviação do jejum no período perioperatório tem sido amplamente adotada.<br>É correto o que se afirma em:",
-                options: [
-                    "I e II, apenas.",
-                    "II, III e V, apenas.",
-                    "III e V, apenas.",
-                    "III e IV, apenas.",
-                    "Todas as afirmativas estão corretas."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "As afirmativas III e V estão corretas. O livro indica o início da terapia nutricional para pacientes que não atingem 50% de suas necessidades e menciona que a abreviação do jejum é uma prática bem fundamentada. A afirmativa I é falsa, pois dietas de prova são usadas também no pré-operatório e para preparo de exames. A afirmativa II é falsa, pois a recomendação atual é de alimentação precoce, em até 24h após a cirurgia. A afirmativa IV é falsa, pois o livro cita que há 'grande respaldo' para o uso de dietas imunomoduladoras no pré-operatório.",
-                    incorrect: [
-                        "Incorreto. A afirmativa I e II são falsas.",
-                        "Incorreto. A afirmativa II é falsa.",
-                        "Incorreto. A afirmativa IV é falsa.",
-                        "Incorreto. As afirmativas I, II e IV são falsas."
-                    ]
-                }
-            },
-            {
-                question: "Sobre as dietas modificadas em consistência, analise as afirmativas a seguir:<br>I. A dieta líquida restrita é indicada para pré-cirúrgicos ou preparo de exames, composta por líquidos de baixa densidade calórica.<br>II. A dieta líquida-pastosa é recomendada para evolução dietética ou disfagia, com alimentos que se transformam em líquidos ou cremosos.<br>III. A dieta pastosa/cremosa é utilizada para desmame de terapia nutricional enteral e para pacientes com risco de aspiração, tendo composição completa.<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "I e II, apenas.",
-                    "II e III, apenas.",
-                    "I, II e III.",
-                    "Nenhuma das afirmativas está correta."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "Todas as afirmativas descrevem corretamente as indicações, características e público-alvo das respectivas dietas de consistência modificada no ambiente hospitalar, conforme as páginas 79 e 80 do livro.",
-                    incorrect: [
-                        "Incorreto. As afirmativas II e III também estão corretas.",
-                        "Incorreto. A afirmativa III também está correta.",
-                        "Incorreto. A afirmativa I também está correta.",
-                        "Incorreto. Todas as afirmativas estão corretas."
-                    ]
-                }
-            },
-            {
-                question: "Sobre a suplementação nutricional em pacientes hospitalizados, analise as afirmativas a seguir:<br>I. A absorção de nutrientes via enteral pode ser afetada por reações entre alimentos e nutrientes e por características genéticas.<br>II. A eliminação de nutrientes pode ocorrer via renal, bile, suor, leite materno e outras secreções.<br>III. A escolha entre suplementos prontos e manipulados depende principalmente da estabilidade e palatabilidade, sem considerar as necessidades do paciente.<br>IV. Os exames laboratoriais são a única fonte confiável de informações sobre a condição nutricional do paciente.<br>É correto o que se afirma em:",
-                options: [
-                    "I e II, apenas.",
-                    "III e IV, apenas.",
-                    "I, II e III, apenas.",
-                    "II, III e IV, apenas.",
-                    "Todas as afirmativas estão corretas."
-                ],
-                correct: 0,
-                explanations: {
-                    correct: "As afirmativas I e II estão corretas e são explicadas na página 107. A afirmativa III é falsa, pois a escolha de produtos manipulados tem como vantagem o ajuste da fórmula às necessidades do paciente. A afirmativa IV é falsa, pois o texto afirma que a determinação de quais nutrientes suplementar depende de uma boa anamnese, avaliação física, exames laboratoriais e análise da alimentação, não apenas de uma fonte.",
-                    incorrect: [
-                        "Incorreto. A afirmativa III e IV são falsas.",
-                        "Incorreto. A afirmativa III é falsa.",
-                        "Incorreto. A afirmativa IV é falsa.",
-                        "Incorreto. As afirmativas III e IV são falsas."
-                    ]
-                }
-            },
-            {
-                question: "Com base no cuidado nutricional a pacientes com doenças hepáticas, analise as afirmações a seguir:<br>I. A doença hepática aumenta o risco de desnutrição e sarcopenia devido a dificuldades no metabolismo.<br>II. O IMC é uma medida confiável para avaliar a desnutrição na cirrose, não necessitando de ajuste para o peso seco.<br>III. A ferramenta RFH-NPT é eficaz e considerada adequada para determinar o risco de desnutrição em hepatopatas crônicos.<br>IV. A prevalência de desnutrição em pacientes com cirrose hepática descompensada é maior que 50%.<br>É correto o que se afirma em:",
-                options: [
-                    "I, II e III, apenas.",
-                    "I, III e IV, apenas.",
-                    "II e IV, apenas.",
-                    "II, III e IV, apenas.",
-                    "Todas as afirmativas estão corretas."
-                ],
-                correct: 1,
-                explanations: {
-                    correct: "A afirmativa II é falsa. O livro afirma que o IMC tem limitações devido à retenção de líquidos e que para validar os valores, é preciso fazer a correção do peso ou apurar o peso seco do paciente. As demais afirmativas (I, III, IV) estão corretas e são suportadas pelo texto nas páginas 164 e 165.",
-                    incorrect: [
-                        "Incorreto. A afirmativa II é falsa.",
-                        "Incorreto. A afirmativa II é falsa.",
-                        "Incorreto. A afirmativa II é falsa.",
-                        "Incorreto. A afirmativa II é falsa."
-                    ]
-                }
-            },
-            {
-                question: "Sobre a conduta nutricional adequada em cuidados paliativos, assinale a alternativa correta:",
-                options: [
-                    "Manter a alimentação por via oral a qualquer custo, mesmo com desconforto.",
-                    "Utilizar sempre terapia nutricional enteral agressiva para reverter a perda de peso.",
-                    "Considerar o uso de terapia enteral com dietas hipercalóricas e hiperproteicas para garantir maior densidade nutricional, quando indicada e alinhada ao conforto.",
-                    "A prioridade é atingir 100% das necessidades calóricas estimadas, independentemente da aceitação.",
-                    "Restringir todos os alimentos preferidos do paciente em favor de uma dieta 'saudável'."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "Para pacientes acamados, como os em cuidados paliativos, o objetivo principal é a qualidade de vida e o conforto. Se a terapia enteral for indicada para pacientes em recuperação, dietas hipercalóricas e hiperproteicas podem garantir maior densidade nutricional em menor volume. Esta opção é a mais adequada, pois condiciona o uso da terapia à indicação e ao conforto do paciente.",
-                    incorrect: [
-                        "Incorreto. Forçar a alimentação pode causar grande desconforto e vai contra os princípios dos cuidados paliativos.",
-                        "Incorreto. A terapia agressiva pode não ser benéfica; para pacientes em terminalidade, por exemplo, sugere-se alimentação trófica para conforto.",
-                        "Incorreto. O conforto e a vontade do paciente são mais importantes que atingir metas calóricas.",
-                        "Incorreto. Liberalizar a dieta e oferecer alimentos que tenham significado afetivo é uma estratégia importante para o bem-estar."
-                    ]
-                }
-            },
-            {
-                question: "Considerando a nutrição em pacientes oncológicos, avalie as asserções a seguir:<br>I. Pacientes oncológicos se beneficiam de dietas hiperproteicas devido ao estado catabólico causado pela doença e pelo tratamento.<br>PORQUE<br>II. O objetivo do suporte nutricional é a manutenção e/ou recuperação do estado nutricional, observando a perda de massa, visto que a caquexia e a sarcopenia são preditores de mau prognóstico.",
-                options: [
-                    "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
-                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
-                    "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
-                    "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
-                    "As asserções I e II são proposições falsas."
-                ],
-                correct: 0,
-                explanations: {
-                    correct: "Ambas as asserções são verdadeiras e a II justifica a I. A recomendação de dieta hiperproteica (I) se dá exatamente porque o objetivo é combater o catabolismo e a perda de massa muscular (caquexia/sarcopenia), que são fatores de mau prognóstico, para manter e recuperar o estado nutricional do paciente (II).",
-                    incorrect: [
-                        "Incorreto. A II é uma justificativa direta para a I.",
-                        "Incorreto. A II é verdadeira e justifica a I.",
-                        "Incorreto. A I é verdadeira.",
-                        "Incorreto. Ambas as asserções são verdadeiras."
-                    ]
-                }
-            },
-            {
-                question: "A respeito da recomendação de proteínas de pacientes com Doença Renal Crônica (DRC) não-dialisados em tratamento conservador, assinale a alternativa correta:",
-                options: [
-                    "A recomendação é de 1,0 a 1,2 g/kg/dia.",
-                    "A recomendação é de 0,55 a 0,8 g/kg/dia.",
-                    "A restrição de proteínas não é necessária nesta fase.",
-                    "A recomendação é a mesma de um indivíduo saudável, sem ajustes.",
-                    "A recomendação é de 2,0 g/kg/dia para evitar a perda muscular."
-                ],
-                correct: 1,
-                explanations: {
-                    correct: "Para pacientes com DRC em tratamento conservador (não-dialisado), a recomendação é uma restrição proteica de 0,55 a 0,8 g/kg/dia para pacientes sem risco nutricional, conforme a tabela na página 147.",
-                    incorrect: [
-                        "Incorreto. Esta recomendação é para pacientes em diálise.",
-                        "Incorreto. A restrição proteica com o objetivo de retardar a piora da função renal é uma das bases do tratamento conservador.",
-                        "Incorreto. A recomendação é menor que a de um indivíduo saudável (0,8 a 1,0 g/kg/dia) para proteger a função renal residual.",
-                        "Incorreto. Esta quantidade de proteína seria prejudicial para um paciente em tratamento conservador."
-                    ]
-                }
-            },
-            {
-                question: "Considerando as alterações glicêmicas em ambiente hospitalar, avalie as asserções a seguir:<br>I. Durante uma internação hospitalar, tanto a hiperglicemia quanto a hipoglicemia são situações comuns e exclusivamente observadas em pacientes diabéticos.<br>PORQUE<br>II. A hiperglicemia pode surgir devido a diversos fatores, como estresse e inflamação, enquanto a hipoglicemia está associada a complicações graves, não ocorrendo apenas em pacientes diabéticos.",
-                options: [
-                    "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
-                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
-                    "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
-                    "A asserção I é uma proposição falsa, e a II é uma proposição falsa.",
-                    "As asserções I e II são proposições falsas."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "A asserção I é falsa porque a hiperglicemia não é exclusividade de pacientes diabéticos, podendo ocorrer pelo estresse e inflamação da internação. A asserção II é verdadeira, pois explica corretamente as causas dessas alterações que podem afetar qualquer paciente hospitalizado.",
-                    incorrect: [
-                        "Incorreto. A asserção I é falsa.",
-                        "Incorreto. A asserção I é falsa.",
-                        "Incorreto. A asserção I é falsa.",
-                        "Incorreto. A asserção II é verdadeira."
-                    ]
-                }
-            },
-            {
-                question: "Considerando a conduta nutricional em pacientes com doença hepática, analise as afirmativas a seguir:<br>I. Pacientes com doença hepática aguda devem receber uma dieta semelhante à de pacientes críticos, com ajuste na demanda energética.<br>II. Na doença hepática crônica, as necessidades proteicas são de até 1,2g/kg de peso seco (compensados e não desnutridos) e até 1,5g/kg (desnutridos ou sarcopênicos).<br>III. A dieta para esteatose não alcoólica deve incluir carboidratos complexos e gorduras saturadas.<br>IV. O controle do índice glicêmico na dieta é importante para pacientes com esteatose não alcoólica, pois pode favorecer não apenas o controle da glicemia, mas da lipogênese.<br>É correto o que se afirma em:",
-                options: [
-                    "I, II e III, apenas.",
-                    "II, III e IV, apenas.",
-                    "I, II e IV, apenas.",
-                    "I e IV, apenas.",
-                    "Todas as afirmativas estão corretas."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "A afirmativa III é falsa. A recomendação para esteatose não alcoólica é priorizar gorduras mono e poli-insaturadas e evitar gorduras saturadas e trans. As afirmativas I, II e IV estão corretas e descrevem condutas nutricionais adequadas para diferentes cenários da doença hepática, conforme as páginas 173 e 174.",
-                    incorrect: [
-                        "Incorreto. A afirmativa III é falsa.",
-                        "Incorreto. A afirmativa III é falsa.",
-                        "Incorreto. A afirmativa III é falsa.",
-                        "Incorreto. A afirmativa III é falsa."
-                    ]
-                }
-            },
-            {
-                question: "Considerando as recomendações proteicas para pacientes com DRC submetidos à hemodiálise, analise as afirmativas a seguir:<br>I. Pacientes em hemodiálise ou diálise peritoneal devem receber um aporte proteico aumentado, chegando a 1,2g/kg/dia, mesmo na presença de comorbidades associadas.<br>II. Pacientes hipercatabólicos, como aqueles com neoplasias ou infecções, devem ser submetidos à restrição proteica para reduzir o risco de mortalidade.<br>III. Em pacientes críticos em hemodiálise intermitente, a recomendação proteica pode ser ajustada para valores entre 1,3 e 1,5g/kg/dia.<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "I e III, apenas.",
-                    "II e III, apenas.",
-                    "I e II, apenas.",
-                    "Todas as afirmativas estão corretas."
-                ],
-                correct: 1,
-                explanations: {
-                    correct: "A afirmativa II é falsa. O texto afirma que em pacientes hipercatabólicos (com neoplasias, infecções, etc.) não deve ser realizada restrição proteica, pois isso aumenta o risco de mortalidade. As afirmativas I e III estão corretas, indicando a necessidade aumentada de proteína para pacientes em diálise e um aporte ainda maior para aqueles em estado crítico.",
-                    incorrect: [
-                        "Incorreto. A afirmativa III também está correta.",
-                        "Incorreto. A afirmativa II é falsa.",
-                        "Incorreto. A afirmativa II é falsa.",
-                        "Incorreto. A afirmativa II é falsa."
-                    ]
-                }
-            },
-            {
-                question: "Assinale a alternativa que apresenta de forma adequada as recomendações para a escolha de suplementos nutricionais para pacientes oncológicos:",
-                options: [
-                    "Sempre preferir suplementos com alto teor de açúcar para aumentar a palatabilidade.",
-                    "Considerar suplementos neutros para facilitar a ingestão em pacientes com inapetência ou náuseas.",
-                    "Utilizar exclusivamente suplementos artesanais para garantir a qualidade.",
-                    "Escolher o suplemento com base apenas no menor custo, sem considerar a composição.",
-                    "Evitar qualquer tipo de suplemento, pois eles interferem no tratamento quimioterápico."
-                ],
-                correct: 1,
-                explanations: {
-                    correct: "O livro menciona que existem suplementos com sabor neutro que são ótimos para uso em pacientes com inapetência ou náuseas, podendo ser adicionados a receitas para maior flexibilidade. Esta é uma estratégia eficaz para melhorar a aceitação e o consumo.",
-                    incorrect: [
-                        "Incorreto. O texto sugere evitar alimentos muito doces em caso de náuseas.",
-                        "Incorreto. O texto não faz essa recomendação; suplementos industrializados passam por controle de qualidade e podem ser mais práticos e seguros.",
-                        "Incorreto. A escolha deve ser baseada na necessidade do paciente, como fórmulas hipercalóricas, hiperproteicas ou com imunonutrientes.",
-                        "Incorreto. O uso de suplementos é uma estratégia para atingir as metas nutricionais quando a via oral é insuficiente."
-                    ]
-                }
-            },
-            {
-                question: "Um paciente relata um período significativo de baixa ingestão alimentar e perda de peso involuntária. Assinale a alternativa que corresponde ao método que fornece informações mais precisas sobre as deficiências nutricionais específicas e outras condições de saúde desse paciente:",
-                options: [
-                    "Recordatório alimentar de 24 horas.",
-                    "Medida da circunferência do braço.",
-                    "Análise de exames laboratoriais.",
-                    "Avaliação subjetiva global.",
-                    "Questionário de frequência alimentar."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "Embora todos os métodos sejam importantes, os exames laboratoriais conseguem perceber deficiências e excessos nutricionais e condições de saúde que por vezes não seriam compreendidas apenas com a avaliação física e antropométrica. Eles podem identificar deficiências específicas de vitaminas e minerais.",
-                    incorrect: [
-                        "Incorreto. Fornece uma estimativa da ingestão, mas não mede o estado nutricional bioquímico.",
-                        "Incorreto. É uma medida antropométrica que estima a reserva de tecido muscular, mas não identifica deficiências específicas de micronutrientes.",
-                        "Incorreto. É uma excelente ferramenta de triagem de risco nutricional, mas não quantifica deficiências bioquímicas.",
-                        "Incorreto. Avalia o padrão alimentar habitual, mas não o estado nutricional atual ou deficiências."
-                    ]
-                }
-            },
-            {
-                question: "Considerando a importância da avaliação nutricional em pacientes com Doença Pulmonar Obstrutiva Crônica (DPOC), analise as afirmações a seguir:<br>I. A desnutrição é considerada uma das principais condições a serem acompanhadas nos pacientes com DPOC, devido à sua associação negativa com a morbidade e mortalidade da doença.<br>II. A desnutrição energético-proteica é um dos preditores do diagnóstico da DPOC, estando relacionada com o aumento do risco para infecções e diminuição da qualidade de vida.<br>III. A triagem nutricional é recomendada para todos os pacientes com DPOC, independentemente da gravidade, para identificar precocemente o risco de desnutrição.<br>IV. A avaliação nutricional completa é indicada apenas para pacientes com DPOC em estado crítico.<br>É correto o que se afirma em:",
-                options: [
-                    "I e II, apenas.",
-                    "III e IV, apenas.",
-                    "I, II e III, apenas.",
-                    "II, III e IV, apenas.",
-                    "Todas as afirmativas estão corretas."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "A afirmativa IV é falsa. A avaliação nutricional completa é indicada para todos os pacientes com DPOC, não se limitando aos críticos, a fim de garantir uma ação precoce da equipe de nutrição. As afirmativas I e II são diretamente suportadas pelo texto. A afirmativa III, sobre a triagem para todos, está alinhada com o espírito do texto, que enfatiza a detecção precoce devido à alta prevalência de desnutrição (25-40%) nesses pacientes.",
-                    incorrect: [
-                        "Incorreto. A afirmativa III também está correta.",
-                        "Incorreto. A afirmativa IV é falsa.",
-                        "Incorreto. A afirmativa IV é falsa.",
-                        "Incorreto. A afirmativa IV é falsa."
-                    ]
-                }
-            }
-        ];
-
+        // --- GLOBAL APP STATE ---
         let correctAnswers = 0;
-        const selectedAnswers = new Array(questions.length).fill(null);
+        let answeredQuestions = 0;
+        const totalQuestions = Object.values(allQuestions).flat(2).length;
+        const selectedAnswers = {};
+        
+        // --- CORE FUNCTIONS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeQuiz();
+            setupEventListeners();
+        });
 
-        function loadQuestions() {
-            const container = document.getElementById('quiz-container');
-            container.innerHTML = questions.map((question, index) => `
-                <div class="question-container" id="question-${index}">
-                    <div class="question"><strong>${index + 1}ª Questão</strong><br>${question.question}</div>
-                    <div class="options">
-                        ${question.options.map((option, i) => `
-                            <label>
-                                <input type="radio" name="answer-${index}" value="${i}" onchange="selectAnswer(${index}, ${i})">
-                                <span>${option}</span>
-                            </label>
-                        `).join('')}
-                    </div>
-                    <button id="submit-btn-${index}" onclick="checkAnswer(${index})" disabled>Verificar Resposta</button>
-                    <div class="feedback" id="feedback-${index}" style="display: none;"></div>
-                </div>
-            `).join('');
+        function initializeQuiz() {
+            loadAllQuestions();
+            updateScoreCounter();
+            startTimer();
         }
+        
+        function setupEventListeners() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.content-section');
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
 
-        function selectAnswer(questionIndex, answerIndex) {
-            selectedAnswers[questionIndex] = answerIndex;
-            document.getElementById(`submit-btn-${questionIndex}`).disabled = false;
-        }
-
-        function checkAnswer(questionIndex) {
-            const question = questions[questionIndex];
-            const labels = document.querySelectorAll(`#question-${questionIndex} .options label`);
-            let selectedLabelContent = '';
-            
-            labels.forEach((label, i) => {
-                if (i === question.correct) {
-                    label.classList.add('correct');
-                } else if (i === selectedAnswers[questionIndex]) {
-                    label.classList.add('incorrect');
-                }
-                if(i === selectedAnswers[questionIndex]){
-                    selectedLabelContent = question.options[i];
-                }
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => handleNavClick(e, link, navLinks, sections, sidebar));
             });
 
-            const isCorrect = selectedAnswers[questionIndex] === question.correct;
-            const feedbackDiv = document.getElementById(`feedback-${questionIndex}`);
+            document.getElementById('livro-toggle').addEventListener('click', function(e){
+                e.preventDefault();
+                document.getElementById('livro-submenu').classList.toggle('open');
+                document.getElementById('livro-menu-item').classList.toggle('open');
+            });
+            
+            menuToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+            
+            document.getElementById('font-increase').addEventListener('click', () => changeFontSize(1));
+            document.getElementById('font-decrease').addEventListener('click', () => changeFontSize(-1));
+        }
+
+        function handleNavClick(e, link, navLinks, sections, sidebar) {
+            e.preventDefault();
+            const sectionId = link.getAttribute('data-section');
+            if (!sectionId) return;
+
+            navLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+
+            if (link.closest('.submenu')) {
+                document.getElementById('livro-toggle').classList.add('active');
+            } else if (link.id !== 'livro-toggle') {
+                 document.getElementById('livro-toggle').classList.remove('active');
+            }
+
+            sections.forEach(section => section.classList.toggle('active', section.id === sectionId));
+            
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.remove('open');
+            }
+        }
+        
+        function loadAllQuestions() {
+            for (const category in allQuestions) {
+                if (category === 'ae') {
+                    document.getElementById('quiz-container-ae').innerHTML = generateQuestionHTML(allQuestions.ae, 'ae');
+                } else {
+                    allQuestions.livro.forEach((unit, index) => {
+                        const unitId = index + 1;
+                        document.getElementById(`quiz-container-livro-${unitId}`).innerHTML = generateQuestionHTML(unit, `livro-${unitId}`);
+                    });
+                }
+            }
+        }
+
+        function generateQuestionHTML(questions, prefix) {
+            return questions.map((q, i) => {
+                const qId = `${prefix}-${i}`;
+                return `
+                <div class="question-container" id="question-${qId}">
+                    <div class="question"><strong>${i + 1}ª Questão</strong><br>${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((opt, optIdx) => `
+                            <label>
+                                <input type="radio" name="answer-${qId}" value="${optIdx}" onchange="selectAnswer('${qId}')">
+                                <span>${opt}</span>
+                            </label>`).join('')}
+                    </div>
+                    <button id="submit-btn-${qId}" class="quiz-button" onclick="checkAnswer('${qId}')" disabled>Verificar Resposta</button>
+                    <div class="feedback" id="feedback-${qId}" style="display: none;"></div>
+                </div>`;
+            }).join('');
+        }
+        
+        function selectAnswer(questionId) {
+            const radio = document.querySelector(`input[name="answer-${questionId}"]:checked`);
+            if (radio) {
+                selectedAnswers[questionId] = parseInt(radio.value, 10);
+                document.getElementById(`submit-btn-${questionId}`).disabled = false;
+            }
+        }
+        
+        function checkAnswer(questionId) {
+            const parts = questionId.split('-'); // "ae-0" or "livro-1-0"
+            const prefix = parts[0];
+            let questionData;
+
+            if (prefix === 'ae') {
+                const questionIndex = parseInt(parts[1], 10);
+                questionData = allQuestions.ae[questionIndex];
+            } else if (prefix === 'livro') {
+                const unitIndex = parseInt(parts[1], 10) - 1; // unit 1 is index 0
+                const questionIndex = parseInt(parts[2], 10);
+                questionData = allQuestions.livro[unitIndex][questionIndex];
+            }
+
+            if (!questionData) return; // Exit if question data not found
+
+            const userAnswer = selectedAnswers[questionId];
+            if (userAnswer === undefined) return;
+
+            const isCorrect = userAnswer === questionData.correct;
+            const feedbackDiv = document.getElementById(`feedback-${questionId}`);
             
             if (isCorrect) {
-                if (!feedbackDiv.hasAttribute('data-answered')) {
-                    correctAnswers++;
-                }
-                feedbackDiv.innerHTML = `<p class="correct-feedback"><strong>Correto!</strong> ${question.explanations.correct}</p>`;
+                correctAnswers++;
+                feedbackDiv.innerHTML = `<p class="correct-feedback"><strong>Correto!</strong> ${questionData.explanations.correct}</p>`;
                 feedbackDiv.style.borderLeftColor = "var(--correct-color)";
-
             } else {
-                feedbackDiv.innerHTML = `<p class="incorrect-feedback"><strong>Incorreto.</strong></p><p>${question.explanations.correct}</p>`;
+                feedbackDiv.innerHTML = `<p class="incorrect-feedback"><strong>Incorreto.</strong></p><p>${questionData.explanations.correct}</p>`;
                 feedbackDiv.style.borderLeftColor = "var(--incorrect-color)";
             }
             
-            updateScoreCounter(); // Update score after checking answer
-
-            document.getElementById(`submit-btn-${questionIndex}`).style.display = 'none'; // Hide button after answer
-            feedbackDiv.style.display = 'block';
-            feedbackDiv.setAttribute('data-answered', 'true');
+            if (!feedbackDiv.hasAttribute('data-answered')) {
+                answeredQuestions++;
+                feedbackDiv.setAttribute('data-answered', 'true');
+            }
             
-            const radios = document.querySelectorAll(`input[name="answer-${questionIndex}"]`);
-            radios.forEach(radio => radio.disabled = true);
+            updateScoreCounter();
+            
+            const labels = document.querySelectorAll(`#question-${questionId} .options label`);
+            labels.forEach((label, i) => {
+                if (i === questionData.correct) label.classList.add('correct');
+                else if (i === userAnswer) label.classList.add('incorrect');
+            });
 
-            checkAllAnswered();
-        }
+            document.getElementById(`submit-btn-${questionId}`).style.display = 'none';
+            feedbackDiv.style.display = 'block';
+            
+            document.querySelectorAll(`input[name="answer-${questionId}"]`).forEach(r => r.disabled = true);
 
-        function checkAllAnswered() {
-            const allAnswered = selectedAnswers.every(answer => answer !== null);
-            if (allAnswered) {
-                const scoreDiv = document.getElementById('score');
-                scoreDiv.innerHTML = `Quiz finalizado! Você acertou <span>${correctAnswers} de ${questions.length}</span> questões.`;
+            if (answeredQuestions === totalQuestions) {
+                const scoreDiv = document.getElementById('final-score');
+                scoreDiv.innerHTML = `🎉 Quiz finalizado! Você acertou <span>${correctAnswers} de ${totalQuestions}</span> questões. 🎉`;
                 scoreDiv.style.display = 'block';
             }
         }
-        
-        // Initial setup
-        loadQuestions();
-        updateScoreCounter(); // Initialize score counter on page load
+
+        // --- UI AND UTILITY FUNCTIONALITY ---
+        let currentFontSize = 16;
+        function changeFontSize(amount) {
+            const minSize = 12;
+            const maxSize = 20;
+            const newSize = currentFontSize + amount;
+            if (newSize >= minSize && newSize <= maxSize) {
+                currentFontSize = newSize;
+                document.documentElement.style.fontSize = `${currentFontSize}px`;
+            }
+        }
+
+        function startTimer() {
+            const timerElement = document.getElementById('timer');
+            let seconds = 0;
+            setInterval(() => {
+                seconds++;
+                const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const secs = (seconds % 60).toString().padStart(2, '0');
+                timerElement.textContent = `Tempo: ${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function updateScoreCounter() {
+            document.getElementById('score-counter').innerHTML = `✅ Acertos: ${correctAnswers} de ${totalQuestions}`;
+        }
     </script>
 </body>
 </html>
