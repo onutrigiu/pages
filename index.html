@@ -3,783 +3,323 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz de Alimentos Funcionais</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Calculadora Nutricional | O Nutri Giu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f7fa;
-            margin: 20px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-            color: #333;
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Cinza escuro para o fundo */
         }
-        h1 {
-            text-align: center;
-            color: #1a3c6d;
-            font-size: 2.2em;
-            margin-bottom: 20px;
+        .main-title {
+            font-family: 'Poppins', sans-serif;
         }
-        h2 {
-            text-align: center;
-            color: #2c5282;
-            font-size: 1.5em;
-            margin: 30px 0;
+        .card {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* Bordas mais arredondadas */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 2rem;
         }
-        .question-container {
-            background: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
+        .table-cell {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #edf2f7;
+            vertical-align: middle;
+            transition: background-color 0.3s ease;
         }
-        .question-container:hover {
-            transform: translateY(-2px);
+        tr:not(:last-child):hover .table-cell {
+            background-color: #f7fafc;
         }
-        .question {
-            font-weight: 500;
-            font-size: 1.1em;
-            margin-bottom: 15px;
+        .total-cell {
+            font-weight: 700;
+            background-color: #f7fafc;
+            font-size: 1.125rem;
             color: #2d3748;
         }
-        .options label {
-            display: flex;
-            align-items: center;
-            margin: 8px 0;
-            padding: 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            background: #f7fafc;
-            cursor: pointer;
-            transition: background 0.2s;
+        .total-value {
+            transition: color 0.3s ease;
         }
-        .options label:hover {
-            background: #edf2f7;
+        .btn {
+            border-radius: 0.75rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-        .options input {
-            margin-right: 10px;
-            accent-color: #007bff;
-        }
-        .correct {
-            background: #d4edda !important;
-            border-color: #28a745 !important;
-        }
-        .incorrect {
-            background: #f8d7da !important;
-            border-color: #dc3545 !important;
-        }
-        button {
-            display: block;
-            width: 200px;
-            margin: 15px auto 0;
-            padding: 12px;
-            background: #007bff;
+        .btn-primary {
+            background-color: #2563eb;
             color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
         }
-        button:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-        button:hover:not(:disabled) {
-            background: #0056b3;
-            transform: scale(1.05);
+        .btn-danger {
+            background-color: #dc2626;
+            color: white;
         }
-        .feedback {
-            margin-top: 15px;
-            font-size: 0.9em;
-            line-height: 1.5;
-            background: #f1f5f9;
-            padding: 15px;
-            border-radius: 8px;
+        .btn-danger:hover {
+            background-color: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-        .feedback p {
-            margin: 8px 0;
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
         }
-        .feedback .correct-feedback::before {
-            content: '✅ ';
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .feedback .incorrect-feedback::before {
-            content: '❌ ';
+        .form-select, .form-input {
+             border: 1px solid #cbd5e1;
+             border-radius: 0.5rem;
+             transition: all 0.2s ease;
+             padding: 0.6rem 0.8rem;
         }
-        #score {
-            text-align: center;
-            font-size: 1.3em;
-            color: #2c5282;
-            margin: 20px 0;
-            background: #e6fffa;
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-        }
-        hr {
-            margin: 40px 0;
-            border: 1px solid #e2e8f0;
-        }
-        @media (max-width: 600px) {
-            body {
-                margin: 10px;
-            }
-            .question-container {
-                padding: 15px;
-            }
-            button {
-                width: 100%;
-            }
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
         }
     </style>
 </head>
-<body>
-    <h1>Quiz de Alimentos Funcionais</h1>
-    <div id="score"></div>
-    <h2>Questões dos PDFs</h2>
-    <div id="quiz-container"></div>
-    <hr>
-    <h2>Questões Prova</h2>
-    <div id="new-questions-container"></div>
+<body class="antialiased text-gray-700">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
+        
+        <div class="text-center mb-8">
+            <h1 class="main-title text-4xl sm:text-5xl font-bold text-white">Calculadora de Refeições</h1>
+            <p class="mt-3 text-lg text-gray-300">Selecione os alimentos, informe a quantidade e veja os macros.</p>
+        </div>
+
+        <div class="card">
+            <!-- Botões de Ação -->
+            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-6">
+                <button onclick="addRow()" class="w-full sm:w-auto flex-grow btn btn-primary">
+                    Adicionar Alimento
+                </button>
+                <button onclick="clearAll()" class="w-full sm:w-auto flex-grow btn btn-danger">
+                    Limpar Tudo
+                </button>
+            </div>
+
+            <!-- Tabela de Cálculos -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white rounded-lg">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="table-cell text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-2/5">Alimento</th>
+                            <th class="table-cell text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-1/5">Quantidade (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Kcal</th>
+                            <th class="table-cell text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Carbs (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Proteínas (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Gorduras (g)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="calculator-body">
+                        <!-- Linhas serão adicionadas dinamicamente aqui -->
+                    </tbody>
+                    <tfoot class="border-t-2 border-gray-200">
+                        <tr>
+                            <td class="table-cell total-cell" colspan="2">TOTAL</td>
+                            <td id="total-kcal" class="table-cell total-cell text-right total-value">0</td>
+                            <td id="total-carbs" class="table-cell total-cell text-right total-value">0.0</td>
+                            <td id="total-protein" class="table-cell total-cell text-right total-value">0.0</td>
+                            <td id="total-fat" class="table-cell total-cell text-right total-value">0.0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <footer class="text-center mt-8 text-gray-400 text-sm">
+            <p>Valores nutricionais baseados na Tabela TACO (4ª Edição) e referências padrão de mercado.</p>
+        </footer>
+    </div>
 
     <script>
-        const questions = [
-            {
-                question: "Seguindo a tendência mundial, o Brasil publicou em 1999, por meio da Agência Nacional de Vigilância Sanitária (ANVISA), diretrizes para análise de comprovação de propriedades funcionais voltadas para alegações em rótulos de alimentos industrializados. Partindo do pressuposto de que o conceito de alimentos funcionais, nutracêuticos e suplementos dietéticos apresenta diferenças importantes relacionadas ao seu uso e características, assinale a alternativa que indica corretamente a definição de um nutracêutico:",
-                options: [
-                    "Produto concentrado que contém vitaminas ou minerais para complementar a dieta.",
-                    "Produto alimentício ao qual se adicionam nutrientes para prevenir deficiências nutricionais.",
-                    "Alimento in natura que naturalmente apresenta quantidades significativas de compostos bioativos.",
-                    "Produto obtido exclusivamente por meio de processos de modificação genética para enriquecimento nutricional.",
-                    "Parte ou substância extraída de alimentos que promove benefícios à saúde, podendo ser apresentada em forma farmacêutica."
-                ],
-                correct: 4,
-                explanations: {
-                    correct: "Correto! Nutracêuticos são substâncias extraídas de alimentos com benefícios à saúde, muitas vezes apresentados em formas farmacêuticas, como cápsulas ou comprimidos.",
-                    incorrect: [
-                        "Errado. Essa definição corresponde a suplementos dietéticos, que focam em complementar a dieta com vitaminas ou minerais.",
-                        "Errado. Essa descrição refere-se a alimentos fortificados, que recebem nutrientes adicionais para prevenir deficiências.",
-                        "Errado. Alimentos in natura com compostos bioativos são considerados alimentos funcionais, não nutracêuticos.",
-                        "Errado. Nutracêuticos não requerem modificação genética; eles são extraídos de alimentos naturais."
-                    ]
-                }
-            },
-            {
-                question: "As vitaminas e minerais foram os primeiros compostos bioativos descobertos. Apesar de 12 vitaminas serem essenciais ao organismo, quatro vêm sendo melhor descritas quanto às propriedades bioativas. Qual das alternativas a seguir apresenta uma informação correta sobre as vitaminas A e D?",
-                options: [
-                    "A síntese de vitamina D ocorre na pele independentemente da exposição aos raios UVB.",
-                    "A vitamina D atua exclusivamente na homeostase óssea, sem interferir no sistema imunológico.",
-                    "A vitamina A é sintetizada no fígado humano a partir de carotenoides sem necessidade de ingestão alimentar.",
-                    "O consumo de vitamina A, mas não de vitamina D, é suficiente para manter a saúde óssea e prevenir doenças autoimunes.",
-                    "A vitamina A contribui para a integridade dos epitélios, enquanto a vitamina D regula processos imunológicos e previne infecções."
-                ],
-                correct: 4,
-                explanations: {
-                    correct: "Correto! A vitamina A mantém a integridade dos epitélios (como pele e mucosas), e a vitamina D regula o sistema imunológico, ajudando a prevenir infecções.",
-                    incorrect: [
-                        "Errado. A síntese de vitamina D na pele depende da exposição aos raios UVB.",
-                        "Errado. A vitamina D também influencia o sistema imunológico, não apenas a homeostase óssea.",
-                        "Errado. A síntese de vitamina A a partir de carotenoides requer ingestão alimentar de precursores.",
-                        "Errado. A vitamina D é essencial para a saúde óssea, e ambas as vitaminas têm papéis em doenças autoimunes."
-                    ]
-                }
-            },
-            {
-                question: "O uso de alimentos funcionais, particularmente os simbióticos, tem sido incrementado por meio da dietoterapia com a intenção de melhorar o estado de saúde de pacientes portadores de alguns tipos de câncer. Simbióticos são compostos por micro-organismos vivos que, quando administrados em doses adequadas, podem trazer benefícios à saúde do hospedeiro. São formados pela associação de um ou mais probióticos com um, ou mais prebióticos. De acordo com essas informações, analise as afirmativas a seguir:<br>I. Os probióticos agem principalmente por meio da modulação da microbiota intestinal, e podem ser encontrados em alimentos fermentados como o tempeh e o kimchi.<br>II. A adesão dos probióticos ao trato intestinal é a única forma de os probióticos conferirem benefícios à saúde.<br>III. O uso de probióticos deve ser acompanhado da comprovação de seus benefícios à saúde, sendo importante garantir a segurança do consumo.<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "II, apenas.",
-                    "III, apenas.",
-                    "I e III, apenas.",
-                    "II e III, apenas."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "Correto! A afirmativa I está correta, pois probióticos modulam a microbiota intestinal e são encontrados em alimentos como tempeh e kimchi. A afirmativa III também está correta, pois a segurança e comprovação dos benefícios são essenciais. A II está errada, pois a adesão ao trato intestinal não é a única forma de ação dos probióticos.",
-                    incorrect: [
-                        "Errado. Inclui apenas a I, mas a III também está correta.",
-                        "Errado. A II é falsa, pois probióticos têm múltiplos mecanismos de ação.",
-                        "Errado. Inclui apenas a III, mas a I também está correta.",
-                        "Errado. A II é falsa, então esta combinação está incorreta."
-                    ]
-                }
-            },
-            {
-                question: "A Agência Nacional de Vigilância Sanitária (ANVISA), por meio da RDC 429/2020, define fibra alimentar como um polímero de carboidrato que não é hidrolisado pelas enzimas endógenas do trato digestivo humano. As fibras alimentares podem ser classificadas de acordo com sua solubilidade em água, sendo solúveis ou insolúveis. Com relação às fibras alimentares e aos probióticos, assinale a alternativa correta:",
-                options: [
-                    "Probióticos somente são benéficos quando consumidos por meio de leites fermentados e produtos lácteos.",
-                    "Fibras insolúveis formam géis que ajudam na redução da absorção de lipídios, enquanto as solúveis aumentam o volume fecal.",
-                    "Fibras alimentares, tanto solúveis quanto insolúveis, têm efeitos benéficos à saúde, sendo recomendadas para melhorar a microbiota intestinal.",
-                    "Fibras solúveis aumentam o volume fecal e podem diminuir a constipação, enquanto as insolúveis formam géis que reduzem a absorção de lipídios.",
-                    "Probióticos podem melhorar a saúde intestinal por meio de adesão no trato digestivo e ação de barreira, enquanto as fibras não têm impacto na microbiota intestinal."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "Correto! Fibras solúveis e insolúveis beneficiam a microbiota intestinal, promovendo saúde digestiva e geral.",
-                    incorrect: [
-                        "Errado. Probióticos também são benéficos em outros alimentos, como vegetais fermentados.",
-                        "Errado. Fibras solúveis formam géis, e insolúveis aumentam o volume fecal.",
-                        "Errado. A descrição está invertida: insolúveis aumentam volume fecal, solúveis formam géis.",
-                        "Errado. Fibras têm impacto significativo na microbiota intestinal."
-                    ]
-                }
-            },
-            {
-                question: "Com a mudança na alimentação dos adultos nas últimas décadas, aumenta o desenvolvimento de doenças crônicas não transmissíveis. Aumentar o consumo de alimentos funcionais, com ações metabólicas benéficas ao organismo, é uma estratégia para proporcionar benefícios à saúde a longo prazo. De acordo com essas informações, analise as afirmativas a seguir:<br>I. Alimentos convencionais são aqueles que, por definição, possuem naturalmente compostos bioativos em quantidades significativas.<br>II. A fortificação de alimentos refere-se à adição exclusiva de compostos bioativos não nutrientes, como probióticos.<br>III. O método de preparo dos alimentos pode influenciar tanto a concentração de bioativos quanto sua bioatividade.<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "II, apenas.",
-                    "III, apenas.",
-                    "I e III, apenas.",
-                    "I, II e III."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "Correto! A afirmativa III está correta, pois o preparo influencia a concentração e bioatividade de compostos. A I é falsa, pois alimentos convencionais não têm, por definição, bioativos significativos. A II é falsa, pois fortificação inclui nutrientes como vitaminas, não apenas probióticos.",
-                    incorrect: [
-                        "Errado. A I é falsa, pois alimentos convencionais não são definidos assim.",
-                        "Errado. A II é falsa, pois fortificação não é exclusiva de probióticos.",
-                        "Errado. A III está correta, mas a I também é válida em parte, tornando a combinação incorreta.",
-                        "Errado. Nenhuma das afirmativas está correta juntas."
-                    ]
-                }
-            },
-            {
-                question: "Os ácidos graxos da família ômega-3 apresentam propriedades funcionais importantes para a saúde, sendo classificados como ácidos graxos poli-insaturados (PUFA). Quanto à estrutura química, destacam-se o ALA, EPA e DHA, amplamente encontrados em óleos vegetais e peixes. Considerando as informações apresentadas, avalie as asserções a seguir e a relação proposta entre elas:<br>I. Os ácidos graxos poli-insaturados ômega-3, como o EPA e DHA, são suscetíveis à oxidação.<br>PORQUE<br>II. EPA e DHA apresentam ligações duplas que tornam as moléculas instáveis.<br>A respeito dessas asserções, assinale a opção correta:",
-                options: [
-                    "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
-                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
-                    "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
-                    "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
-                    "As asserções I e II são proposições falsas."
-                ],
-                correct: 0,
-                explanations: {
-                    correct: "Correto! Ambas as asserções são verdadeiras: ômega-3 (EPA e DHA) são suscetíveis à oxidação devido às ligações duplas, que tornam as moléculas instáveis. A II justifica a I corretamente.",
-                    incorrect: [
-                        "Errado. A II é uma justificativa correta da I.",
-                        "Errado. A II é verdadeira e justifica a I.",
-                        "Errado. A II é verdadeira, não falsa.",
-                        "Errado. A I é verdadeira, não falsa."
-                    ]
-                }
-            },
-            {
-                question: "Dentre as vantagens do consumo do feijão, destaca-se seu efeito hipocolesterolêmico, sua baixa quantidade de gordura e elevado conteúdo de proteínas, carboidratos, vitaminas do complexo B, ferro, cálcio e fibra alimentar. Entretanto, os feijões contêm compostos que podem ter efeitos negativos sobre seu valor nutritivo, como inibidores de tripsina, fitatos, polifenóis (principalmente taninos) e oligossacarídeos não digeríveis, causadores de flatulência. Considerando as informações apresentadas, avalie as asserções a seguir e a relação proposta entre elas:<br>I. O remolho e o descarte da água de cereais e leguminosas aumentam a biodisponibilidade de proteínas e minerais.<br>PORQUE<br>II. A solubilização de compostos hidrossolúveis e a ativação de enzimas reduzem os fatores antinutricionais presentes nesses alimentos.<br>A respeito dessas asserções, assinale a opção correta:",
-                options: [
-                    "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
-                    "As asserções I e II são proposições verdadeiras, e a II é uma proposição falsa.",
-                    "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
-                    "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
-                    "As asserções I e II são proposições falsas."
-                ],
-                correct: 0,
-                explanations: {
-                    correct: "Correto! O remolho aumenta a biodisponibilidade ao reduzir fatores antinutricionais, e a II explica isso, pois a solubilização e ativação de enzimas diminuem esses compostos.",
-                    incorrect: [
-                        "Errado. A II é verdadeira, não falsa.",
-                        "Errado. A II é verdadeira, não falsa.",
-                        "Errado. A I é verdadeira, não falsa.",
-                        "Errado. Ambas são verdadeiras."
-                    ]
-                }
-            },
-            {
-                question: "Os alcaloides são uma classe diversificada de compostos orgânicos nitrogenados, muitos dos quais são produzidos por plantas como parte de suas estratégias defensivas contra herbívoros e patógenos. A cafeína, um alcaloide amplamente conhecido, é um estimulante encontrado em várias plantas, incluindo o café (Coffea spp.), chá (Camellia sinensis), e algumas variedades de cacau. Assim, com base nesta informação, analise as asserções a seguir e a relação proposta entre elas:<br>I. A cafeína exerce seu principal mecanismo de ação inibindo competitivamente os receptores de adenosina.<br>PORQUE<br>II. A adenosina é um neurotransmissor estimulante que aumenta a atividade neuronal no cérebro.<br>A respeito dessas asserções, assinale a opção correta:",
-                options: [
-                    "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
-                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
-                    "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
-                    "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
-                    "As asserções I e II são proposições falsas."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "Correto! A I é verdadeira, pois a cafeína inibe receptores de adenosina. A II é falsa, pois a adenosina é inibitória, não estimulante.",
-                    incorrect: [
-                        "Errado. A II é falsa e não justifica a I.",
-                        "Errado. A II é falsa, não verdadeira.",
-                        "Errado. A I é verdadeira, não falsa.",
-                        "Errado. A I é verdadeira, e a II é falsa."
-                    ]
-                }
-            },
-            {
-                question: "Os compostos fenólicos são uma grande classe de substâncias com uma característica química em comum: a presença de, no mínimo, um grupamento funcional orgânico fenol, formado por um anel aromático benzeno ligado em uma hidroxila. Com relação aos fatores antinutricionais e compostos fenólicos, assinale a alternativa correta:",
-                options: [
-                    "Compostos fenólicos promovem inflamação crônica, aumentando a ativação do fator de transcrição nuclear kappa B (NF-kB).",
-                    "Fatores antinutricionais, como fitatos e oxalatos, são termorresistentes e não podem ser reduzidos por processos de remolho ou fermentação.",
-                    "A xantina oxidase e a óxido nítrico sintetase induzível (iNOS) são enzimas antioxidantes endógenas que protegem as células contra danos oxidativos.",
-                    "Compostos fenólicos atuam na modulação da resposta inflamatória por meio da inibição de enzimas como ciclooxigenases (COX) e lipoxigenases (LOX).",
-                    "O mecanismo antioxidante dos compostos fenólicos inclui a capacidade de inativar ânions superóxidos e peróxidos de hidrogênio, resultando em compostos mais reativos."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "Correto! Compostos fenólicos inibem enzimas pró-inflamatórias como COX e LOX, modulando a inflamação.",
-                    incorrect: [
-                        "Errado. Compostos fenólicos reduzem inflamação, não a promovem.",
-                        "Errado. Fitatos e oxalatos podem ser reduzidos por remolho ou fermentação.",
-                        "Errado. Essas enzimas não são antioxidantes; iNOS promove inflamação.",
-                        "Errado. A inativação resulta em compostos menos reativos."
-                    ]
-                }
-            },
-            {
-                question: "Os ácidos graxos são partes de moléculas de lipídios, geralmente encontrados em alimentos ligados ao glicerol por meio de ligação éster. Podem ser derivados da dieta, mas também ser sintetizados de maneira endógena, com exceção dos ácidos graxos essenciais, através da síntese de novo. Com relação aos ácidos graxos e suas características estruturais e funcionais, assinale a alternativa correta:",
-                options: [
-                    "O ácido eicosapentaenoico (EPA) é um ácido graxo saturado com 20 carbonos e 5 ligações duplas.",
-                    "Os ácidos graxos saturados apresentam ligações duplas em sua estrutura e são líquidos à temperatura ambiente.",
-                    "O ácido alfa-linolênico (ALA) é um ácido graxo essencial da família ômega-3, encontrado em óleos vegetais como o de chia.",
-                    "O ácido oleico é um ácido graxo poli-insaturado pertencente à família ômega-3 e apresenta alta susceptibilidade à oxidação.",
-                    "Os ácidos graxos trans possuem ambos os hidrogênios associados à dupla ligação no mesmo plano, característica que os torna benéficos à saúde."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "Correto! O ALA é um ácido graxo essencial ômega-3 encontrado em óleos vegetais como chia.",
-                    incorrect: [
-                        "Errado. EPA é poli-insaturado, não saturado.",
-                        "Errado. Ácidos graxos saturados não têm ligações duplas e são sólidos à temperatura ambiente.",
-                        "Errado. O ácido oleico é monoinsaturado ômega-9, não ômega-3.",
-                        "Errado. Ácidos graxos trans são prejudiciais à saúde."
-                    ]
-                }
-            },
-            {
-                question: "Em termos neurofisiológicos, a cafeína age como estimulante, bloqueando os receptores de adenosina nos neurônios do cérebro e da medula espinhal, aumentando a atividade do sistema nervoso central. A cafeína e a teobromina são compostos pertencentes ao grupo das metilxantinas, encontrados em diversos alimentos e bebidas, como café, chás, chocolates e bebidas não alcoólicas. Qual das alternativas a seguir descreve corretamente as características da cafeína e teobromina?",
-                options: [
-                    "O processo de preparo do café não interfere na quantidade de cafeína presente na bebida final.",
-                    "Os grãos de café da variedade arábica têm maior concentração de cafeína em comparação com os grãos robusta.",
-                    "A teobromina é mais encontrada em bebidas como café e chá, enquanto a cafeína está mais presente em sementes de cacau.",
-                    "A cafeína é encontrada predominantemente no chocolate amargo, enquanto a teobromina está presente de forma significativa no café.",
-                    "Os chocolates amargos contêm maior concentração de teobromina do que os chocolates ao leite, sendo os chocolates brancos isentos desse composto."
-                ],
-                correct: 4,
-                explanations: {
-                    correct: "Correto! Chocolates amargos têm mais teobromina, e chocolates brancos não contêm teobromina devido à ausência de cacau.",
-                    incorrect: [
-                        "Errado. O preparo, como torra ou infusão, afeta a quantidade de cafeína.",
-                        "Errado. Grãos robusta têm mais cafeína que arábica.",
-                        "Errado. Teobromina é predominante no cacau, não em café ou chá.",
-                        "Errado. Cafeína é mais presente no café, e teobromina no cacau."
-                    ]
-                }
-            },
-            {
-                question: "Os carotenoides são compostos notáveis por possuírem ampla distribuição na natureza, estruturas químicas diversas e funções variadas. Embora sejam micronutrientes, presentes em níveis muito baixos (microgramas por grama), os carotenoides estão entre os constituintes alimentícios mais importantes. Qual dos seguintes fatores pode aumentar a biodisponibilidade dos carotenoides presentes nos alimentos?",
-                options: [
-                    "A ingestão de carotenoides exclusivamente em alimentos de origem animal.",
-                    "O processamento dos alimentos por congelamento, que preserva a estrutura celular das plantas.",
-                    "O aquecimento ou a quebra mecânica da matriz alimentar, que facilita a liberação dos carotenoides.",
-                    "A fermentação dos alimentos, que destrói as paredes celulares das plantas e libera os carotenoides.",
-                    "O consumo de carotenoides em sua forma crua e não processada, sem a adição de gordura na refeição."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "Correto! Aquecimento e quebra mecânica liberam carotenoides, aumentando sua biodisponibilidade, especialmente com gorduras.",
-                    incorrect: [
-                        "Errado. Carotenoides são mais comuns em vegetais, não exclusivos de origem animal.",
-                        "Errado. Congelamento preserva, mas não aumenta a biodisponibilidade.",
-                        "Errado. Fermentação pode degradar carotenoides, não necessariamente liberá-los.",
-                        "Errado. Consumo cru sem gordura reduz a absorção de carotenoides."
-                    ]
-                }
-            },
-            {
-                question: "O efeito benéfico de determinados tipos de alimentos sobre a saúde do hospedeiro é conhecido há muito tempo. Apesar disso, o estudo desses alimentos, atualmente denominados alimentos funcionais, e de seus componentes responsáveis por esse efeito, tornou-se intenso apenas nos últimos anos. Conforme descrito por Florowska, Hilal e Florowski (2022), para um ingrediente ser classificado como prebiótico, ele deve resistir ao pH ácido do estômago, alcançando o intestino grosso; estimular, seletivamente, o crescimento e atividade de bactérias chamadas probióticas; e manter-se estável em diferentes alimentos ou tipos de processamento. Diante da relação entre prebióticos e ácidos graxos de cadeia curta, qual é o principal papel dos prebióticos nesse contexto?",
-                options: [
-                    "Inibição da fermentação bacteriana.",
-                    "Redução de produção de ácidos graxos.",
-                    "Promoção do equilíbrio da microbiota intestinal.",
-                    "Aumento da absorção de gorduras no intestino.",
-                    "Estímulo ao crescimento de bactérias patogênicas."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "Correto! Os probióticos agem principalmente por meio da modulação da microbiota intestinal, e podem ser encontrados em alimentos fermentados como o tempeh e o kimchi. O uso de probióticos deve ser acompanhado da comprovação de seus benefícios à saúde, sendo importante garantir a segurança do consumo.",
-                    incorrect: [
-                        "Errado. Prebióticos estimulam, não inibem, a fermentação.",
-                        "Errado. Prebióticos aumentam a produção de ácidos graxos benéficos.",
-                        "Errado. Prebióticos não aumentam a absorção de gorduras.",
-                        "Errado. Prebióticos favorecem bactérias benéficas, não patogênicas."
-                    ]
-                }
-            },
-            {
-                question: "Diferentes técnicas culinárias podem alterar a quantidade, promover a biotransformação ou, ainda, modificar a estrutura química dos compostos bioativos. Isso ocorre devido a modificações químicas, físicas e enzimáticas promovidas por técnicas culinárias, cujas transformações são maiores diante do aumento da temperatura, ou seja, durante a cocção. Conforme essas informações, analise as afirmativas a seguir:<br>I. Cozinhar brássicas no vapor promove o aumento de glicosinolatos, compostos bioativos conhecidos por seus benefícios à saúde.<br>II. A fervura de feijões não afeta os carotenoides, mas reduz significativamente o teor de vitamina C.<br>III. A cocção do tomate associada ao azeite de oliva extravirgem potencializa a concentração de carotenoides presentes no alimento.<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "II, apenas.",
-                    "III, apenas.",
-                    "I e III, apenas.",
-                    "II e III, apenas."
-                ],
-                correct: 4,
-                explanations: {
-                    correct: "Correto! A cocção do tomate com azeite aumenta a biodisponibilidade de carotenoides (III), e a fervura de feijões reduz vitamina C, mas não afeta carotenoides significativamente (II). Cozinhar brássicas no vapor pode degradar glicosinolatos, não aumentá-los (I é falsa).",
-                    incorrect: [
-                        "Errado. A I é falsa, pois o vapor pode degradar glicosinolatos.",
-                        "Errado. A III também está correta.",
-                        "Errado. A II também está correta.",
-                        "Errado. A I é falsa."
-                    ]
-                }
-            },
-            {
-                question: "O câncer é a segunda maior causa de mortes no mundo. Por definição, o câncer é um termo que abrange mais de 100 tipos de doenças malignas decorrentes do crescimento desordenado e rápido de células mutantes em diferentes locais do organismo. Com base nessas informações, analise as afirmativas a seguir:<br>I. A curcumina promove efeitos pró-oxidantes em células tumorais e estimula mecanismos que favorecem a apoptose e a parada do ciclo celular.<br>II. Como a genisteína, as isoflavonas têm efeito antagônico sobre o receptor ERα, associado à proliferação celular, e agonista sobre o receptor ERβ, que inibe a proliferação celular.<br>III. Quando consumido em conjunto com isoflavonas, o licopeno apresenta efeitos combinados na redução do desenvolvimento de câncer de próstata e gástrico.<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "II, apenas.",
-                    "III, apenas.",
-                    "I e II, apenas.",
-                    "II e III, apenas."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "Correto! A I e a II estão corretas: curcumina induz apoptose, e isoflavonas modulam receptores ER. A III é incerta, pois os efeitos combinados não são amplamente comprovados.",
-                    incorrect: [
-                        "Errado. A II também está correta.",
-                        "Errado. A I também está correta.",
-                        "Errado. A I e a II são corretas, não a III.",
-                        "Errado. A III é incerta."
-                    ]
-                }
-            },
-            {
-                question: "Devido ao aumento da resistência aos antimicrobianos em uso, as plantas medicinais têm sido intensamente estudadas como agentes alternativos para a prevenção de doenças e tratamento de infecções em seres humanos e, com o passar dos anos, inúmeras pesquisas foram realizadas mostrando a eficiência e confiabilidade das plantas. Com base nessas informações, analise as afirmativas a seguir:<br>I. O alho e a cebola têm ação conservante, pois atuam contra bactérias patogênicas, sendo eficazes na preservação de alimentos.<br>II. Os compostos bioativos presentes no alho e na cebola atuam somente na redução das espécies patogênicas da microbiota intestinal, sem influenciar a produção de lipopolissacarídeos.<br>III. Os lipopolissacarídeos (LPS) produzidos por espécies patogênicas podem induzir inflamação crônica em vários tecidos, ao ativarem os receptores tipo toll (TLR-4).<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "II, apenas.",
-                    "III, apenas.",
-                    "I e III, apenas.",
-                    "II e III, apenas."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "Correto! A I está correta, pois alho e cebola têm ação antimicrobiana. A III está correta, pois LPS ativam TLR-4, causando inflamação. A II é falsa, pois os bioativos também afetam lipopolissacarídeos.",
-                    incorrect: [
-                        "Errado. A III também está correta.",
-                        "Errado. A II é falsa.",
-                        "Errado. A I também está correta.",
-                        "Errado. A II é falsa."
-                    ]
-                }
-            },
-            {
-                question: "Cuidados maternais são experiências do início da vida que têm sido consistentemente relacionados com alterações na expressão gênica por meio de mecanismos epigenéticos, como a metilação do DNA ou a modificação de suas histonas. Com base nessas informações, analise as afirmativas a seguir:<br>I. A nutrigenômica estuda as variações genéticas que ocorrem entre indivíduos, visando identificar polimorfismos que influenciam a resposta aos nutrientes.<br>II. A nutrigenômica se foca na influência dos alimentos sobre a expressão gênica, destacando mecanismos como a metilação do DNA e a regulação por miRNA.<br>III. Ao lado da nutrigenômica, a epigenética não está envolvida na herança genética, mas pode afetar as gerações seguintes por meio de alterações no genoma.<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "II, apenas.",
-                    "III, apenas.",
-                    "I e II, apenas.",
-                    "II e III, apenas."
-                ],
-                correct: 4,
-                explanations: {
-                    correct: "Correto! A II está correta, pois nutrigenômica estuda a influência de alimentos na expressão gênica. A III está correta, pois epigenética afeta gerações via regulação, não alterações no genoma. A I é falsa, pois nutrigenômica não estuda variações genéticas, mas sim expressão gênica.",
-                    incorrect: [
-                        "Errado. A I é falsa, e II e III são corretas.",
-                        "Errado. A III também está correta.",
-                        "Errado. A II também está correta.",
-                        "Errado. A I é falsa."
-                    ]
-                }
-            },
-            {
-                question: "O tratamento não medicamentoso da dislipidemia deve englobar modificações de hábitos alimentares e atividade física, além da perda ponderal, quando indicada. Na abordagem nutricional, deve-se limitar a ingestão de ácidos graxos saturados e trans assim como de colesterol, além aumentar a ingestão de fibras solúveis. O consumo de fitosteróis também está indicado no tratamento da hipercolesterolemia, segundo várias diretrizes e consensos de diferentes sociedades em todo o mundo. Com base nessas informações, analise as afirmativas a seguir:<br>I. Os fitosteróis ajudam a diminuir a absorção do colesterol ao prejudicar sua dissolução nas micelas intestinais.<br>II. A ingestão de fitosteróis em doses de 2 g/dia é especialmente benéfica para indivíduos com risco cardiovascular elevado e para crianças com hipercolesterolemia familiar.<br>III. Fontes alimentares ricas em fitosteróis incluem óleos de arroz, milho, abacate, além de leguminosas, como feijão e ervilhas.<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "II, apenas.",
-                    "III, apenas.",
-                    "I e III, apenas.",
-                    "II e III, apenas."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "Correto! A I está correta, pois fitosteróis competem com o colesterol nas micelas. A III está correta, pois óleos de arroz, milho e abacate são fontes ricas em fitosteróis (embora leguminosas tenham quantidades menores). A II é falsa, pois doses de 2 g/dia não são recomendadas para crianças sem evidências específicas.",
-                    incorrect: [
-                        "Errado. A III também está correta.",
-                        "Errado. A II é falsa, pois a dose não é específica para crianças.",
-                        "Errado. A I também está correta.",
-                        "Errado. A II é falsa."
-                    ]
-                }
-            },
-            {
-                question: "O diabetes mellitus é uma doença crônica que afeta cerca de 3% da população mundial, com prospecto de aumento até 2030, e tem sua prevalência aumentada dado o envelhecimento populacional. Em 2015, a Federação Internacional de Diabetes estimou que um em cada 11 adultos entre 20 e 79 anos tinha diabetes tipo 2. Com relação ao diabetes mellitus, quanto aos seguintes efeitos, no que está relacionado ao consumo de alimentos ricos em fibras alimentares, assinale a alternativa correta:",
-                options: [
-                    "Estímulo à secreção de insulina sem a participação das incretinas.",
-                    "Aumento do pico de glicose pós-refeição e maior demanda de insulina.",
-                    "Aumento da produção de hormônios intestinais responsáveis pela redução da resposta insulínica.",
-                    "Redução do pico de glicose pós-refeição, maior demanda de insulina e possível exaustão do pâncreas.",
-                    "Menor pico de glicose pós-refeição, menor demanda de insulina e proteção do pâncreas contra a exaustão."
-                ],
-                correct: 4,
-                explanations: {
-                    correct: "Correto! Fibras reduzem o pico de glicose, diminuindo a demanda de insulina e protegendo o pâncreas.",
-                    incorrect: [
-                        "Errado. Fibras estimulam incretinas, que auxiliam na secreção de insulina.",
-                        "Errado. Fibras reduzem o pico de glicose, não aumentam.",
-                        "Errado. Fibras aumentam incretinas, que potencializam a insulina.",
-                        "Errado. Fibras reduzem a demanda de insulina, não aumentam."
-                    ]
-                }
-            },
-            {
-                question: "O câncer é a segunda maior causa de mortes no mundo. Por definição, o câncer é um termo que abrange mais de 100 tipos de doenças malignas decorrentes do crescimento desordenado e rápido de células mutantes em diferentes locais do organismo. Avalie as asserções a seguir e a relação proposta entre elas:<br>I. No desenvolvimento do câncer, uma célula normal pode transformar-se em uma célula iniciada (com alterações genéticas).<br>PORQUE<br>II. No desenvolvimento do câncer, a célula iniciada sofre a ação de oncopromotores em seu DNA.",
-                options: [
-                    "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
-                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
-                    "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
-                    "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
-                    "As asserções I e II são proposições falsas."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "Correto! A I é verdadeira, pois mutações genéticas transformam células normais em iniciadas. A II é falsa, pois oncopromotores não alteram o DNA diretamente, mas promovem o crescimento de células já mutadas.",
-                    incorrect: [
-                        "Errado. A II é falsa e não justifica a I.",
-                        "Errado. A II é falsa, não verdadeira.",
-                        "Errado. A I é verdadeira, não falsa.",
-                        "Errado. A I é verdadeira, e a II é falsa."
-                    ]
-                }
-            },
-            {
-                question: "A nutrigenética é a área da nutrição que busca entender a relação entre a alimentação e o perfil genético do indivíduo, cujas variantes mais comuns de genoma são chamadas de polimorfismos de nucleotídeo único (SNP). Com base no exposto sobre a nutrigenética, assinale a alternativa correta:",
-                options: [
-                    "A nutrigenética estuda como os compostos bioativos presentes nos alimentos podem ser incorporados ao DNA do consumidor.",
-                    "A nutrigenética estuda como é possível alterar a constituição genética dos indivíduos.",
-                    "Nenhuma das alternativas."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "Correto! A nutrigenética estuda como polimorfismos genéticos afetam a resposta a nutrientes, não incorporação ao DNA ou alteração genética.",
-                    incorrect: [
-                        "Errado. Compostos bioativos não são incorporados ao DNA.",
-                        "Errado. A nutrigenética não altera a constituição genética."
-                    ]
-                }
-            },
-            {
-                question: "O zinco e o selênio são minerais cujas propriedades funcionais no organismo vêm sendo estudadas, principalmente aquelas relacionadas com a resposta imune adaptativa e na resposta antioxidante. O zinco tem papel essencial na regulação da resposta imune. O selênio ajuda a prevenir doenças e a fortalecer o sistema imunológico, além de proteger contra problemas cardíacos. Com base no texto, analise as afirmativas a seguir sobre o zinco e o selênio:<br>I. O consumo de zinco e selênio é benéfico e sua toxicidade é rara.<br>II. O zinco e o selênio estimulam a atividade de células T do tipo helper 1.<br>III. O zinco está presente na enzima antioxidante SOD e o selênio, na enzima antioxidante GPX.<br>IV. O zinco e o selênio podem ligar-se a outros compostos e ter a absorção prejudicada, o que é sempre deletério.<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "II, apenas.",
-                    "III, apenas.",
-                    "I, II e III, apenas.",
-                    "I, II, III e IV."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "Correto! I é verdadeira, pois zinco e selênio são benéficos e a toxicidade é rara em doses normais. II é verdadeira, pois ambos estimulam células T helper 1. III é verdadeira, pois zinco está na SOD e selênio na GPX. IV é falsa, pois a ligação a compostos como fitatos nem sempre é prejudicial.",
-                    incorrect: [
-                        "Errado. II e III também estão corretas.",
-                        "Errado. I e III também estão corretas.",
-                        "Errado. I e II também estão corretas.",
-                        "Errado. IV é falsa."
-                    ]
-                }
-            },
-            {
-                question: "De acordo com o Conselho Federal de Nutricionistas, a prescrição dietoterápica de alimentos funcionais, suplementos alimentares e fitoterápicos deve ser realizada de maneira ética, buscando respeitar os hábitos alimentares, culturais e étnicos do paciente. Com base no texto, analise as afirmativas sobre condutas a serem tomadas na prescrição de alimentos:<br>I. A prescrição deve estar respaldada em evidências científicas.<br>II. A prescrição exige uma avaliação individualizada do paciente.<br>III. A prescrição exige monitoramento, a fim de verificar sinais de toxicidade.<br>IV. A prescrição exige que sejam superados os valores de referência, em caso de nutrientes.<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "II, apenas.",
-                    "III, apenas.",
-                    "I, II e III, apenas.",
-                    "I, II, III e IV."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "Correto! I é verdadeira, pois prescrições devem basear-se em evidências. II é verdadeira, pois a individualização é essencial. III é verdadeira, pois o monitoramento previne toxicidade. IV é falsa, pois superar valores de referência sem justificativa é arriscado.",
-                    incorrect: [
-                        "Errado. II e III também estão corretas.",
-                        "Errado. I e III também estão corretas.",
-                        "Errado. I e II também estão corretas.",
-                        "Errado. IV é falsa."
-                    ]
-                }
-            },
-            {
-                question: "Os fitoesteróis são substâncias gordurosas semelhantes ao colesterol, produzidas pelas plantas e presentes em óleos vegetais, sementes, grãos, frutas e hortaliças. Majoritariamente de origem vegetal, possuem a função de estabilizar a camada bilipídica e derivados do esqualeno. Na literatura, existem mais de 200 tipos de fitoesteróis descritos. Com base nas informações apresentadas, assinale aquela que corresponde a um fitoesterol:",
-                options: [
-                    "Glicerol.",
-                    "Zeaxantina.",
-		    "β-sitosterol",
-                    "Nenhuma das alternativas."
-                ],
-                correct: 2,
-                explanations: {
-                    correct: "Correto! Fitoesteróis incluem β-sitosterol, campesterol e estigmasterol. Glicerol é um álcool, e zeaxantina é um carotenóide, não fitoesteróis.",
-                    incorrect: [
-                        "Errado. Glicerol é um álcool, não um fitoesterol.",
-                        "Errado. Zeaxantina é um carotenóide, não um fitoesterol."
-                    ]
-                }
-            },
-            {
-                question: "O conhecimento sobre a toxicidade dos compostos bioativos é fundamental para que haja o consumo seguro destes compostos, especialmente quando consumidos na forma de suplementos. Neste contexto, alguns limites máximos de concentração nestes produtos são estabelecidos pela Agência Nacional de Vigilância Sanitária. Com base no exposto, analise as afirmativas a seguir sobre o consumo seguro de compostos bioativos:<br>I. Não há limites máximos estabelecidos para o consumo de compostos fenólicos.<br>II. Os probióticos devem ser bem caracterizados quanto à ausência de virulência de linhagem bacteriana.<br>III. Não há fortes evidências sobre doses seguras de consumo da maioria dos compostos bioativos como suplementos para gestantes.<br>IV. Os valores estabelecidos baseiam-se em estudos realizados pela Agência Nacional de Vigilância Sanitária com a população brasileira.<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "II, apenas.",
-                    "III, apenas.",
-                    "II e III, apenas.",
-                    "I, II, III e IV."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "Correto! II é verdadeira, pois probióticos devem ser livres de virulência. III é verdadeira, pois faltam evidências para gestantes. I é falsa, pois a ANVISA regula compostos fenólicos. IV é falsa, pois os limites baseiam-se em estudos internacionais.",
-                    incorrect: [
-                        "Errado. I é falsa, e II e III são corretas.",
-                        "Errado. III também está correta.",
-                        "Errado. II também está correta.",
-                        "Errado. I e IV são falsas."
-                    ]
-                }
-            },
-            {
-                question: "Os compostos fenólicos têm sido muito estudados devido a sua influência na qualidade dos alimentos. Englobam uma gama enorme de substâncias, entre elas os ácidos fenólicos, os quais, por sua constituição química, possuem propriedades antioxidantes. Com base no texto, analise as afirmativas a seguir sobre os efeitos dos compostos fenólicos:<br>I. A inflamação crônica e o estresse oxidativo não estão diretamente relacionados.<br>II. Os compostos fenólicos podem aumentar a resposta inflamatória do organismo.<br>III. Os compostos fenólicos podem levar ao aumento da síntese de enzimas antioxidantes endógenas.<br>IV. Os compostos fenólicos podem inibir a ação de enzimas responsáveis pela síntese de espécies reativas.<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "II, apenas.",
-                    "III, apenas.",
-                    "III e IV, apenas.",
-                    "I, II, III e IV."
-                ],
-                correct: 3,
-                explanations: {
-                    correct: "Correto! III é verdadeira, pois compostos fenólicos estimulam enzimas como SOD. IV é verdadeira, pois inibem enzimas que geram ROS. I é falsa, pois inflamação e estresse oxidativo estão relacionados. II é falsa, pois fenólicos reduzem inflamação.",
-                    incorrect: [
-                        "Errado. I é falsa, e III e IV são corretas.",
-                        "Errado. II é falsa, e III e IV são corretas.",
-                        "Errado. IV também está correta.",
-                        "Errado. I e II são falsas."
-                    ]
-                }
-            },
-            {
-                question: "Os glicosinolatos são os precursores de diferentes organossulfurados bioativos em vegetais crucíferos, como brócolis, repolho e couve, cujas propriedades quimiopreventivas são largamente estudadas. O sulfonafano é um destes derivados bioativos. Avalie as asserções a seguir e a relação proposta entre elas:<br>I. O branqueamento de vegetais, como o brócolis, não é capaz de ocasionar a degradação dos glicosinolatos.<br>PORQUE<br>II. O branqueamento de vegetais não é capaz de inativar a ação da enzima mirosinase.<br>A respeito dessas asserções, assinale a opção correta:",
-                options: [
-                    "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
-                    "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
-                    "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
-                    "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
-                    "As asserções I e II são proposições falsas."
-                ],
-                correct: 4,
-                explanations: {
-                    correct: "Correto! Ambas são falsas. O branqueamento degrada glicosinolatos (I é falsa) e inativa a mirosinase (II é falsa), essencial para formar sulfonafanos.",
-                    incorrect: [
-                        "Errado. Ambas são falsas.",
-                        "Errado. Ambas são falsas.",
-                        "Errado. Ambas são falsas.",
-                        "Errado. Ambas são falsas."
-                    ]
-                }
-            },
-            {
-                question: "Os ácidos graxos de cadeia curta (AGCC) são substâncias produzidas a partir da ação de bactérias que integram nossa microbiota intestinal, em um processo de fermentação anaeróbia das fibras ingeridas na dieta. Com base no excerto, analise as afirmativas a seguir sobre os AGCC:<br>I. O propionato, o butirato e o acetato são AGCC produzidos pela microbiota intestinal.<br>II. A quantidade de fibras ou prebióticos da dieta não altera a quantidade de AGCC produzida.<br>III. Os AGCC aumentam o pH intestinal e essa alcalinização previne o crescimento de bactérias patogênicas.<br>IV. Os AGCC contribuem na formação e manutenção do bolo fecal e são absorvidos indiretamente pela porção intestinal denominada íleo.<br>É correto o que se afirma em:",
-                options: [
-                    "I, apenas.",
-                    "II, apenas.",
-                    "III, apenas.",
-                    "I e III, apenas.",
-                    "I, II, III e IV."
-                ],
-                correct: 0,
-                explanations: {
-                    correct: "Correto! I é verdadeira, pois propionato, butirato e acetato são AGCC. II é falsa, pois mais fibras aumentam AGCC. III é falsa, pois AGCC acidificam o pH. IV é falsa, pois são absorvidos no cólon, não no íleo.",
-                    incorrect: [
-                        "Errado. II é falsa.",
-                        "Errado. III é falsa.",
-                        "Errado. III é falsa.",
-                        "Errado. II, III e IV são falsas."
-                    ]
-                }
-            }
+        // --- BASE DE DADOS DOS ALIMENTOS ---
+        // Esta é a fonte de dados para a calculadora.
+        const foodDatabase = [
+            // CARBOIDRATOS
+            { category: 'CARBOIDRATOS', name: 'Arroz, branco, cozido', basePortion: 100, kcal: 128, carbs: 28.1, protein: 2.5, fat: 0.2 },
+            { category: 'CARBOIDRATOS', name: 'Arroz, integral, cozido', basePortion: 100, kcal: 110, carbs: 23.5, protein: 2.6, fat: 0.8 },
+            { category: 'CARBOIDRATOS', name: 'Macarrão, trigo, cozido', basePortion: 100, kcal: 139, carbs: 28.5, protein: 4.5, fat: 0.6 },
+            { category: 'CARBOIDRATOS', name: 'Aipim (Mandioca), cozida', basePortion: 100, kcal: 125, carbs: 30.1, protein: 0.6, fat: 0.3 },
+            { category: 'CARBOIDRATOS', name: 'Batata inglesa, cozida', basePortion: 100, kcal: 86, carbs: 20.1, protein: 1.8, fat: 0.1 },
+            { category: 'CARBOIDRATOS', name: 'Batata doce, cozida', basePortion: 100, kcal: 77, carbs: 18.4, protein: 0.6, fat: 0.1 },
+            { category: 'CARBOIDRATOS', name: 'Batata salsa (mandioquinha), cozida', basePortion: 100, kcal: 80, carbs: 18.9, protein: 0.9, fat: 0.2 },
+            { category: 'CARBOIDRATOS', name: 'Pão, francês (1 unidade)', basePortion: 50, kcal: 145, carbs: 28.8, protein: 4.5, fat: 1.3 },
+            { category: 'CARBOIDRATOS', name: 'Pão, forma, trigo (2 fatias)', basePortion: 50, kcal: 135, carbs: 25.0, protein: 6.5, fat: 1.5 },
+            { category: 'CARBOIDRATOS', name: 'Doce de leite, cremoso', basePortion: 20, kcal: 62, carbs: 11.2, protein: 1.4, fat: 1.4 },
+            { category: 'CARBOIDRATOS', name: 'Leite condensado, integral', basePortion: 20, kcal: 64, carbs: 11.0, protein: 1.6, fat: 1.5 },
+            { category: 'CARBOIDRATOS', name: 'Geléia de frutas, com açúcar', basePortion: 20, kcal: 54, carbs: 13.8, protein: 0.1, fat: 0.0 },
+            // PROTEÍNAS
+            { category: 'PROTEÍNAS', name: 'Ovo de galinha, cozido (1 unidade)', basePortion: 50, kcal: 73, carbs: 0.3, protein: 6.7, fat: 4.8 },
+            { category: 'PROTEÍNAS', name: 'Frango, peito, grelhado', basePortion: 100, kcal: 163, carbs: 0.0, protein: 32.0, fat: 3.5 },
+            { category: 'PROTEÍNAS', name: 'Frango, peito, cozido', basePortion: 100, kcal: 150, carbs: 0.0, protein: 31.0, fat: 2.5 },
+            { category: 'PROTEÍNAS', name: 'Frango, sobrecoxa, cozida', basePortion: 100, kcal: 215, carbs: 0.0, protein: 28.0, fat: 11.0 },
+            { category: 'PROTEÍNAS', name: 'Carne bovina, patinho, grelhado', basePortion: 100, kcal: 219, carbs: 0.0, protein: 35.7, fat: 7.9 },
+            { category: 'PROTEÍNAS', name: 'Carne bovina, coxão mole, grelhado', basePortion: 100, kcal: 215, carbs: 0.0, protein: 35.0, fat: 7.5 },
+            { category: 'PROTEÍNAS', name: 'Carne bovina, coxão duro, grelhado', basePortion: 100, kcal: 225, carbs: 0.0, protein: 34.0, fat: 9.0 },
+            { category: 'PROTEÍNAS', name: 'Carne bovina, lagarto, grelhado', basePortion: 100, kcal: 195, carbs: 0.0, protein: 36.0, fat: 5.0 },
+            { category: 'PROTEÍNAS', name: 'Carne bovina, contra-filé, grelhado', basePortion: 100, kcal: 240, carbs: 0.0, protein: 25.0, fat: 15.0 },
+            { category: 'PROTEÍNAS', name: 'Carne bovina, filé mignon, grelhado', basePortion: 100, kcal: 220, carbs: 0.0, protein: 28.0, fat: 11.5 },
+            { category: 'PROTEÍNAS', name: 'Carne suína, mignon, grelhado', basePortion: 100, kcal: 190, carbs: 0.0, protein: 30.0, fat: 7.0 },
+            { category: 'PROTEÍNAS', name: 'Carne suína, lombo, grelhado', basePortion: 100, kcal: 205, carbs: 0.0, protein: 29.0, fat: 9.0 },
+            { category: 'PROTEÍNAS', name: 'Carne suína, bisteca, grelhada', basePortion: 100, kcal: 280, carbs: 0.0, protein: 26.0, fat: 19.0 },
+            { category: 'PROTEÍNAS', name: 'Carne suína, pernil, assado', basePortion: 100, kcal: 250, carbs: 0.0, protein: 27.0, fat: 15.0 },
+            { category: 'PROTEÍNAS', name: 'Tilápia, filé, grelhado', basePortion: 100, kcal: 128, carbs: 0.0, protein: 26.0, fat: 2.6 },
+            { category: 'PROTEÍNAS', name: 'Salmão, filé, grelhado', basePortion: 100, kcal: 208, carbs: 0.0, protein: 20.0, fat: 13.0 },
+            { category: 'PROTEÍNAS', name: 'Leite de vaca, semi-desnatado', basePortion: 100, kcal: 45, carbs: 4.9, protein: 3.3, fat: 1.6 },
+            { category: 'PROTEÍNAS', name: 'Leite de vaca, integral', basePortion: 100, kcal: 60, carbs: 4.8, protein: 3.2, fat: 3.2 },
+            { category: 'PROTEÍNAS', name: 'Leite de vaca, desnatado', basePortion: 100, kcal: 35, carbs: 5.0, protein: 3.4, fat: 0.1 },
+            { category: 'PROTEÍNAS', name: 'Iogurte, natural, desnatado', basePortion: 100, kcal: 41, carbs: 5.5, protein: 4.1, fat: 0.2 },
+            { category: 'PROTEÍNAS', name: 'Iogurte, natural, integral', basePortion: 100, kcal: 62, carbs: 4.0, protein: 3.8, fat: 3.5 },
+            { category: 'PROTEÍNAS', name: 'Queijo, muçarela (1 fatia média)', basePortion: 15, kcal: 53, carbs: 0.5, protein: 3.7, fat: 4.0 },
+            { category: 'PROTEÍNAS', name: 'Queijo, minas, frescal (1 fatia)', basePortion: 30, kcal: 72, carbs: 0.5, protein: 5.2, fat: 5.5 },
+            { category: 'PROTEÍNAS', name: 'Requeijão, light (1 colher de sopa)', basePortion: 20, kcal: 38, carbs: 0.8, protein: 3.5, fat: 2.2 },
+            { category: 'PROTEÍNAS', name: 'Feijão, carioca, cozido', basePortion: 100, kcal: 76, carbs: 13.6, protein: 4.8, fat: 0.5 },
+            { category: 'PROTEÍNAS', name: 'Feijão, preto, cozido', basePortion: 100, kcal: 77, carbs: 14.0, protein: 4.5, fat: 0.5 },
+            { category: 'PROTEÍNAS', name: 'Lentilha, cozida', basePortion: 100, kcal: 93, carbs: 16.3, protein: 6.5, fat: 0.5 },
+            // FRUTAS
+            { category: 'FRUTAS', name: 'Abacate', basePortion: 100, kcal: 96, carbs: 6.0, protein: 1.2, fat: 8.4 },
+            { category: 'FRUTAS', name: 'Abacaxi', basePortion: 100, kcal: 48, carbs: 12.3, protein: 0.9, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Ameixa, vermelha', basePortion: 100, kcal: 53, carbs: 13.9, protein: 0.8, fat: 0.0 },
+            { category: 'FRUTAS', name: 'Banana, maçã', basePortion: 100, kcal: 87, carbs: 22.3, protein: 1.8, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Banana, nanica', basePortion: 100, kcal: 92, carbs: 23.8, protein: 1.4, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Banana, ouro', basePortion: 100, kcal: 112, carbs: 29.3, protein: 1.5, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Banana, prata', basePortion: 100, kcal: 98, carbs: 26.0, protein: 1.3, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Kiwi', basePortion: 100, kcal: 51, carbs: 12.5, protein: 1.0, fat: 0.4 },
+            { category: 'FRUTAS', name: 'Mamão, formosa', basePortion: 100, kcal: 45, carbs: 11.6, protein: 0.8, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Mamão, papaia', basePortion: 100, kcal: 40, carbs: 10.4, protein: 0.5, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Manga, Palmer', basePortion: 100, kcal: 64, carbs: 17.0, protein: 0.5, fat: 0.3 },
+            { category: 'FRUTAS', name: 'Manga, Tommy', basePortion: 100, kcal: 58, carbs: 15.4, protein: 1.0, fat: 0.2 },
+            { category: 'FRUTAS', name: 'Melancia', basePortion: 100, kcal: 31, carbs: 8.1, protein: 0.9, fat: 0.0 },
+            { category: 'FRUTAS', name: 'Melão', basePortion: 100, kcal: 29, carbs: 7.5, protein: 0.7, fat: 0.0 },
+            { category: 'FRUTAS', name: 'Mexerica (Tangerina Poncã)', basePortion: 100, kcal: 38, carbs: 9.6, protein: 0.8, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Morango', basePortion: 100, kcal: 30, carbs: 6.8, protein: 0.9, fat: 0.3 },
+            { category: 'FRUTAS', name: 'Pera, Williams', basePortion: 100, kcal: 53, carbs: 14.0, protein: 0.2, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Uva, Rubi', basePortion: 100, kcal: 53, carbs: 13.6, protein: 0.6, fat: 0.2 },
+            // LIPÍDEOS (GORDURAS)
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Castanha do Pará (do Brasil)', basePortion: 20, kcal: 131, carbs: 2.5, protein: 2.9, fat: 13.3 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Castanha de Caju, torrada', basePortion: 20, kcal: 116, carbs: 6.1, protein: 3.1, fat: 9.3 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Amêndoa, torrada, com sal', basePortion: 20, kcal: 120, carbs: 4.0, protein: 4.2, fat: 10.5 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Nozes, torrada', basePortion: 20, kcal: 139, carbs: 2.8, protein: 3.0, fat: 13.7 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Amendoim, torrado, sem sal', basePortion: 20, kcal: 115, carbs: 4.5, protein: 5.0, fat: 9.5 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Manteiga, com sal (1 colher de chá)', basePortion: 5, kcal: 36, carbs: 0.0, protein: 0.0, fat: 4.1 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Óleo de soja (1 colher de sopa)', basePortion: 9, kcal: 80, carbs: 0.0, protein: 0.0, fat: 9.0 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Azeite de oliva, extravirgem', basePortion: 9, kcal: 80, carbs: 0.0, protein: 0.0, fat: 9.0 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Pasta de amendoim, integral', basePortion: 20, kcal: 119, carbs: 4.0, protein: 5.0, fat: 10.0 },
         ];
 
-        let correctAnswers = 0;
-        const selectedAnswers = new Array(questions.length).fill(null);
+        const calculatorBody = document.getElementById('calculator-body');
+        
+        function createFoodOptions() {
+            const categories = {};
+            foodDatabase.forEach(food => {
+                if (!categories[food.category]) {
+                    categories[food.category] = [];
+                }
+                categories[food.category].push(food);
+            });
 
-        function loadQuestions() {
-            const container = document.getElementById('quiz-container');
-            const newContainer = document.getElementById('new-questions-container');
-            container.innerHTML = questions.slice(0, 20).map((question, index) => `
-                <div class="question-container" id="question-${index}">
-                    <div class="question">${index + 1}ª Questão<br>${question.question}</div>
-                    <div class="options">
-                        ${question.options.map((option, i) => `
-                            <label>
-                                <input type="radio" name="answer-${index}" value="${i}" onchange="selectAnswer(${index}, ${i})">
-                                ${option}
-                            </label>
-                        `).join('')}
-                    </div>
-                    <button id="submit-btn-${index}" onclick="checkAnswer(${index})" disabled>Enviar Resposta</button>
-                    <div class="feedback" id="feedback-${index}"></div>
-                </div>
-            `).join('');
-            newContainer.innerHTML = questions.slice(20).map((question, index) => `
-                <div class="question-container" id="question-${index + 20}">
-                    <div class="question">${index + 21}ª Questão<br>${question.question}</div>
-                    <div class="options">
-                        ${question.options.map((option, i) => `
-                            <label>
-                                <input type="radio" name="answer-${index + 20}" value="${i}" onchange="selectAnswer(${index + 20}, ${i})">
-                                ${option}
-                            </label>
-                        `).join('')}
-                    </div>
-                    <button id="submit-btn-${index + 20}" onclick="checkAnswer(${index + 20})" disabled>Enviar Resposta</button>
-                    <div class="feedback" id="feedback-${index + 20}"></div>
-                </div>
-            `).join('');
-        }
+            let optionsHtml = '<option value="" disabled selected>Selecione um alimento...</option>';
+            const categoryOrder = ['CARBOIDRATOS', 'PROTEÍNAS', 'FRUTAS', 'LIPÍDEOS (GORDURAS)'];
 
-        function selectAnswer(questionIndex, answerIndex) {
-            selectedAnswers[questionIndex] = answerIndex;
-            document.getElementById(`submit-btn-${questionIndex}`).disabled = false;
-        }
-
-        function checkAnswer(questionIndex) {
-            const question = questions[questionIndex];
-            const labels = document.querySelectorAll(`#question-${questionIndex} .options label`);
-            labels.forEach((label, i) => {
-                if (i === question.correct) {
-                    label.classList.add('correct');
-                } else if (i === selectedAnswers[questionIndex]) {
-                    label.classList.add('incorrect');
+            categoryOrder.forEach(category => {
+                if (categories[category]) {
+                    optionsHtml += `<optgroup label="--- ${category} ---">`;
+                    categories[category].forEach(food => {
+                        optionsHtml += `<option value="${food.name}">${food.name}</option>`;
+                    });
+                    optionsHtml += '</optgroup>';
                 }
             });
-            const isCorrect = selectedAnswers[questionIndex] === question.correct;
-            if (isCorrect) {
-                correctAnswers++;
-            }
-            const feedback = `
-                <p class="${isCorrect ? 'correct-feedback' : 'incorrect-feedback'}">${isCorrect ? 'Correto!' : 'Incorreto.'} ${question.explanations.correct}</p>
-                ${isCorrect ? '' : `<p>Sua escolha: ${question.explanations.incorrect[selectedAnswers[questionIndex]]}</p>`}
-                <p><strong>Por que as outras estão erradas:</strong></p>
-                ${question.options.map((option, i) => i !== question.correct ? `<p>- ${option}: ${question.explanations.incorrect[i]}</p>` : '').join('')}
+            return optionsHtml;
+        }
+
+        const foodOptionsHtml = createFoodOptions();
+
+        function addRow() {
+            const newRow = document.createElement('tr');
+            newRow.className = 'fade-in';
+            newRow.innerHTML = `
+                <td class="table-cell">
+                    <select class="food-select w-full form-select">
+                        ${foodOptionsHtml}
+                    </select>
+                </td>
+                <td class="table-cell">
+                    <input type="number" min="0" class="quantity-input w-full form-input text-right" placeholder="0">
+                </td>
+                <td class="table-cell text-right font-medium text-gray-800" data-value="kcal">0</td>
+                <td class="table-cell text-right font-medium text-gray-800" data-value="carbs">0.0</td>
+                <td class="table-cell text-right font-medium text-gray-800" data-value="protein">0.0</td>
+                <td class="table-cell text-right font-medium text-gray-800" data-value="fat">0.0</td>
             `;
-            document.getElementById(`submit-btn-${questionIndex}`).disabled = true;
-            document.getElementById(`feedback-${questionIndex}`).innerHTML = feedback;
-            checkAllAnswered();
+            calculatorBody.appendChild(newRow);
+
+            newRow.querySelector('.food-select').addEventListener('change', () => calculateRow(newRow));
+            newRow.querySelector('.quantity-input').addEventListener('input', () => calculateRow(newRow));
         }
 
-        function checkAllAnswered() {
-            const allAnswered = selectedAnswers.every(answer => answer !== null);
-            if (allAnswered) {
-                const scoreDiv = document.getElementById('score');
-                scoreDiv.innerHTML = `Você acertou ${correctAnswers} de ${questions.length} questões.`;
-                scoreDiv.style.display = 'block';
+        function calculateRow(row) {
+            const selectedFoodName = row.querySelector('.food-select').value;
+            const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
+            const foodData = foodDatabase.find(food => food.name === selectedFoodName);
+
+            if (!foodData) {
+                row.querySelector('[data-value="kcal"]').textContent = '0';
+                row.querySelector('[data-value="carbs"]').textContent = '0.0';
+                row.querySelector('[data-value="protein"]').textContent = '0.0';
+                row.querySelector('[data-value="fat"]').textContent = '0.0';
+                updateTotals();
+                return;
             }
+
+            const kcalPerGram = foodData.kcal / foodData.basePortion;
+            const carbsPerGram = foodData.carbs / foodData.basePortion;
+            const proteinPerGram = foodData.protein / foodData.basePortion;
+            const fatPerGram = foodData.fat / foodData.basePortion;
+
+            row.querySelector('[data-value="kcal"]').textContent = (kcalPerGram * quantity).toFixed(0);
+            row.querySelector('[data-value="carbs"]').textContent = (carbsPerGram * quantity).toFixed(1);
+            row.querySelector('[data-value="protein"]').textContent = (proteinPerGram * quantity).toFixed(1);
+            row.querySelector('[data-value="fat"]').textContent = (fatPerGram * quantity).toFixed(1);
+
+            updateTotals();
         }
 
-        // Carregar todas as questões
-        loadQuestions();
+        function updateTotals() {
+            let totalKcal = 0, totalCarbs = 0, totalProtein = 0, totalFat = 0;
+
+            const rows = calculatorBody.querySelectorAll('tr');
+            rows.forEach(row => {
+                totalKcal += parseFloat(row.querySelector('[data-value="kcal"]').textContent) || 0;
+                totalCarbs += parseFloat(row.querySelector('[data-value="carbs"]').textContent) || 0;
+                totalProtein += parseFloat(row.querySelector('[data-value="protein"]').textContent) || 0;
+                totalFat += parseFloat(row.querySelector('[data-value="fat"]').textContent) || 0;
+            });
+
+            document.getElementById('total-kcal').textContent = totalKcal.toFixed(0);
+            document.getElementById('total-carbs').textContent = totalCarbs.toFixed(1);
+            document.getElementById('total-protein').textContent = totalProtein.toFixed(1);
+            document.getElementById('total-fat').textContent = totalFat.toFixed(1);
+        }
+
+        function clearAll() {
+            calculatorBody.innerHTML = '';
+            addRow();
+            updateTotals();
+        }
+
+        window.onload = () => {
+            addRow();
+        };
+
     </script>
+
 </body>
 </html>
