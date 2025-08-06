@@ -3,22 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Nutricional</title>
+    <title>Calculadora Nutricional | O Nutri Giu</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
+            background-color: #1a202c; /* Cinza escuro para o fundo */
+        }
+        .main-title {
+            font-family: 'Poppins', sans-serif;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* Bordas mais arredondadas */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 2rem;
         }
         .table-cell {
-            padding: 12px 16px;
-            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #edf2f7;
             vertical-align: middle;
+            transition: background-color 0.3s ease;
+        }
+        tr:not(:last-child):hover .table-cell {
+            background-color: #f7fafc;
         }
         .total-cell {
+            font-weight: 700;
+            background-color: #f7fafc;
+            font-size: 1.125rem;
+            color: #2d3748;
+        }
+        .total-value {
+            transition: color 0.3s ease;
+        }
+        .btn {
+            border-radius: 0.75rem;
             font-weight: 600;
-            background-color: #f9fafb;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .btn-danger {
+            background-color: #dc2626;
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
@@ -27,23 +72,36 @@
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .form-select, .form-input {
+             border: 1px solid #cbd5e1;
+             border-radius: 0.5rem;
+             transition: all 0.2s ease;
+             padding: 0.6rem 0.8rem;
+        }
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
     </style>
 </head>
-<body class="antialiased text-gray-800">
+<body class="antialiased text-gray-700">
 
     <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
-        <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Calculadora de Refeições</h1>
-                <p class="mt-2 text-lg text-gray-600">Selecione os alimentos, informe a quantidade e veja os macros.</p>
-            </div>
+        
+        <div class="text-center mb-8">
+            <img src="LOGO_NutriGiu.png" alt="Logo O Nutri Giu" class="mx-auto h-24 w-auto mb-4">
+            <h1 class="main-title text-4xl sm:text-5xl font-bold text-white">Calculadora de Refeições</h1>
+            <p class="mt-3 text-lg text-gray-300">Selecione os alimentos, informe a quantidade e veja os macros.</p>
+        </div>
 
+        <div class="card">
             <!-- Botões de Ação -->
-            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
-                <button onclick="addRow()" class="w-full sm:w-auto flex-grow bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow transition-transform transform hover:scale-105">
+            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-6">
+                <button onclick="addRow()" class="w-full sm:w-auto flex-grow btn btn-primary">
                     Adicionar Alimento
                 </button>
-                <button onclick="clearAll()" class="w-full sm:w-auto flex-grow bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow transition-transform transform hover:scale-105">
+                <button onclick="clearAll()" class="w-full sm:w-auto flex-grow btn btn-danger">
                     Limpar Tudo
                 </button>
             </div>
@@ -51,32 +109,32 @@
             <!-- Tabela de Cálculos -->
             <div class="overflow-x-auto">
                 <table class="min-w-full bg-white rounded-lg">
-                    <thead class="bg-gray-100">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <th class="table-cell text-left text-sm font-semibold text-gray-600 uppercase tracking-wider w-2/5">Alimento</th>
-                            <th class="table-cell text-left text-sm font-semibold text-gray-600 uppercase tracking-wider w-1/5">Quantidade (g)</th>
-                            <th class="table-cell text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">Kcal</th>
-                            <th class="table-cell text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">Carbs (g)</th>
-                            <th class="table-cell text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">Proteínas (g)</th>
-                            <th class="table-cell text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">Gorduras (g)</th>
+                            <th class="table-cell text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-2/5">Alimento</th>
+                            <th class="table-cell text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-1/5">Quantidade (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Kcal</th>
+                            <th class="table-cell text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Carbs (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Proteínas (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Gorduras (g)</th>
                         </tr>
                     </thead>
                     <tbody id="calculator-body">
                         <!-- Linhas serão adicionadas dinamicamente aqui -->
                     </tbody>
-                    <tfoot class="bg-gray-100">
+                    <tfoot class="border-t-2 border-gray-200">
                         <tr>
-                            <td class="table-cell total-cell text-lg" colspan="2">TOTAL</td>
-                            <td id="total-kcal" class="table-cell total-cell text-right text-lg">0</td>
-                            <td id="total-carbs" class="table-cell total-cell text-right text-lg">0.0</td>
-                            <td id="total-protein" class="table-cell total-cell text-right text-lg">0.0</td>
-                            <td id="total-fat" class="table-cell total-cell text-right text-lg">0.0</td>
+                            <td class="table-cell total-cell" colspan="2">TOTAL</td>
+                            <td id="total-kcal" class="table-cell total-cell text-right total-value">0</td>
+                            <td id="total-carbs" class="table-cell total-cell text-right total-value">0.0</td>
+                            <td id="total-protein" class="table-cell total-cell text-right total-value">0.0</td>
+                            <td id="total-fat" class="table-cell total-cell text-right total-value">0.0</td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
-        <footer class="text-center mt-8 text-gray-500 text-sm">
+        <footer class="text-center mt-8 text-gray-400 text-sm">
             <p>Valores nutricionais baseados na Tabela TACO (4ª Edição) e referências padrão de mercado.</p>
         </footer>
     </div>
@@ -85,6 +143,7 @@
         // --- BASE DE DADOS DOS ALIMENTOS ---
         // Esta é a fonte de dados para a calculadora.
         const foodDatabase = [
+            // CARBOIDRATOS
             { category: 'CARBOIDRATOS', name: 'Arroz, branco, cozido', basePortion: 100, kcal: 128, carbs: 28.1, protein: 2.5, fat: 0.2 },
             { category: 'CARBOIDRATOS', name: 'Arroz, integral, cozido', basePortion: 100, kcal: 110, carbs: 23.5, protein: 2.6, fat: 0.8 },
             { category: 'CARBOIDRATOS', name: 'Macarrão, trigo, cozido', basePortion: 100, kcal: 139, carbs: 28.5, protein: 4.5, fat: 0.6 },
@@ -97,6 +156,7 @@
             { category: 'CARBOIDRATOS', name: 'Doce de leite, cremoso', basePortion: 20, kcal: 62, carbs: 11.2, protein: 1.4, fat: 1.4 },
             { category: 'CARBOIDRATOS', name: 'Leite condensado, integral', basePortion: 20, kcal: 64, carbs: 11.0, protein: 1.6, fat: 1.5 },
             { category: 'CARBOIDRATOS', name: 'Geléia de frutas, com açúcar', basePortion: 20, kcal: 54, carbs: 13.8, protein: 0.1, fat: 0.0 },
+            // PROTEÍNAS
             { category: 'PROTEÍNAS', name: 'Ovo de galinha, cozido (1 unidade)', basePortion: 50, kcal: 73, carbs: 0.3, protein: 6.7, fat: 4.8 },
             { category: 'PROTEÍNAS', name: 'Frango, peito, grelhado', basePortion: 100, kcal: 163, carbs: 0.0, protein: 32.0, fat: 3.5 },
             { category: 'PROTEÍNAS', name: 'Frango, peito, cozido', basePortion: 100, kcal: 150, carbs: 0.0, protein: 31.0, fat: 2.5 },
@@ -124,6 +184,26 @@
             { category: 'PROTEÍNAS', name: 'Feijão, carioca, cozido', basePortion: 100, kcal: 76, carbs: 13.6, protein: 4.8, fat: 0.5 },
             { category: 'PROTEÍNAS', name: 'Feijão, preto, cozido', basePortion: 100, kcal: 77, carbs: 14.0, protein: 4.5, fat: 0.5 },
             { category: 'PROTEÍNAS', name: 'Lentilha, cozida', basePortion: 100, kcal: 93, carbs: 16.3, protein: 6.5, fat: 0.5 },
+            // FRUTAS
+            { category: 'FRUTAS', name: 'Abacate', basePortion: 100, kcal: 96, carbs: 6.0, protein: 1.2, fat: 8.4 },
+            { category: 'FRUTAS', name: 'Abacaxi', basePortion: 100, kcal: 48, carbs: 12.3, protein: 0.9, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Ameixa, vermelha', basePortion: 100, kcal: 53, carbs: 13.9, protein: 0.8, fat: 0.0 },
+            { category: 'FRUTAS', name: 'Banana, maçã', basePortion: 100, kcal: 87, carbs: 22.3, protein: 1.8, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Banana, nanica', basePortion: 100, kcal: 92, carbs: 23.8, protein: 1.4, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Banana, ouro', basePortion: 100, kcal: 112, carbs: 29.3, protein: 1.5, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Banana, prata', basePortion: 100, kcal: 98, carbs: 26.0, protein: 1.3, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Kiwi', basePortion: 100, kcal: 51, carbs: 12.5, protein: 1.0, fat: 0.4 },
+            { category: 'FRUTAS', name: 'Mamão, formosa', basePortion: 100, kcal: 45, carbs: 11.6, protein: 0.8, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Mamão, papaia', basePortion: 100, kcal: 40, carbs: 10.4, protein: 0.5, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Manga, Palmer', basePortion: 100, kcal: 64, carbs: 17.0, protein: 0.5, fat: 0.3 },
+            { category: 'FRUTAS', name: 'Manga, Tommy', basePortion: 100, kcal: 58, carbs: 15.4, protein: 1.0, fat: 0.2 },
+            { category: 'FRUTAS', name: 'Melancia', basePortion: 100, kcal: 31, carbs: 8.1, protein: 0.9, fat: 0.0 },
+            { category: 'FRUTAS', name: 'Melão', basePortion: 100, kcal: 29, carbs: 7.5, protein: 0.7, fat: 0.0 },
+            { category: 'FRUTAS', name: 'Mexerica (Tangerina Poncã)', basePortion: 100, kcal: 38, carbs: 9.6, protein: 0.8, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Morango', basePortion: 100, kcal: 30, carbs: 6.8, protein: 0.9, fat: 0.3 },
+            { category: 'FRUTAS', name: 'Pera, Williams', basePortion: 100, kcal: 53, carbs: 14.0, protein: 0.2, fat: 0.1 },
+            { category: 'FRUTAS', name: 'Uva, Rubi', basePortion: 100, kcal: 53, carbs: 13.6, protein: 0.6, fat: 0.2 },
+            // LIPÍDEOS (GORDURAS)
             { category: 'LIPÍDEOS (GORDURAS)', name: 'Castanha do Pará (do Brasil)', basePortion: 20, kcal: 131, carbs: 2.5, protein: 2.9, fat: 13.3 },
             { category: 'LIPÍDEOS (GORDURAS)', name: 'Castanha de Caju, torrada', basePortion: 20, kcal: 116, carbs: 6.1, protein: 3.1, fat: 9.3 },
             { category: 'LIPÍDEOS (GORDURAS)', name: 'Amêndoa, torrada, com sal', basePortion: 20, kcal: 120, carbs: 4.0, protein: 4.2, fat: 10.5 },
@@ -137,7 +217,6 @@
 
         const calculatorBody = document.getElementById('calculator-body');
         
-        // Função para criar a lista de opções de alimentos
         function createFoodOptions() {
             const categories = {};
             foodDatabase.forEach(food => {
@@ -148,52 +227,51 @@
             });
 
             let optionsHtml = '<option value="" disabled selected>Selecione um alimento...</option>';
-            for (const category in categories) {
-                optionsHtml += `<optgroup label="--- ${category} ---">`;
-                categories[category].forEach(food => {
-                    optionsHtml += `<option value="${food.name}">${food.name}</option>`;
-                });
-                optionsHtml += '</optgroup>';
-            }
+            const categoryOrder = ['CARBOIDRATOS', 'PROTEÍNAS', 'FRUTAS', 'LIPÍDEOS (GORDURAS)'];
+
+            categoryOrder.forEach(category => {
+                if (categories[category]) {
+                    optionsHtml += `<optgroup label="--- ${category} ---">`;
+                    categories[category].forEach(food => {
+                        optionsHtml += `<option value="${food.name}">${food.name}</option>`;
+                    });
+                    optionsHtml += '</optgroup>';
+                }
+            });
             return optionsHtml;
         }
 
         const foodOptionsHtml = createFoodOptions();
 
-        // Função para adicionar uma nova linha na tabela
         function addRow() {
             const newRow = document.createElement('tr');
             newRow.className = 'fade-in';
             newRow.innerHTML = `
                 <td class="table-cell">
-                    <select class="food-select w-full p-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select class="food-select w-full form-select">
                         ${foodOptionsHtml}
                     </select>
                 </td>
                 <td class="table-cell">
-                    <input type="number" min="0" class="quantity-input w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ex: 100">
+                    <input type="number" min="0" class="quantity-input w-full form-input text-right" placeholder="0">
                 </td>
-                <td class="table-cell text-right font-medium text-gray-700" data-value="kcal">0</td>
-                <td class="table-cell text-right font-medium text-gray-700" data-value="carbs">0.0</td>
-                <td class="table-cell text-right font-medium text-gray-700" data-value="protein">0.0</td>
-                <td class="table-cell text-right font-medium text-gray-700" data-value="fat">0.0</td>
+                <td class="table-cell text-right font-medium text-gray-800" data-value="kcal">0</td>
+                <td class="table-cell text-right font-medium text-gray-800" data-value="carbs">0.0</td>
+                <td class="table-cell text-right font-medium text-gray-800" data-value="protein">0.0</td>
+                <td class="table-cell text-right font-medium text-gray-800" data-value="fat">0.0</td>
             `;
             calculatorBody.appendChild(newRow);
 
-            // Adiciona os event listeners para a nova linha
             newRow.querySelector('.food-select').addEventListener('change', () => calculateRow(newRow));
             newRow.querySelector('.quantity-input').addEventListener('input', () => calculateRow(newRow));
         }
 
-        // Função para calcular os valores de uma linha
         function calculateRow(row) {
             const selectedFoodName = row.querySelector('.food-select').value;
             const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
-
             const foodData = foodDatabase.find(food => food.name === selectedFoodName);
 
             if (!foodData) {
-                // Se nenhum alimento for selecionado, zera os valores da linha
                 row.querySelector('[data-value="kcal"]').textContent = '0';
                 row.querySelector('[data-value="carbs"]').textContent = '0.0';
                 row.querySelector('[data-value="protein"]').textContent = '0.0';
@@ -202,28 +280,19 @@
                 return;
             }
 
-            // Calcula o valor por grama
             const kcalPerGram = foodData.kcal / foodData.basePortion;
             const carbsPerGram = foodData.carbs / foodData.basePortion;
             const proteinPerGram = foodData.protein / foodData.basePortion;
             const fatPerGram = foodData.fat / foodData.basePortion;
 
-            // Calcula o valor total para a quantidade inserida
-            const totalKcal = (kcalPerGram * quantity).toFixed(0);
-            const totalCarbs = (carbsPerGram * quantity).toFixed(1);
-            const totalProtein = (proteinPerGram * quantity).toFixed(1);
-            const totalFat = (fatPerGram * quantity).toFixed(1);
-
-            // Atualiza as células da linha
-            row.querySelector('[data-value="kcal"]').textContent = totalKcal;
-            row.querySelector('[data-value="carbs"]').textContent = totalCarbs;
-            row.querySelector('[data-value="protein"]').textContent = totalProtein;
-            row.querySelector('[data-value="fat"]').textContent = totalFat;
+            row.querySelector('[data-value="kcal"]').textContent = (kcalPerGram * quantity).toFixed(0);
+            row.querySelector('[data-value="carbs"]').textContent = (carbsPerGram * quantity).toFixed(1);
+            row.querySelector('[data-value="protein"]').textContent = (proteinPerGram * quantity).toFixed(1);
+            row.querySelector('[data-value="fat"]').textContent = (fatPerGram * quantity).toFixed(1);
 
             updateTotals();
         }
 
-        // Função para atualizar os totais no rodapé da tabela
         function updateTotals() {
             let totalKcal = 0, totalCarbs = 0, totalProtein = 0, totalFat = 0;
 
@@ -241,14 +310,12 @@
             document.getElementById('total-fat').textContent = totalFat.toFixed(1);
         }
 
-        // Função para limpar todas as linhas e totais
         function clearAll() {
             calculatorBody.innerHTML = '';
             addRow();
             updateTotals();
         }
 
-        // Adiciona a primeira linha ao carregar a página
         window.onload = () => {
             addRow();
         };
