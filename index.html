@@ -9,138 +9,301 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --danger-color: #e11d48;
+            --bg-color: #111827; /* Cor de fundo azul escuro (gray-900) */
+            --card-bg-color: #ffffff; /* Cor do card central branca */
+            --border-color: #e0e7ff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #1a202c; /* Cinza escuro para o fundo */
+            background-color: var(--bg-color);
+            color: var(--text-primary);
         }
+
         .main-title {
             font-family: 'Poppins', sans-serif;
         }
+
         .card {
-            background-color: #ffffff;
-            border-radius: 1.5rem; /* Bordas mais arredondadas */
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            padding: 2rem;
+            background-color: var(--card-bg-color);
+            border-radius: 1.5rem; /* Bordas bem arredondadas */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem; /* Padding ajustado para mobile */
+            transition: all 0.3s ease;
         }
+        
+        @media (min-width: 768px) {
+            .card {
+                padding: 2.5rem;
+            }
+        }
+        
+        .card:hover {
+            transform: translateY(-5px); /* Efeito de flutuar */
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
         .table-cell {
             padding: 1rem 1.5rem;
-            border-bottom: 1px solid #edf2f7;
+            border-bottom: 1px solid #f1f5f9; /* Borda mais suave */
             vertical-align: middle;
             transition: background-color 0.3s ease;
         }
-        tr:not(:last-child):hover .table-cell {
-            background-color: #f7fafc;
+
+        tbody tr:hover .table-cell {
+            background-color: #f8fafc; /* Cor de hover na linha da tabela */
         }
+
         .total-cell {
             font-weight: 700;
-            background-color: #f7fafc;
             font-size: 1.125rem;
-            color: #2d3748;
+            color: var(--text-primary);
         }
+
         .total-value {
-            transition: color 0.3s ease;
+            transition: transform 0.2s ease;
+            display: inline-block;
         }
+
+        .highlight {
+            animation: highlight-anim 0.5s ease;
+        }
+        @keyframes highlight-anim {
+            0% { transform: scale(1); color: var(--primary-color); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); color: var(--text-primary); }
+        }
+
         .btn {
+            position: relative;
+            overflow: hidden;
             border-radius: 0.75rem;
             font-weight: 600;
             padding: 0.75rem 1.5rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: none;
+            cursor: pointer;
         }
+        
         .btn-primary {
-            background-color: #2563eb;
+            background-color: var(--primary-color);
             color: white;
         }
         .btn-primary:hover {
-            background-color: #1d4ed8;
+            background-color: var(--primary-hover);
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.25);
             transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+
         .btn-danger {
-            background-color: #dc2626;
-            color: white;
+            background-color: #fff;
+            color: var(--danger-color);
+            border: 1px solid #e2e8f0;
         }
         .btn-danger:hover {
-            background-color: #b91c1c;
+            background-color: #ffe4e6;
+            border-color: #fecdd3;
             transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple-anim 0.6s linear;
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+        @keyframes ripple-anim {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
         .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
+            animation: fadeIn-anim 0.5s ease-in-out;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
+        @keyframes fadeIn-anim {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
         .form-select, .form-input {
-             border: 1px solid #cbd5e1;
-             border-radius: 0.5rem;
+             width: 100%;
+             border: 1px solid #d1d5db;
+             border-radius: 0.75rem;
              transition: all 0.2s ease;
-             padding: 0.6rem 0.8rem;
+             padding: 0.75rem;
+             background-color: #f8fafc;
         }
         .form-select:focus, .form-input:focus {
             outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            border-color: var(--primary-color);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+        
+        /* --- ESTILOS RESPONSIVOS PARA MOBILE --- */
+        @media (max-width: 767px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            tbody tr {
+                border: 1px solid #e2e8f0;
+                border-radius: 1rem;
+                margin-bottom: 1rem;
+                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            }
+            
+            tbody tr:hover {
+                background-color: transparent;
+            }
+            
+            tbody tr:hover .table-cell {
+                background-color: transparent;
+            }
+
+            td.table-cell {
+                border: none;
+                border-bottom: 1px solid #f1f5f9;
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+                padding-top: 0.75rem;
+                padding-bottom: 0.75rem;
+            }
+            
+            td.table-cell:last-child {
+                border-bottom: none;
+            }
+
+            td.table-cell:before {
+                position: absolute;
+                top: 50%;
+                left: 1.5rem;
+                transform: translateY(-50%);
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: 600;
+                color: var(--text-secondary);
+            }
+
+            tbody td:nth-of-type(1) { padding-left: 0.75rem; padding-right: 0.75rem; }
+            tbody td:nth-of-type(2) { padding-left: 0.75rem; padding-right: 0.75rem; }
+            tbody td:nth-of-type(1):before,
+            tbody td:nth-of-type(2):before { content: ""; } /* Remove label para os dois primeiros */
+
+            tbody td:nth-of-type(3):before { content: "Kcal"; }
+            tbody td:nth-of-type(4):before { content: "Carbs (g)"; }
+            tbody td:nth-of-type(5):before { content: "Proteínas (g)"; }
+            tbody td:nth-of-type(6):before { content: "Gorduras (g)"; }
+            
+            .form-select, .form-input {
+                text-align: left;
+            }
+            .quantity-input {
+                text-align: center;
+            }
+            
+            /* Estilos para o rodapé (tfoot) no mobile */
+            tfoot {
+                display: block;
+                margin-top: 1.5rem;
+                border-radius: 1rem;
+                border: 1px solid var(--border-color);
+                overflow: hidden;
+                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+                background-color: #f8fafc;
+            }
+            
+            tfoot tr, tfoot td {
+                display: block;
+            }
+
+            tfoot td[colspan="2"] {
+                padding: 1rem 1.5rem !important;
+                text-align: center !important;
+                font-size: 1.25rem;
+                border-bottom: 2px solid var(--border-color);
+            }
+            tfoot td[colspan="2"]:before {
+                content: "" !important;
+            }
+            
+            tfoot td:not([colspan="2"]):before {
+                content: attr(data-label);
+            }
         }
     </style>
 </head>
-<body class="antialiased text-gray-700">
+<body class="antialiased">
 
-    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-6xl">
         
-        <div class="text-center mb-8">
-            <h1 class="main-title text-4xl sm:text-5xl font-bold text-white">Calculadora de Refeições</h1>
-            <p class="mt-3 text-lg text-gray-300">Selecione os alimentos, informe a quantidade e veja os macros.</p>
+        <div class="text-center mb-10">
+            <h1 class="main-title text-4xl sm:text-5xl font-bold text-slate-100">Calculadora Nutricional</h1>
+            <p class="mt-3 text-lg text-slate-300">Monte sua refeição de forma simples e precisa.</p>
         </div>
 
         <div class="card">
-            <!-- Botões de Ação -->
-            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-6">
-                <button onclick="addRow()" class="w-full sm:w-auto flex-grow btn btn-primary">
+            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-8">
+                <button onclick="addRow()" class="btn btn-primary">
                     Adicionar Alimento
                 </button>
-                <button onclick="clearAll()" class="w-full sm:w-auto flex-grow btn btn-danger">
+                <button onclick="clearAll()" class="btn btn-danger">
                     Limpar Tudo
                 </button>
             </div>
 
-            <!-- Tabela de Cálculos -->
             <div class="overflow-x-auto">
-                <table class="min-w-full bg-white rounded-lg">
-                    <thead class="bg-gray-50">
+                <table class="min-w-full bg-white">
+                    <thead>
                         <tr>
-                            <th class="table-cell text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-2/5">Alimento</th>
-                            <th class="table-cell text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-1/5">Quantidade (g)</th>
-                            <th class="table-cell text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Kcal</th>
-                            <th class="table-cell text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Carbs (g)</th>
-                            <th class="table-cell text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Proteínas (g)</th>
-                            <th class="table-cell text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Gorduras (g)</th>
+                            <th class="table-cell text-left text-sm font-semibold text-slate-500 uppercase tracking-wider w-2/5">Alimento</th>
+                            <th class="table-cell text-center text-sm font-semibold text-slate-500 uppercase tracking-wider w-1/5">Quantidade (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-slate-500 uppercase tracking-wider">Kcal</th>
+                            <th class="table-cell text-right text-sm font-semibold text-slate-500 uppercase tracking-wider">Carbs (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-slate-500 uppercase tracking-wider">Proteínas (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-slate-500 uppercase tracking-wider">Gorduras (g)</th>
                         </tr>
                     </thead>
                     <tbody id="calculator-body">
                         <!-- Linhas serão adicionadas dinamicamente aqui -->
                     </tbody>
-                    <tfoot class="border-t-2 border-gray-200">
+                    <tfoot class="border-t-2 border-gray-100">
                         <tr>
                             <td class="table-cell total-cell" colspan="2">TOTAL</td>
-                            <td id="total-kcal" class="table-cell total-cell text-right total-value">0</td>
-                            <td id="total-carbs" class="table-cell total-cell text-right total-value">0.0</td>
-                            <td id="total-protein" class="table-cell total-cell text-right total-value">0.0</td>
-                            <td id="total-fat" class="table-cell total-cell text-right total-value">0.0</td>
+                            <td class="table-cell total-cell text-right" id="total-kcal" data-label="Total Kcal"><span class="total-value">0</span></td>
+                            <td class="table-cell total-cell text-right" id="total-carbs" data-label="Total Carbs (g)"><span class="total-value">0.0</span></td>
+                            <td class="table-cell total-cell text-right" id="total-protein" data-label="Total Proteínas (g)"><span class="total-value">0.0</span></td>
+                            <td class="table-cell total-cell text-right" id="total-fat" data-label="Total Gorduras (g)"><span class="total-value">0.0</span></td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
-        <footer class="text-center mt-8 text-gray-400 text-sm">
-            <p>Valores nutricionais baseados na Tabela TACO (4ª Edição) e referências padrão de mercado.</p>
+        <footer class="text-center mt-8 text-slate-400 text-sm">
+            <p>Valores nutricionais baseados na Tabela TACO (4ª Edição).</p>
         </footer>
     </div>
 
     <script>
         // --- BASE DE DADOS DOS ALIMENTOS ---
-        // Esta é a fonte de dados para a calculadora.
         const foodDatabase = [
             // CARBOIDRATOS
             { category: 'CARBOIDRATOS', name: 'Arroz, branco, cozido', basePortion: 100, kcal: 128, carbs: 28.1, protein: 2.5, fat: 0.2 },
@@ -247,20 +410,19 @@
             newRow.className = 'fade-in';
             newRow.innerHTML = `
                 <td class="table-cell">
-                    <select class="food-select w-full form-select">
+                    <select class="food-select form-select">
                         ${foodOptionsHtml}
                     </select>
                 </td>
                 <td class="table-cell">
-                    <input type="number" min="0" class="quantity-input w-full form-input text-right" placeholder="0">
+                    <input type="number" min="0" class="quantity-input form-input text-center" placeholder="0">
                 </td>
-                <td class="table-cell text-right font-medium text-gray-800" data-value="kcal">0</td>
-                <td class="table-cell text-right font-medium text-gray-800" data-value="carbs">0.0</td>
-                <td class="table-cell text-right font-medium text-gray-800" data-value="protein">0.0</td>
-                <td class="table-cell text-right font-medium text-gray-800" data-value="fat">0.0</td>
+                <td class="table-cell text-right font-medium text-slate-700" data-value="kcal">0</td>
+                <td class="table-cell text-right font-medium text-slate-700" data-value="carbs">0.0</td>
+                <td class="table-cell text-right font-medium text-slate-700" data-value="protein">0.0</td>
+                <td class="table-cell text-right font-medium text-slate-700" data-value="fat">0.0</td>
             `;
             calculatorBody.appendChild(newRow);
-
             newRow.querySelector('.food-select').addEventListener('change', () => calculateRow(newRow));
             newRow.querySelector('.quantity-input').addEventListener('input', () => calculateRow(newRow));
         }
@@ -302,11 +464,23 @@
                 totalProtein += parseFloat(row.querySelector('[data-value="protein"]').textContent) || 0;
                 totalFat += parseFloat(row.querySelector('[data-value="fat"]').textContent) || 0;
             });
+            
+            const totalElements = {
+                kcal: document.querySelector('#total-kcal .total-value'),
+                carbs: document.querySelector('#total-carbs .total-value'),
+                protein: document.querySelector('#total-protein .total-value'),
+                fat: document.querySelector('#total-fat .total-value')
+            };
 
-            document.getElementById('total-kcal').textContent = totalKcal.toFixed(0);
-            document.getElementById('total-carbs').textContent = totalCarbs.toFixed(1);
-            document.getElementById('total-protein').textContent = totalProtein.toFixed(1);
-            document.getElementById('total-fat').textContent = totalFat.toFixed(1);
+            totalElements.kcal.textContent = totalKcal.toFixed(0);
+            totalElements.carbs.textContent = totalCarbs.toFixed(1);
+            totalElements.protein.textContent = totalProtein.toFixed(1);
+            totalElements.fat.textContent = totalFat.toFixed(1);
+            
+            Object.values(totalElements).forEach(el => {
+                el.classList.add('highlight');
+                el.addEventListener('animationend', () => el.classList.remove('highlight'), { once: true });
+            });
         }
 
         function clearAll() {
@@ -315,8 +489,30 @@
             updateTotals();
         }
 
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement("span");
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+            circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+            circle.classList.add("ripple");
+
+            const ripple = button.getElementsByClassName("ripple")[0];
+            if (ripple) {
+                ripple.remove();
+            }
+            button.appendChild(circle);
+        }
+
         window.onload = () => {
             addRow();
+            const buttons = document.querySelectorAll(".btn");
+            buttons.forEach(button => {
+                button.addEventListener("click", createRipple);
+            });
         };
 
     </script>
