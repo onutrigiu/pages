@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Nutricional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .table-cell {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: middle;
+        }
+        .total-cell {
+            font-weight: 600;
+            background-color: #f9fafb;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
+        <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Calculadora de Refeições</h1>
+                <p class="mt-2 text-lg text-gray-600">Selecione os alimentos, informe a quantidade e veja os macros.</p>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
+                <button onclick="addRow()" class="w-full sm:w-auto flex-grow bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow transition-transform transform hover:scale-105">
+                    Adicionar Alimento
+                </button>
+                <button onclick="clearAll()" class="w-full sm:w-auto flex-grow bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow transition-transform transform hover:scale-105">
+                    Limpar Tudo
+                </button>
+            </div>
+
+            <!-- Tabela de Cálculos -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white rounded-lg">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="table-cell text-left text-sm font-semibold text-gray-600 uppercase tracking-wider w-2/5">Alimento</th>
+                            <th class="table-cell text-left text-sm font-semibold text-gray-600 uppercase tracking-wider w-1/5">Quantidade (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">Kcal</th>
+                            <th class="table-cell text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">Carbs (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">Proteínas (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">Gorduras (g)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="calculator-body">
+                        <!-- Linhas serão adicionadas dinamicamente aqui -->
+                    </tbody>
+                    <tfoot class="bg-gray-100">
+                        <tr>
+                            <td class="table-cell total-cell text-lg" colspan="2">TOTAL</td>
+                            <td id="total-kcal" class="table-cell total-cell text-right text-lg">0</td>
+                            <td id="total-carbs" class="table-cell total-cell text-right text-lg">0.0</td>
+                            <td id="total-protein" class="table-cell total-cell text-right text-lg">0.0</td>
+                            <td id="total-fat" class="table-cell total-cell text-right text-lg">0.0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <footer class="text-center mt-8 text-gray-500 text-sm">
+            <p>Valores nutricionais baseados na Tabela TACO (4ª Edição) e referências padrão de mercado.</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- BASE DE DADOS DOS ALIMENTOS ---
+        // Esta é a fonte de dados para a calculadora.
+        const foodDatabase = [
+            { category: 'CARBOIDRATOS', name: 'Arroz, branco, cozido', basePortion: 100, kcal: 128, carbs: 28.1, protein: 2.5, fat: 0.2 },
+            { category: 'CARBOIDRATOS', name: 'Arroz, integral, cozido', basePortion: 100, kcal: 110, carbs: 23.5, protein: 2.6, fat: 0.8 },
+            { category: 'CARBOIDRATOS', name: 'Macarrão, trigo, cozido', basePortion: 100, kcal: 139, carbs: 28.5, protein: 4.5, fat: 0.6 },
+            { category: 'CARBOIDRATOS', name: 'Aipim (Mandioca), cozida', basePortion: 100, kcal: 125, carbs: 30.1, protein: 0.6, fat: 0.3 },
+            { category: 'CARBOIDRATOS', name: 'Batata inglesa, cozida', basePortion: 100, kcal: 86, carbs: 20.1, protein: 1.8, fat: 0.1 },
+            { category: 'CARBOIDRATOS', name: 'Batata doce, cozida', basePortion: 100, kcal: 77, carbs: 18.4, protein: 0.6, fat: 0.1 },
+            { category: 'CARBOIDRATOS', name: 'Batata salsa (mandioquinha), cozida', basePortion: 100, kcal: 80, carbs: 18.9, protein: 0.9, fat: 0.2 },
+            { category: 'CARBOIDRATOS', name: 'Pão, francês (1 unidade)', basePortion: 50, kcal: 145, carbs: 28.8, protein: 4.5, fat: 1.3 },
+            { category: 'CARBOIDRATOS', name: 'Pão, forma, trigo (2 fatias)', basePortion: 50, kcal: 135, carbs: 25.0, protein: 6.5, fat: 1.5 },
+            { category: 'CARBOIDRATOS', name: 'Doce de leite, cremoso', basePortion: 20, kcal: 62, carbs: 11.2, protein: 1.4, fat: 1.4 },
+            { category: 'CARBOIDRATOS', name: 'Leite condensado, integral', basePortion: 20, kcal: 64, carbs: 11.0, protein: 1.6, fat: 1.5 },
+            { category: 'CARBOIDRATOS', name: 'Geléia de frutas, com açúcar', basePortion: 20, kcal: 54, carbs: 13.8, protein: 0.1, fat: 0.0 },
+            { category: 'PROTEÍNAS', name: 'Ovo de galinha, cozido (1 unidade)', basePortion: 50, kcal: 73, carbs: 0.3, protein: 6.7, fat: 4.8 },
+            { category: 'PROTEÍNAS', name: 'Frango, peito, grelhado', basePortion: 100, kcal: 163, carbs: 0.0, protein: 32.0, fat: 3.5 },
+            { category: 'PROTEÍNAS', name: 'Frango, peito, cozido', basePortion: 100, kcal: 150, carbs: 0.0, protein: 31.0, fat: 2.5 },
+            { category: 'PROTEÍNAS', name: 'Frango, sobrecoxa, cozida', basePortion: 100, kcal: 215, carbs: 0.0, protein: 28.0, fat: 11.0 },
+            { category: 'PROTEÍNAS', name: 'Carne bovina, patinho, grelhado', basePortion: 100, kcal: 219, carbs: 0.0, protein: 35.7, fat: 7.9 },
+            { category: 'PROTEÍNAS', name: 'Carne bovina, coxão mole, grelhado', basePortion: 100, kcal: 215, carbs: 0.0, protein: 35.0, fat: 7.5 },
+            { category: 'PROTEÍNAS', name: 'Carne bovina, coxão duro, grelhado', basePortion: 100, kcal: 225, carbs: 0.0, protein: 34.0, fat: 9.0 },
+            { category: 'PROTEÍNAS', name: 'Carne bovina, lagarto, grelhado', basePortion: 100, kcal: 195, carbs: 0.0, protein: 36.0, fat: 5.0 },
+            { category: 'PROTEÍNAS', name: 'Carne bovina, contra-filé, grelhado', basePortion: 100, kcal: 240, carbs: 0.0, protein: 25.0, fat: 15.0 },
+            { category: 'PROTEÍNAS', name: 'Carne bovina, filé mignon, grelhado', basePortion: 100, kcal: 220, carbs: 0.0, protein: 28.0, fat: 11.5 },
+            { category: 'PROTEÍNAS', name: 'Carne suína, mignon, grelhado', basePortion: 100, kcal: 190, carbs: 0.0, protein: 30.0, fat: 7.0 },
+            { category: 'PROTEÍNAS', name: 'Carne suína, lombo, grelhado', basePortion: 100, kcal: 205, carbs: 0.0, protein: 29.0, fat: 9.0 },
+            { category: 'PROTEÍNAS', name: 'Carne suína, bisteca, grelhada', basePortion: 100, kcal: 280, carbs: 0.0, protein: 26.0, fat: 19.0 },
+            { category: 'PROTEÍNAS', name: 'Carne suína, pernil, assado', basePortion: 100, kcal: 250, carbs: 0.0, protein: 27.0, fat: 15.0 },
+            { category: 'PROTEÍNAS', name: 'Tilápia, filé, grelhado', basePortion: 100, kcal: 128, carbs: 0.0, protein: 26.0, fat: 2.6 },
+            { category: 'PROTEÍNAS', name: 'Salmão, filé, grelhado', basePortion: 100, kcal: 208, carbs: 0.0, protein: 20.0, fat: 13.0 },
+            { category: 'PROTEÍNAS', name: 'Leite de vaca, semi-desnatado', basePortion: 100, kcal: 45, carbs: 4.9, protein: 3.3, fat: 1.6 },
+            { category: 'PROTEÍNAS', name: 'Leite de vaca, integral', basePortion: 100, kcal: 60, carbs: 4.8, protein: 3.2, fat: 3.2 },
+            { category: 'PROTEÍNAS', name: 'Leite de vaca, desnatado', basePortion: 100, kcal: 35, carbs: 5.0, protein: 3.4, fat: 0.1 },
+            { category: 'PROTEÍNAS', name: 'Iogurte, natural, desnatado', basePortion: 100, kcal: 41, carbs: 5.5, protein: 4.1, fat: 0.2 },
+            { category: 'PROTEÍNAS', name: 'Iogurte, natural, integral', basePortion: 100, kcal: 62, carbs: 4.0, protein: 3.8, fat: 3.5 },
+            { category: 'PROTEÍNAS', name: 'Queijo, muçarela (1 fatia média)', basePortion: 15, kcal: 53, carbs: 0.5, protein: 3.7, fat: 4.0 },
+            { category: 'PROTEÍNAS', name: 'Queijo, minas, frescal (1 fatia)', basePortion: 30, kcal: 72, carbs: 0.5, protein: 5.2, fat: 5.5 },
+            { category: 'PROTEÍNAS', name: 'Requeijão, light (1 colher de sopa)', basePortion: 20, kcal: 38, carbs: 0.8, protein: 3.5, fat: 2.2 },
+            { category: 'PROTEÍNAS', name: 'Feijão, carioca, cozido', basePortion: 100, kcal: 76, carbs: 13.6, protein: 4.8, fat: 0.5 },
+            { category: 'PROTEÍNAS', name: 'Feijão, preto, cozido', basePortion: 100, kcal: 77, carbs: 14.0, protein: 4.5, fat: 0.5 },
+            { category: 'PROTEÍNAS', name: 'Lentilha, cozida', basePortion: 100, kcal: 93, carbs: 16.3, protein: 6.5, fat: 0.5 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Castanha do Pará (do Brasil)', basePortion: 20, kcal: 131, carbs: 2.5, protein: 2.9, fat: 13.3 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Castanha de Caju, torrada', basePortion: 20, kcal: 116, carbs: 6.1, protein: 3.1, fat: 9.3 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Amêndoa, torrada, com sal', basePortion: 20, kcal: 120, carbs: 4.0, protein: 4.2, fat: 10.5 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Nozes, torrada', basePortion: 20, kcal: 139, carbs: 2.8, protein: 3.0, fat: 13.7 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Amendoim, torrado, sem sal', basePortion: 20, kcal: 115, carbs: 4.5, protein: 5.0, fat: 9.5 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Manteiga, com sal (1 colher de chá)', basePortion: 5, kcal: 36, carbs: 0.0, protein: 0.0, fat: 4.1 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Óleo de soja (1 colher de sopa)', basePortion: 9, kcal: 80, carbs: 0.0, protein: 0.0, fat: 9.0 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Azeite de oliva, extravirgem', basePortion: 9, kcal: 80, carbs: 0.0, protein: 0.0, fat: 9.0 },
+            { category: 'LIPÍDEOS (GORDURAS)', name: 'Pasta de amendoim, integral', basePortion: 20, kcal: 119, carbs: 4.0, protein: 5.0, fat: 10.0 },
+        ];
+
+        const calculatorBody = document.getElementById('calculator-body');
+        
+        // Função para criar a lista de opções de alimentos
+        function createFoodOptions() {
+            const categories = {};
+            foodDatabase.forEach(food => {
+                if (!categories[food.category]) {
+                    categories[food.category] = [];
+                }
+                categories[food.category].push(food);
+            });
+
+            let optionsHtml = '<option value="" disabled selected>Selecione um alimento...</option>';
+            for (const category in categories) {
+                optionsHtml += `<optgroup label="--- ${category} ---">`;
+                categories[category].forEach(food => {
+                    optionsHtml += `<option value="${food.name}">${food.name}</option>`;
+                });
+                optionsHtml += '</optgroup>';
+            }
+            return optionsHtml;
+        }
+
+        const foodOptionsHtml = createFoodOptions();
+
+        // Função para adicionar uma nova linha na tabela
+        function addRow() {
+            const newRow = document.createElement('tr');
+            newRow.className = 'fade-in';
+            newRow.innerHTML = `
+                <td class="table-cell">
+                    <select class="food-select w-full p-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        ${foodOptionsHtml}
+                    </select>
+                </td>
+                <td class="table-cell">
+                    <input type="number" min="0" class="quantity-input w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ex: 100">
+                </td>
+                <td class="table-cell text-right font-medium text-gray-700" data-value="kcal">0</td>
+                <td class="table-cell text-right font-medium text-gray-700" data-value="carbs">0.0</td>
+                <td class="table-cell text-right font-medium text-gray-700" data-value="protein">0.0</td>
+                <td class="table-cell text-right font-medium text-gray-700" data-value="fat">0.0</td>
+            `;
+            calculatorBody.appendChild(newRow);
+
+            // Adiciona os event listeners para a nova linha
+            newRow.querySelector('.food-select').addEventListener('change', () => calculateRow(newRow));
+            newRow.querySelector('.quantity-input').addEventListener('input', () => calculateRow(newRow));
+        }
+
+        // Função para calcular os valores de uma linha
+        function calculateRow(row) {
+            const selectedFoodName = row.querySelector('.food-select').value;
+            const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
+
+            const foodData = foodDatabase.find(food => food.name === selectedFoodName);
+
+            if (!foodData) {
+                // Se nenhum alimento for selecionado, zera os valores da linha
+                row.querySelector('[data-value="kcal"]').textContent = '0';
+                row.querySelector('[data-value="carbs"]').textContent = '0.0';
+                row.querySelector('[data-value="protein"]').textContent = '0.0';
+                row.querySelector('[data-value="fat"]').textContent = '0.0';
+                updateTotals();
+                return;
+            }
+
+            // Calcula o valor por grama
+            const kcalPerGram = foodData.kcal / foodData.basePortion;
+            const carbsPerGram = foodData.carbs / foodData.basePortion;
+            const proteinPerGram = foodData.protein / foodData.basePortion;
+            const fatPerGram = foodData.fat / foodData.basePortion;
+
+            // Calcula o valor total para a quantidade inserida
+            const totalKcal = (kcalPerGram * quantity).toFixed(0);
+            const totalCarbs = (carbsPerGram * quantity).toFixed(1);
+            const totalProtein = (proteinPerGram * quantity).toFixed(1);
+            const totalFat = (fatPerGram * quantity).toFixed(1);
+
+            // Atualiza as células da linha
+            row.querySelector('[data-value="kcal"]').textContent = totalKcal;
+            row.querySelector('[data-value="carbs"]').textContent = totalCarbs;
+            row.querySelector('[data-value="protein"]').textContent = totalProtein;
+            row.querySelector('[data-value="fat"]').textContent = totalFat;
+
+            updateTotals();
+        }
+
+        // Função para atualizar os totais no rodapé da tabela
+        function updateTotals() {
+            let totalKcal = 0, totalCarbs = 0, totalProtein = 0, totalFat = 0;
+
+            const rows = calculatorBody.querySelectorAll('tr');
+            rows.forEach(row => {
+                totalKcal += parseFloat(row.querySelector('[data-value="kcal"]').textContent) || 0;
+                totalCarbs += parseFloat(row.querySelector('[data-value="carbs"]').textContent) || 0;
+                totalProtein += parseFloat(row.querySelector('[data-value="protein"]').textContent) || 0;
+                totalFat += parseFloat(row.querySelector('[data-value="fat"]').textContent) || 0;
+            });
+
+            document.getElementById('total-kcal').textContent = totalKcal.toFixed(0);
+            document.getElementById('total-carbs').textContent = totalCarbs.toFixed(1);
+            document.getElementById('total-protein').textContent = totalProtein.toFixed(1);
+            document.getElementById('total-fat').textContent = totalFat.toFixed(1);
+        }
+
+        // Função para limpar todas as linhas e totais
+        function clearAll() {
+            calculatorBody.innerHTML = '';
+            addRow();
+            updateTotals();
+        }
+
+        // Adiciona a primeira linha ao carregar a página
+        window.onload = () => {
+            addRow();
+        };
+
+    </script>
+
+</body>
+</html>
