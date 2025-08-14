@@ -10,20 +10,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Light Theme */
             --primary-color: #4f46e5;
             --primary-hover: #4338ca;
             --danger-color: #e11d48;
-            --bg-color: #111827; /* Cor de fundo azul escuro (gray-900) */
-            --card-bg-color: #ffffff; /* Cor do card central branca */
+            --danger-hover: #be123c;
+            --bg-color: #f0f9ff;
+            --card-bg-color: #ffffff;
             --border-color: #e0e7ff;
             --text-primary: #1e293b;
             --text-secondary: #64748b;
+            --input-bg: #f8fafc;
+        }
+
+        html.dark {
+            /* Dark Theme */
+            --bg-color: #0f172a;
+            --card-bg-color: #1e293b;
+            --border-color: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --input-bg: #334155;
+        }
+
+        html {
+            font-size: 16px; /* Base font size */
+            transition: font-size 0.2s ease-in-out;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .main-title {
@@ -32,32 +51,38 @@
 
         .card {
             background-color: var(--card-bg-color);
-            border-radius: 1.5rem; /* Bordas bem arredondadas */
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem; /* Padding ajustado para mobile */
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 40px rgba(100, 116, 139, 0.12);
+            padding: 2.5rem;
             transition: all 0.3s ease;
         }
         
-        @media (min-width: 768px) {
-            .card {
-                padding: 2.5rem;
-            }
+        html.dark .card {
+             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
         
         .card:hover {
-            transform: translateY(-5px); /* Efeito de flutuar */
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(100, 116, 139, 0.15);
+        }
+        
+        html.dark .card:hover {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
         }
 
         .table-cell {
             padding: 1rem 1.5rem;
-            border-bottom: 1px solid #f1f5f9; /* Borda mais suave */
+            border-bottom: 1px solid var(--border-color);
             vertical-align: middle;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         tbody tr:hover .table-cell {
-            background-color: #f8fafc; /* Cor de hover na linha da tabela */
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+        
+        html.dark tbody tr:hover .table-cell {
+             background-color: rgba(79, 70, 229, 0.1);
         }
 
         .total-cell {
@@ -102,14 +127,21 @@
         }
 
         .btn-danger {
-            background-color: #fff;
+            background-color: var(--card-bg-color);
             color: var(--danger-color);
             border: 1px solid #e2e8f0;
+        }
+        html.dark .btn-danger {
+            border-color: #475569;
         }
         .btn-danger:hover {
             background-color: #ffe4e6;
             border-color: #fecdd3;
             transform: translateY(-2px);
+        }
+        html.dark .btn-danger:hover {
+            background-color: rgba(225, 29, 72, 0.1);
+            border-color: rgba(225, 29, 72, 0.5);
         }
 
         .ripple {
@@ -134,130 +166,97 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .form-select, .form-input {
+        .form-input {
              width: 100%;
-             border: 1px solid #d1d5db;
+             border: 1px solid var(--border-color);
              border-radius: 0.75rem;
              transition: all 0.2s ease;
              padding: 0.75rem;
-             background-color: #f8fafc;
+             background-color: var(--input-bg);
+             color: var(--text-primary);
         }
-        .form-select:focus, .form-input:focus {
+        .form-input:focus {
             outline: none;
             border-color: var(--primary-color);
-            background-color: #fff;
+            background-color: var(--card-bg-color);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
         }
         
-        /* --- ESTILOS RESPONSIVOS PARA MOBILE --- */
-        @media (max-width: 767px) {
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
-
-            thead tr {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
-
-            tbody tr {
-                border: 1px solid #e2e8f0;
-                border-radius: 1rem;
-                margin-bottom: 1rem;
-                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            }
-            
-            tbody tr:hover {
-                background-color: transparent;
-            }
-            
-            tbody tr:hover .table-cell {
-                background-color: transparent;
-            }
-
-            td.table-cell {
-                border: none;
-                border-bottom: 1px solid #f1f5f9;
-                position: relative;
-                padding-left: 50%;
-                text-align: right;
-                padding-top: 0.75rem;
-                padding-bottom: 0.75rem;
-            }
-            
-            td.table-cell:last-child {
-                border-bottom: none;
-            }
-
-            td.table-cell:before {
-                position: absolute;
-                top: 50%;
-                left: 1.5rem;
-                transform: translateY(-50%);
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                text-align: left;
-                font-weight: 600;
-                color: var(--text-secondary);
-            }
-
-            tbody td:nth-of-type(1) { padding-left: 0.75rem; padding-right: 0.75rem; }
-            tbody td:nth-of-type(2) { padding-left: 0.75rem; padding-right: 0.75rem; }
-            tbody td:nth-of-type(1):before,
-            tbody td:nth-of-type(2):before { content: ""; } /* Remove label para os dois primeiros */
-
-            tbody td:nth-of-type(3):before { content: "Kcal"; }
-            tbody td:nth-of-type(4):before { content: "Carbs (g)"; }
-            tbody td:nth-of-type(5):before { content: "Proteínas (g)"; }
-            tbody td:nth-of-type(6):before { content: "Gorduras (g)"; }
-            
-            .form-select, .form-input {
-                text-align: left;
-            }
-            .quantity-input {
-                text-align: center;
-            }
-            
-            /* Estilos para o rodapé (tfoot) no mobile */
-            tfoot {
-                display: block;
-                margin-top: 1.5rem;
-                border-radius: 1rem;
-                border: 1px solid var(--border-color);
-                overflow: hidden;
-                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-                background-color: #f8fafc;
-            }
-            
-            tfoot tr, tfoot td {
-                display: block;
-            }
-
-            tfoot td[colspan="2"] {
-                padding: 1rem 1.5rem !important;
-                text-align: center !important;
-                font-size: 1.25rem;
-                border-bottom: 2px solid var(--border-color);
-            }
-            tfoot td[colspan="2"]:before {
-                content: "" !important;
-            }
-            
-            tfoot td:not([colspan="2"]):before {
-                content: attr(data-label);
-            }
+        .food-search-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        .is-searching {
+            z-index: 100;
+        }
+        
+        .search-results {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg-color);
+            border-top: none;
+            border-radius: 0 0 0.75rem 0.75rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        .result-item {
+            padding: 0.75rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+        
+        .result-item:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .control-button {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 9999px;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .control-button:hover {
+            color: var(--text-primary);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
         }
     </style>
 </head>
 <body class="antialiased">
 
-    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-6xl">
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
         
+        <div class="flex justify-between items-center mb-6">
+            <!-- Font Size Controls -->
+            <div class="flex items-center space-x-2">
+                <button id="decrease-font" class="control-button" aria-label="Diminuir fonte">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path></svg>
+                </button>
+                <span class="text-sm font-medium text-slate-500">A</span>
+                <button id="increase-font" class="control-button" aria-label="Aumentar fonte">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+                </button>
+            </div>
+            <!-- Theme Toggle -->
+            <div class="flex items-center space-x-2">
+                <button id="theme-toggle-light" class="control-button" aria-label="Tema claro">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+                <button id="theme-toggle-dark" class="control-button" aria-label="Tema escuro">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+            </div>
+        </div>
+
         <div class="text-center mb-10">
-            <h1 class="main-title text-4xl sm:text-5xl font-bold text-slate-100">Calculadora Nutricional</h1>
-            <p class="mt-3 text-lg text-slate-300">Selecione os alimentos, informe a quantidade e veja os macros.</p>
+            <h1 class="main-title text-4xl sm:text-5xl font-bold text-slate-800">Calculadora Nutricional</h1>
+            <p class="mt-3 text-lg text-slate-500">Monte sua refeição de forma simples e precisa.</p>
         </div>
 
         <div class="card">
@@ -272,26 +271,28 @@
 
             <div class="overflow-x-auto">
                 <table class="min-w-full bg-white">
-                    <thead>
+                    <thead class="border-b-2 border-indigo-100">
                         <tr>
                             <th class="table-cell text-left text-sm font-semibold text-slate-500 uppercase tracking-wider w-2/5">Alimento</th>
                             <th class="table-cell text-center text-sm font-semibold text-slate-500 uppercase tracking-wider w-1/5">Quantidade (g)</th>
                             <th class="table-cell text-right text-sm font-semibold text-slate-500 uppercase tracking-wider">Kcal</th>
                             <th class="table-cell text-right text-sm font-semibold text-slate-500 uppercase tracking-wider">Carbs (g)</th>
                             <th class="table-cell text-right text-sm font-semibold text-slate-500 uppercase tracking-wider">Proteínas (g)</th>
-                            <th class="table-cell text-right text-sm font-semibold text-slate-500 uppercase tracking-wider">Gorduras (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-slate-500 uppercase tracking-wider">Lipídeos (g)</th>
+                            <th class="table-cell text-right text-sm font-semibold text-slate-500 uppercase tracking-wider">Fibras (g)</th>
                         </tr>
                     </thead>
                     <tbody id="calculator-body">
                         <!-- Linhas serão adicionadas dinamicamente aqui -->
                     </tbody>
-                    <tfoot class="border-t-2 border-gray-100">
+                    <tfoot class="border-t-2 border-indigo-100">
                         <tr>
                             <td class="table-cell total-cell" colspan="2">TOTAL</td>
-                            <td class="table-cell total-cell text-right" id="total-kcal" data-label="Total Kcal"><span class="total-value">0</span></td>
-                            <td class="table-cell total-cell text-right" id="total-carbs" data-label="Total Carbs (g)"><span class="total-value">0.0</span></td>
-                            <td class="table-cell total-cell text-right" id="total-protein" data-label="Total Proteínas (g)"><span class="total-value">0.0</span></td>
-                            <td class="table-cell total-cell text-right" id="total-fat" data-label="Total Gorduras (g)"><span class="total-value">0.0</span></td>
+                            <td id="total-kcal" class="table-cell total-cell text-right"><span class="total-value">0</span></td>
+                            <td id="total-carbs" class="table-cell total-cell text-right"><span class="total-value">0.0</span></td>
+                            <td id="total-protein" class="table-cell total-cell text-right"><span class="total-value">0.0</span></td>
+                            <td id="total-fat" class="table-cell total-cell text-right"><span class="total-value">0.0</span></td>
+                            <td id="total-fiber" class="table-cell total-cell text-right"><span class="total-value">0.0</span></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -303,133 +304,530 @@
     </div>
 
     <script>
-        // --- BASE DE DADOS DOS ALIMENTOS ---
+        // --- BANCO DE DADOS COMPLETO (507 alimentos) ---
         const foodDatabase = [
-            // CARBOIDRATOS
-            { category: 'CARBOIDRATOS', name: 'Arroz, branco, cozido', basePortion: 100, kcal: 128, carbs: 28.1, protein: 2.5, fat: 0.2 },
-            { category: 'CARBOIDRATOS', name: 'Arroz, integral, cozido', basePortion: 100, kcal: 110, carbs: 23.5, protein: 2.6, fat: 0.8 },
-            { category: 'CARBOIDRATOS', name: 'Macarrão, trigo, cozido', basePortion: 100, kcal: 139, carbs: 28.5, protein: 4.5, fat: 0.6 },
-            { category: 'CARBOIDRATOS', name: 'Aipim (Mandioca), cozida', basePortion: 100, kcal: 125, carbs: 30.1, protein: 0.6, fat: 0.3 },
-            { category: 'CARBOIDRATOS', name: 'Batata inglesa, cozida', basePortion: 100, kcal: 86, carbs: 20.1, protein: 1.8, fat: 0.1 },
-            { category: 'CARBOIDRATOS', name: 'Batata doce, cozida', basePortion: 100, kcal: 77, carbs: 18.4, protein: 0.6, fat: 0.1 },
-            { category: 'CARBOIDRATOS', name: 'Batata salsa (mandioquinha), cozida', basePortion: 100, kcal: 80, carbs: 18.9, protein: 0.9, fat: 0.2 },
-            { category: 'CARBOIDRATOS', name: 'Pão, francês (1 unidade)', basePortion: 50, kcal: 145, carbs: 28.8, protein: 4.5, fat: 1.3 },
-            { category: 'CARBOIDRATOS', name: 'Pão, forma, trigo (2 fatias)', basePortion: 50, kcal: 135, carbs: 25.0, protein: 6.5, fat: 1.5 },
-            { category: 'CARBOIDRATOS', name: 'Doce de leite, cremoso', basePortion: 20, kcal: 62, carbs: 11.2, protein: 1.4, fat: 1.4 },
-            { category: 'CARBOIDRATOS', name: 'Leite condensado, integral', basePortion: 20, kcal: 64, carbs: 11.0, protein: 1.6, fat: 1.5 },
-            { category: 'CARBOIDRATOS', name: 'Geléia de frutas, com açúcar', basePortion: 20, kcal: 54, carbs: 13.8, protein: 0.1, fat: 0.0 },
-            // PROTEÍNAS
-            { category: 'PROTEÍNAS', name: 'Ovo de galinha, cozido (1 unidade)', basePortion: 50, kcal: 73, carbs: 0.3, protein: 6.7, fat: 4.8 },
-            { category: 'PROTEÍNAS', name: 'Frango, peito, grelhado', basePortion: 100, kcal: 163, carbs: 0.0, protein: 32.0, fat: 3.5 },
-            { category: 'PROTEÍNAS', name: 'Frango, peito, cozido', basePortion: 100, kcal: 150, carbs: 0.0, protein: 31.0, fat: 2.5 },
-            { category: 'PROTEÍNAS', name: 'Frango, sobrecoxa, cozida', basePortion: 100, kcal: 215, carbs: 0.0, protein: 28.0, fat: 11.0 },
-            { category: 'PROTEÍNAS', name: 'Carne bovina, patinho, grelhado', basePortion: 100, kcal: 219, carbs: 0.0, protein: 35.7, fat: 7.9 },
-            { category: 'PROTEÍNAS', name: 'Carne bovina, coxão mole, grelhado', basePortion: 100, kcal: 215, carbs: 0.0, protein: 35.0, fat: 7.5 },
-            { category: 'PROTEÍNAS', name: 'Carne bovina, coxão duro, grelhado', basePortion: 100, kcal: 225, carbs: 0.0, protein: 34.0, fat: 9.0 },
-            { category: 'PROTEÍNAS', name: 'Carne bovina, lagarto, grelhado', basePortion: 100, kcal: 195, carbs: 0.0, protein: 36.0, fat: 5.0 },
-            { category: 'PROTEÍNAS', name: 'Carne bovina, contra-filé, grelhado', basePortion: 100, kcal: 240, carbs: 0.0, protein: 25.0, fat: 15.0 },
-            { category: 'PROTEÍNAS', name: 'Carne bovina, filé mignon, grelhado', basePortion: 100, kcal: 220, carbs: 0.0, protein: 28.0, fat: 11.5 },
-            { category: 'PROTEÍNAS', name: 'Carne suína, mignon, grelhado', basePortion: 100, kcal: 190, carbs: 0.0, protein: 30.0, fat: 7.0 },
-            { category: 'PROTEÍNAS', name: 'Carne suína, lombo, grelhado', basePortion: 100, kcal: 205, carbs: 0.0, protein: 29.0, fat: 9.0 },
-            { category: 'PROTEÍNAS', name: 'Carne suína, bisteca, grelhada', basePortion: 100, kcal: 280, carbs: 0.0, protein: 26.0, fat: 19.0 },
-            { category: 'PROTEÍNAS', name: 'Carne suína, pernil, assado', basePortion: 100, kcal: 250, carbs: 0.0, protein: 27.0, fat: 15.0 },
-            { category: 'PROTEÍNAS', name: 'Tilápia, filé, grelhado', basePortion: 100, kcal: 128, carbs: 0.0, protein: 26.0, fat: 2.6 },
-            { category: 'PROTEÍNAS', name: 'Salmão, filé, grelhado', basePortion: 100, kcal: 208, carbs: 0.0, protein: 20.0, fat: 13.0 },
-            { category: 'PROTEÍNAS', name: 'Leite de vaca, semi-desnatado', basePortion: 100, kcal: 45, carbs: 4.9, protein: 3.3, fat: 1.6 },
-            { category: 'PROTEÍNAS', name: 'Leite de vaca, integral', basePortion: 100, kcal: 60, carbs: 4.8, protein: 3.2, fat: 3.2 },
-            { category: 'PROTEÍNAS', name: 'Leite de vaca, desnatado', basePortion: 100, kcal: 35, carbs: 5.0, protein: 3.4, fat: 0.1 },
-            { category: 'PROTEÍNAS', name: 'Iogurte, natural, desnatado', basePortion: 100, kcal: 41, carbs: 5.5, protein: 4.1, fat: 0.2 },
-            { category: 'PROTEÍNAS', name: 'Iogurte, natural, integral', basePortion: 100, kcal: 62, carbs: 4.0, protein: 3.8, fat: 3.5 },
-            { category: 'PROTEÍNAS', name: 'Queijo, muçarela (1 fatia média)', basePortion: 15, kcal: 53, carbs: 0.5, protein: 3.7, fat: 4.0 },
-            { category: 'PROTEÍNAS', name: 'Queijo, minas, frescal (1 fatia)', basePortion: 30, kcal: 72, carbs: 0.5, protein: 5.2, fat: 5.5 },
-            { category: 'PROTEÍNAS', name: 'Requeijão, light (1 colher de sopa)', basePortion: 20, kcal: 38, carbs: 0.8, protein: 3.5, fat: 2.2 },
-            { category: 'PROTEÍNAS', name: 'Feijão, carioca, cozido', basePortion: 100, kcal: 76, carbs: 13.6, protein: 4.8, fat: 0.5 },
-            { category: 'PROTEÍNAS', name: 'Feijão, preto, cozido', basePortion: 100, kcal: 77, carbs: 14.0, protein: 4.5, fat: 0.5 },
-            { category: 'PROTEÍNAS', name: 'Lentilha, cozida', basePortion: 100, kcal: 93, carbs: 16.3, protein: 6.5, fat: 0.5 },
-            // FRUTAS
-            { category: 'FRUTAS', name: 'Abacate', basePortion: 100, kcal: 96, carbs: 6.0, protein: 1.2, fat: 8.4 },
-            { category: 'FRUTAS', name: 'Abacaxi', basePortion: 100, kcal: 48, carbs: 12.3, protein: 0.9, fat: 0.1 },
-            { category: 'FRUTAS', name: 'Ameixa, vermelha', basePortion: 100, kcal: 53, carbs: 13.9, protein: 0.8, fat: 0.0 },
-            { category: 'FRUTAS', name: 'Banana, maçã', basePortion: 100, kcal: 87, carbs: 22.3, protein: 1.8, fat: 0.1 },
-            { category: 'FRUTAS', name: 'Banana, nanica', basePortion: 100, kcal: 92, carbs: 23.8, protein: 1.4, fat: 0.1 },
-            { category: 'FRUTAS', name: 'Banana, ouro', basePortion: 100, kcal: 112, carbs: 29.3, protein: 1.5, fat: 0.1 },
-            { category: 'FRUTAS', name: 'Banana, prata', basePortion: 100, kcal: 98, carbs: 26.0, protein: 1.3, fat: 0.1 },
-            { category: 'FRUTAS', name: 'Kiwi', basePortion: 100, kcal: 51, carbs: 12.5, protein: 1.0, fat: 0.4 },
-            { category: 'FRUTAS', name: 'Mamão, formosa', basePortion: 100, kcal: 45, carbs: 11.6, protein: 0.8, fat: 0.1 },
-            { category: 'FRUTAS', name: 'Mamão, papaia', basePortion: 100, kcal: 40, carbs: 10.4, protein: 0.5, fat: 0.1 },
-            { category: 'FRUTAS', name: 'Manga, Palmer', basePortion: 100, kcal: 64, carbs: 17.0, protein: 0.5, fat: 0.3 },
-            { category: 'FRUTAS', name: 'Manga, Tommy', basePortion: 100, kcal: 58, carbs: 15.4, protein: 1.0, fat: 0.2 },
-            { category: 'FRUTAS', name: 'Melancia', basePortion: 100, kcal: 31, carbs: 8.1, protein: 0.9, fat: 0.0 },
-            { category: 'FRUTAS', name: 'Melão', basePortion: 100, kcal: 29, carbs: 7.5, protein: 0.7, fat: 0.0 },
-            { category: 'FRUTAS', name: 'Mexerica (Tangerina Poncã)', basePortion: 100, kcal: 38, carbs: 9.6, protein: 0.8, fat: 0.1 },
-            { category: 'FRUTAS', name: 'Morango', basePortion: 100, kcal: 30, carbs: 6.8, protein: 0.9, fat: 0.3 },
-            { category: 'FRUTAS', name: 'Pera, Williams', basePortion: 100, kcal: 53, carbs: 14.0, protein: 0.2, fat: 0.1 },
-            { category: 'FRUTAS', name: 'Uva, Rubi', basePortion: 100, kcal: 53, carbs: 13.6, protein: 0.6, fat: 0.2 },
-            // LIPÍDEOS (GORDURAS)
-            { category: 'LIPÍDEOS (GORDURAS)', name: 'Castanha do Pará (do Brasil)', basePortion: 20, kcal: 131, carbs: 2.5, protein: 2.9, fat: 13.3 },
-            { category: 'LIPÍDEOS (GORDURAS)', name: 'Castanha de Caju, torrada', basePortion: 20, kcal: 116, carbs: 6.1, protein: 3.1, fat: 9.3 },
-            { category: 'LIPÍDEOS (GORDURAS)', name: 'Amêndoa, torrada, com sal', basePortion: 20, kcal: 120, carbs: 4.0, protein: 4.2, fat: 10.5 },
-            { category: 'LIPÍDEOS (GORDURAS)', name: 'Nozes, torrada', basePortion: 20, kcal: 139, carbs: 2.8, protein: 3.0, fat: 13.7 },
-            { category: 'LIPÍDEOS (GORDURAS)', name: 'Amendoim, torrado, sem sal', basePortion: 20, kcal: 115, carbs: 4.5, protein: 5.0, fat: 9.5 },
-            { category: 'LIPÍDEOS (GORDURAS)', name: 'Manteiga, com sal (1 colher de chá)', basePortion: 5, kcal: 36, carbs: 0.0, protein: 0.0, fat: 4.1 },
-            { category: 'LIPÍDEOS (GORDURAS)', name: 'Óleo de soja (1 colher de sopa)', basePortion: 9, kcal: 80, carbs: 0.0, protein: 0.0, fat: 9.0 },
-            { category: 'LIPÍDEOS (GORDURAS)', name: 'Azeite de oliva, extravirgem', basePortion: 9, kcal: 80, carbs: 0.0, protein: 0.0, fat: 9.0 },
-            { category: 'LIPÍDEOS (GORDURAS)', name: 'Pasta de amendoim, integral', basePortion: 20, kcal: 119, carbs: 4.0, protein: 5.0, fat: 10.0 },
+            { name: "Arroz, integral, cozido", kcal: 124, protein: 2.6, fat: 1, carbs: 25.8, fiber: 2.7 },
+            { name: "Arroz, integral, cru", kcal: 360, protein: 7.3, fat: 1.9, carbs: 77.5, fiber: 4.8 },
+            { name: "Arroz, tipo 1, cozido", kcal: 128, protein: 2.5, fat: 0.2, carbs: 28.1, fiber: 1.6 },
+            { name: "Arroz, tipo 1, cru", kcal: 358, protein: 7.2, fat: 0.3, carbs: 78.8, fiber: 1.6 },
+            { name: "Arroz, tipo 2, cozido", kcal: 130, protein: 2.6, fat: 0.4, carbs: 28.2, fiber: 1.1 },
+            { name: "Arroz, tipo 2, cru", kcal: 358, protein: 7.2, fat: 0.3, carbs: 78.9, fiber: 1.7 },
+            { name: "Aveia, flocos, crua", kcal: 394, protein: 13.9, fat: 8.5, carbs: 66.6, fiber: 9.1 },
+            { name: "Biscoito, doce, maisena", kcal: 443, protein: 8.1, fat: 12, carbs: 75.2, fiber: 2.1 },
+            { name: "Biscoito, doce, recheado com chocolate", kcal: 472, protein: 6.4, fat: 19.6, carbs: 70.5, fiber: 3 },
+            { name: "Biscoito, doce, recheado com morango", kcal: 471, protein: 5.7, fat: 19.6, carbs: 71, fiber: 1.5 },
+            { name: "Biscoito, doce, wafer, recheado de chocolate", kcal: 502, protein: 5.6, fat: 24.7, carbs: 67.5, fiber: 1.9 },
+            { name: "Biscoito, doce, wafer, recheado de morango", kcal: 519, protein: 4.8, fat: 26.9, carbs: 67, fiber: 1.1 },
+            { name: "Biscoito, salgado, cream cracker", kcal: 432, protein: 10, fat: 14.2, carbs: 69.1, fiber: 2.5 },
+            { name: "Bolo, pronto, de aipim", kcal: 298, protein: 3.4, fat: 12.3, carbs: 45.4, fiber: 1.6 },
+            { name: "Bolo, pronto, de chocolate", kcal: 419, protein: 5.8, fat: 21.2, carbs: 54.1, fiber: 2.8 },
+            { name: "Bolo, pronto, de coco", kcal: 333, protein: 4.2, fat: 12.1, carbs: 54, fiber: 1.4 },
+            { name: "Bolo, pronto, de milho", kcal: 311, protein: 4.5, fat: 12.6, carbs: 46.9, fiber: 1.2 },
+            { name: "Bolo, pronto, simples", kcal: 345, protein: 5.8, fat: 10.3, carbs: 59, fiber: 1.1 },
+            { name: "Canjica, branca, crua", kcal: 358, protein: 7.2, fat: 1, carbs: 78.1, fiber: 4.4 },
+            { name: "Cereal, matinal, milho", kcal: 371, protein: 7.7, fat: 1.2, carbs: 84.1, fiber: 3.2 },
+            { name: "Cereal, matinal, milho, açúcar", kcal: 382, protein: 4.8, fat: 0.8, carbs: 90.7, fiber: 2.2 },
+            { name: "Creme de arroz, pó", kcal: 383, protein: 6.9, fat: 1.1, carbs: 84.5, fiber: 0.6 },
+            { name: "Creme de milho, pó", kcal: 351, protein: 5.1, fat: 1.8, carbs: 81.1, fiber: 2.9 },
+            { name: "Farinha de arroz, enriquecida", kcal: 363, protein: 1.3, fat: 0.3, carbs: 86.6, fiber: 0.8 },
+            { name: "Farinha de centeio, integral", kcal: 336, protein: 12.5, fat: 1.8, carbs: 73.3, fiber: 14.6 },
+            { name: "Farinha de milho, amarela", kcal: 351, protein: 7.2, fat: 1.9, carbs: 78.9, fiber: 5.5 },
+            { name: "Farinha de rosca", kcal: 371, protein: 11.2, fat: 1.5, carbs: 76.2, fiber: 4.2 },
+            { name: "Farinha de trigo", kcal: 360, protein: 9.8, fat: 1.4, carbs: 75.1, fiber: 2.3 },
+            { name: "Farinha, láctea, de cereais", kcal: 415, protein: 11.1, fat: 6.6, carbs: 75.8, fiber: 1.9 },
+            { name: "Lasanha, massa fresca, cozida", kcal: 164, protein: 6.3, fat: 1.8, carbs: 29.8, fiber: 1.1 },
+            { name: "Macarrão, instantâneo", kcal: 471, protein: 9.3, fat: 21, carbs: 61.1, fiber: 3.8 },
+            { name: "Macarrão, trigo, com ovos, cozido", kcal: 139, protein: 4.5, fat: 0.6, carbs: 28.5, fiber: 1.8 },
+            { name: "Macarrão, trigo, com ovos, cru", kcal: 371, protein: 10.7, fat: 2.1, carbs: 78.7, fiber: 2.9 },
+            { name: "Macarrão, trigo, sêmola, cozido", kcal: 111, protein: 3.8, fat: 0.5, carbs: 22.1, fiber: 1.3 },
+            { name: "Macarrão, trigo, sêmola, cru", kcal: 373, protein: 10.1, fat: 1.3, carbs: 80, fiber: 2.9 },
+            { name: "Milho, amido, cru", kcal: 361, protein: 0.5, fat: 0.1, carbs: 87.1, fiber: 0.7 },
+            { name: "Milho, fubá, cru", kcal: 351, protein: 7.2, fat: 1.9, carbs: 78.9, fiber: 5.5 },
+            { name: "Milho, verde, cru", kcal: 132, protein: 6.6, fat: 0.6, carbs: 28.6, fiber: 3.9 },
+            { name: "Mingau, de milho, pó", kcal: 369, protein: 0.5, fat: 0, carbs: 90.1, fiber: 0.7 },
+            { name: "Mucilon, de arroz, pó", kcal: 394, protein: 6.8, fat: 1.1, carbs: 87.2, fiber: 0.6 },
+            { name: "Mucilon, de milho, pó", kcal: 395, protein: 6.9, fat: 1.1, carbs: 87.1, fiber: 1.4 },
+            { name: "Pão, de forma, integral", kcal: 253, protein: 10.4, fat: 4.1, carbs: 47.9, fiber: 6.9 },
+            { name: "Pão, de forma, tradicional", kcal: 269, protein: 8, fat: 3.5, carbs: 50.6, fiber: 2.7 },
+            { name: "Pão, de glúten, forma", kcal: 236, protein: 14.9, fat: 3.4, carbs: 36.4, fiber: 2.6 },
+            { name: "Pão, de queijo, assado", kcal: 364, protein: 5.9, fat: 21.7, carbs: 38.6, fiber: 1.7 },
+            { name: "Pão, de queijo, cru", kcal: 382, protein: 3.9, fat: 20.9, carbs: 47.1, fiber: 1.7 },
+            { name: "Pão, francês", kcal: 289, protein: 9, fat: 2.5, carbs: 57.5, fiber: 2.3 },
+            { name: "Pão, sovado", kcal: 304, protein: 8.4, fat: 3.5, carbs: 58.6, fiber: 2.3 },
+            { name: "Pipoca, com óleo, sem sal", kcal: 448, protein: 12.7, fat: 15.3, carbs: 70.3, fiber: 14.5 },
+            { name: "Polenta, pré-cozida", kcal: 103, protein: 2.3, fat: 0.3, carbs: 22.7, fiber: 1.6 },
+            { name: "Torrada, pão francês", kcal: 399, protein: 12.3, fat: 4.2, carbs: 75.8, fiber: 3.8 },
+            { name: "Trigo, grão", kcal: 340, protein: 14.1, fat: 2.2, carbs: 71.2, fiber: 12.1 },
+            { name: "Trigo, para quibe, cru", kcal: 333, protein: 12, fat: 1.6, carbs: 74, fiber: 12.5 },
+            { name: "Abóbora, menina brasileira, cozida", kcal: 29, protein: 0.7, fat: 0.1, carbs: 7.4, fiber: 1.7 },
+            { name: "Abóbora, moranga, cozida", kcal: 40, protein: 1, fat: 0.1, carbs: 10.1, fiber: 2.5 },
+            { name: "Abobrinha, italiana, cozida", kcal: 15, protein: 1.1, fat: 0.2, carbs: 3, fiber: 1.6 },
+            { name: "Abobrinha, italiana, crua", kcal: 19, protein: 1.1, fat: 0.2, carbs: 4.3, fiber: 1.6 },
+            { name: "Acelga, cozida", kcal: 20, protein: 1.9, fat: 0.1, carbs: 4.1, fiber: 2.1 },
+            { name: "Acelga, crua", kcal: 21, protein: 1.4, fat: 0.1, carbs: 4.6, fiber: 1.1 },
+            { name: "Agrião, cru", kcal: 23, protein: 2.7, fat: 0.2, carbs: 4.3, fiber: 2.1 },
+            { name: "Aipo, cru", kcal: 19, protein: 0.8, fat: 0.2, carbs: 4, fiber: 1.8 },
+            { name: "Alface, americana, crua", kcal: 9, protein: 0.6, fat: 0.1, carbs: 1.4, fiber: 1 },
+            { name: "Alface, crespa, crua", kcal: 11, protein: 1.3, fat: 0.2, carbs: 1.7, fiber: 1.2 },
+            { name: "Alface, lisa, crua", kcal: 14, protein: 1.7, fat: 0.2, carbs: 2.4, fiber: 2.3 },
+            { name: "Alface, romana, crua", kcal: 15, protein: 1.8, fat: 0.2, carbs: 2.5, fiber: 2.3 },
+            { name: "Alho, cru", kcal: 113, protein: 7, fat: 0.2, carbs: 23.9, fiber: 4.3 },
+            { name: "Alho-poró, cru", kcal: 52, protein: 1.6, fat: 0.1, carbs: 12.6, fiber: 2.5 },
+            { name: "Almeirão, cru", kcal: 24, protein: 1.8, fat: 0.3, carbs: 5.1, fiber: 2.8 },
+            { name: "Aspargo, em conserva", kcal: 20, protein: 1.4, fat: 0.3, carbs: 4.2, fiber: 1.5 },
+            { name: "Batata, baroa, cozida", kcal: 80, protein: 0.9, fat: 0.2, carbs: 18.9, fiber: 1.8 },
+            { name: "Batata, baroa, crua", kcal: 101, protein: 1, fat: 0.2, carbs: 24, fiber: 2.1 },
+            { name: "Batata, doce, cozida", kcal: 77, protein: 0.6, fat: 0.1, carbs: 18.4, fiber: 2.2 },
+            { name: "Batata, doce, crua", kcal: 118, protein: 1.3, fat: 0.1, carbs: 28.3, fiber: 2.6 },
+            { name: "Batata, inglesa, cozida", kcal: 52, protein: 1.8, fat: 0.1, carbs: 11.9, fiber: 1.3 },
+            { name: "Batata, inglesa, crua", kcal: 64, protein: 1.8, fat: 0.1, carbs: 14.7, fiber: 1.3 },
+            { name: "Berinjela, cozida", kcal: 19, protein: 0.7, fat: 0.2, carbs: 4.5, fiber: 2.5 },
+            { name: "Berinjela, crua", kcal: 20, protein: 1.2, fat: 0.1, carbs: 4.4, fiber: 2.9 },
+            { name: "Beterraba, cozida", kcal: 49, protein: 1.9, fat: 0.1, carbs: 11.1, fiber: 3.4 },
+            { name: "Beterraba, crua", kcal: 49, protein: 1.9, fat: 0.1, carbs: 11.1, fiber: 3.4 },
+            { name: "Biscoito, polvilho, doce", kcal: 438, protein: 0.8, fat: 10.8, carbs: 84.4, fiber: 0.5 },
+            { name: "Brócolis, cozido", kcal: 25, protein: 2.1, fat: 0.5, carbs: 4.4, fiber: 3.4 },
+            { name: "Brócolis, cru", kcal: 25, protein: 3.2, fat: 0.3, carbs: 4.8, fiber: 2.9 },
+            { name: "Cará, cozido", kcal: 78, protein: 1.5, fat: 0.1, carbs: 18.9, fiber: 2.6 },
+            { name: "Cará, cru", kcal: 96, protein: 2.3, fat: 0.1, carbs: 22.6, fiber: 3.9 },
+            { name: "Cebola, crua", kcal: 39, protein: 1.7, fat: 0.1, carbs: 8.9, fiber: 2.2 },
+            { name: "Cenoura, cozida", kcal: 34, protein: 0.8, fat: 0.2, carbs: 7.9, fiber: 2.6 },
+            { name: "Cenoura, crua", kcal: 34, protein: 1, fat: 0.2, carbs: 7.7, fiber: 3.2 },
+            { name: "Chicória, crua", kcal: 14, protein: 1.1, fat: 0.1, carbs: 2.9, fiber: 1.1 },
+            { name: "Chuchu, cozido", kcal: 19, protein: 0.6, fat: 0.2, carbs: 4.6, fiber: 1.4 },
+            { name: "Chuchu, cru", kcal: 20, protein: 0.7, fat: 0.1, carbs: 4.8, fiber: 1.4 },
+            { name: "Coentro, folhas desidratadas", kcal: 337, protein: 21.8, fat: 5.4, carbs: 59.5, fiber: 12.3 },
+            { name: "Couve, manteiga, cozida", kcal: 37, protein: 2.7, fat: 0.6, carbs: 7.5, fiber: 3.1 },
+            { name: "Couve, manteiga, crua", kcal: 27, protein: 2.9, fat: 0.5, carbs: 4.3, fiber: 3.1 },
+            { name: "Couve-flor, cozida", kcal: 19, protein: 1.6, fat: 0.3, carbs: 3.9, fiber: 2.4 },
+            { name: "Couve-flor, crua", kcal: 23, protein: 1.9, fat: 0.2, carbs: 5.1, fiber: 2.4 },
+            { name: "Espinafre, cozido", kcal: 26, protein: 2.8, fat: 0.3, carbs: 4.8, fiber: 2.7 },
+            { name: "Espinafre, cru", kcal: 16, protein: 2, fat: 0.3, carbs: 2.6, fiber: 2.1 },
+            { name: "Farinha, de mandioca, crua", kcal: 361, protein: 1.6, fat: 0.3, carbs: 87.3, fiber: 6.5 },
+            { name: "Farinha, de mandioca, torrada", kcal: 365, protein: 1.6, fat: 0.3, carbs: 88.4, fiber: 6.4 },
+            { name: "Fécula, de batata", kcal: 337, protein: 0.4, fat: 0, carbs: 83.1, fiber: 1.2 },
+            { name: "Fécula, de mandioca", kcal: 331, protein: 0.5, fat: 0.1, carbs: 81.7, fiber: 0.7 },
+            { name: "Inhame, cozido", kcal: 97, protein: 2.1, fat: 0.2, carbs: 22.7, fiber: 2.6 },
+            { name: "Inhame, cru", kcal: 114, protein: 2.1, fat: 0.2, carbs: 26.6, fiber: 3.4 },
+            { name: "Jiló, cru", kcal: 27, protein: 1.4, fat: 0.2, carbs: 6.3, fiber: 4.8 },
+            { name: "Mandioca, cozida", kcal: 125, protein: 0.6, fat: 0.3, carbs: 30.1, fiber: 1.6 },
+            { name: "Mandioca, crua", kcal: 151, protein: 1.1, fat: 0.3, carbs: 36.1, fiber: 1.9 },
+            { name: "Mandioca, farinha, crua", kcal: 361, protein: 1.6, fat: 0.3, carbs: 87.3, fiber: 6.5 },
+            { name: "Mandioca, frita", kcal: 300, protein: 1, fat: 14.9, carbs: 42.1, fiber: 1.7 },
+            { name: "Maxixe, cru", kcal: 14, protein: 1.4, fat: 0.1, carbs: 2.8, fiber: 2.2 },
+            { name: "Mostarda, folha, crua", kcal: 22, protein: 2.2, fat: 0.3, carbs: 4.2, fiber: 2 },
+            { name: "Nabo, cru", kcal: 35, protein: 1.2, fat: 0.1, carbs: 8.1, fiber: 3.1 },
+            { name: "Palmito, juçara, em conserva", kcal: 23, protein: 1.8, fat: 0.4, carbs: 4.3, fiber: 1.4 },
+            { name: "Palmito, pupunha, em conserva", kcal: 28, protein: 2.5, fat: 0.5, carbs: 4.6, fiber: 1.7 },
+            { name: "Pepino, cru", kcal: 10, protein: 0.9, fat: 0.1, carbs: 2, fiber: 0.5 },
+            { name: "Pimentão, amarelo, cru", kcal: 28, protein: 1, fat: 0.3, carbs: 6.4, fiber: 1.6 },
+            { name: "Pimentão, verde, cru", kcal: 23, protein: 1.1, fat: 0.2, carbs: 5.2, fiber: 2.6 },
+            { name: "Pimentão, vermelho, cru", kcal: 26, protein: 1, fat: 0.1, carbs: 6.2, fiber: 1.6 },
+            { name: "Polvilho, doce", kcal: 331, protein: 0.5, fat: 0.1, carbs: 81.7, fiber: 0.7 },
+            { name: "Quiabo, cozido", kcal: 26, protein: 1.9, fat: 0.3, carbs: 5.1, fiber: 2.5 },
+            { name: "Quiabo, cru", kcal: 30, protein: 1.9, fat: 0.3, carbs: 6.4, fiber: 2.5 },
+            { name: "Rabanete, cru", kcal: 14, protein: 1.4, fat: 0.1, carbs: 2.7, fiber: 2.3 },
+            { name: "Repolho, branco, cru", kcal: 17, protein: 0.9, fat: 0.1, carbs: 3.9, fiber: 1.9 },
+            { name: "Repolho, roxo, cozido", kcal: 27, protein: 1.9, fat: 0.2, carbs: 6.1, fiber: 2.6 },
+            { name: "Repolho, roxo, cru", kcal: 22, protein: 1.4, fat: 0.1, carbs: 5.1, fiber: 2 },
+            { name: "Rúcula, crua", kcal: 13, protein: 1.8, fat: 0.1, carbs: 2.2, fiber: 1.3 },
+            { name: "Salsa, crua", kcal: 33, protein: 3.3, fat: 0.6, carbs: 5.7, fiber: 1.9 },
+            { name: "Seleta de legumes, em conserva", kcal: 47, protein: 2.3, fat: 0.3, carbs: 9.7, fiber: 2.5 },
+            { name: "Serralha, crua", kcal: 36, protein: 2.7, fat: 0.7, carbs: 6.4, fiber: 3.7 },
+            { name: "Taioba, crua", kcal: 31, protein: 2.9, fat: 0.9, carbs: 4.5, fiber: 3.7 },
+            { name: "Tomate, com semente, cru", kcal: 15, protein: 1.1, fat: 0.2, carbs: 3.1, fiber: 1.2 },
+            { name: "Tomate, extrato", kcal: 61, protein: 2.8, fat: 0.2, carbs: 13.6, fiber: 2.5 },
+            { name: "Tomate, molho industrializado", kcal: 38, protein: 1.3, fat: 0.9, carbs: 6.9, fiber: 1.2 },
+            { name: "Tomate, purê", kcal: 29, protein: 1.5, fat: 0.1, carbs: 6.4, fiber: 1.2 },
+            { name: "Vagem, crua", kcal: 25, protein: 1.4, fat: 0.2, carbs: 5.6, fiber: 1.9 },
+            { name: "Abacate", kcal: 160, protein: 2, fat: 14.7, carbs: 8.5, fiber: 6.7 },
+            { name: "Abacaxi", kcal: 50, protein: 0.5, fat: 0.1, carbs: 13.1, fiber: 1.4 },
+            { name: "Abacaxi, em calda", kcal: 104, protein: 0.4, fat: 0.1, carbs: 27.5, fiber: 1 },
+            { name: "Abiu, cru", kcal: 62, protein: 0.8, fat: 0.5, carbs: 15, fiber: 1.7 },
+            { name: "Açaí, polpa, com xarope de guaraná e glucose", kcal: 110, protein: 0.7, fat: 0.4, carbs: 26.2, fiber: 0.8 },
+            { name: "Açaí, polpa, congelada", kcal: 58, protein: 0.8, fat: 3.9, carbs: 6.2, fiber: 2.6 },
+            { name: "Acerola, crua", kcal: 33, protein: 0.9, fat: 0.2, carbs: 7.8, fiber: 1.5 },
+            { name: "Ameixa, em calda", kcal: 180, protein: 0.4, fat: 0, carbs: 48.2, fiber: 1.6 },
+            { name: "Ameixa, preta, seca", kcal: 298, protein: 3.6, fat: 0.5, carbs: 75.6, fiber: 9.4 },
+            { name: "Ameixa, vermelha, crua", kcal: 53, protein: 0.8, fat: 0, carbs: 13.9, fiber: 2.4 },
+            { name: "Amora, preta, crua", kcal: 49, protein: 1.2, fat: 0.2, carbs: 11.7, fiber: 4.9 },
+            { name: "Atemóia, crua", kcal: 97, protein: 1.4, fat: 0.3, carbs: 24.1, fiber: 2.6 },
+            { name: "Banana, da terra, crua", kcal: 128, protein: 1.4, fat: 0.2, carbs: 33.7, fiber: 1.5 },
+            { name: "Banana, maçã, crua", kcal: 87, protein: 1.8, fat: 0.1, carbs: 22.3, fiber: 2.6 },
+            { name: "Banana, nanica, crua", kcal: 92, protein: 1.4, fat: 0.1, carbs: 23.8, fiber: 1.9 },
+            { name: "Banana, ouro, crua", kcal: 112, protein: 1.5, fat: 0.1, carbs: 29.3, fiber: 2.2 },
+            { name: "Banana, prata, crua", kcal: 98, protein: 1.3, fat: 0.1, carbs: 26, fiber: 2 },
+            { name: "Cajá-manga, cru", kcal: 46, protein: 1.3, fat: 0.2, carbs: 11.4, fiber: 2.6 },
+            { name: "Caju, cru", kcal: 43, protein: 0.8, fat: 0.3, carbs: 10.3, fiber: 1.7 },
+            { name: "Caqui, chocolate, cru", kcal: 71, protein: 0.4, fat: 0.1, carbs: 19.3, fiber: 6.5 },
+            { name: "Carambola, crua", kcal: 46, protein: 0.9, fat: 0.2, carbs: 11.5, fiber: 2 },
+            { name: "Cereja, em calda", kcal: 162, protein: 0.6, fat: 0.1, carbs: 42.1, fiber: 1.2 },
+            { name: "Cereja, fresca", kcal: 69, protein: 1.2, fat: 0.3, carbs: 17.5, fiber: 1.4 },
+            { name: "Cupuaçu, polpa", kcal: 61, protein: 1, fat: 1.5, carbs: 12.4, fiber: 2.3 },
+            { name: "Damasco, seco", kcal: 273, protein: 4.8, fat: 0.6, carbs: 72.8, fiber: 10.3 },
+            { name: "Figo, cru", kcal: 66, protein: 1.2, fat: 0.2, carbs: 16.8, fiber: 2.1 },
+            { name: "Figo, em calda", kcal: 184, protein: 0.6, fat: 0.1, carbs: 48.7, fiber: 1.8 },
+            { name: "Framboesa, crua", kcal: 57, protein: 1, fat: 0.3, carbs: 13.6, fiber: 4.1 },
+            { name: "Fruta-pão, crua", kcal: 101, protein: 1.1, fat: 0.2, carbs: 26.1, fiber: 5.5 },
+            { name: "Goiaba, em calda", kcal: 86, protein: 0.4, fat: 0, carbs: 23, fiber: 1.6 },
+            { name: "Goiaba, vermelha, crua", kcal: 54, protein: 1.1, fat: 0.4, carbs: 13, fiber: 6.2 },
+            { name: "Graviola, crua", kcal: 60, protein: 0.8, fat: 0.2, carbs: 15.8, fiber: 1.9 },
+            { name: "Jabuticaba, crua", kcal: 58, protein: 0.6, fat: 0.1, carbs: 15.3, fiber: 2.3 },
+            { name: "Jaca, crua", kcal: 88, protein: 1.4, fat: 0.3, carbs: 22.5, fiber: 2.4 },
+            { name: "Jambo, cru", kcal: 39, protein: 0.7, fat: 0.1, carbs: 9.8, fiber: 2.3 },
+            { name: "Kiwi, cru", kcal: 51, protein: 1, fat: 0.4, carbs: 12.5, fiber: 2.7 },
+            { name: "Laranja, da terra", kcal: 41, protein: 1, fat: 0.1, carbs: 10.1, fiber: 1.8 },
+            { name: "Laranja, lima", kcal: 51, protein: 1.1, fat: 0.1, carbs: 12.9, fiber: 2.2 },
+            { name: "Laranja, pêra", kcal: 37, protein: 1, fat: 0.1, carbs: 8.9, fiber: 1.8 },
+            { name: "Laranja, valência", kcal: 46, protein: 0.8, fat: 0.1, carbs: 11.7, fiber: 1.7 },
+            { name: "Limão, tahiti", kcal: 32, protein: 0.8, fat: 0.1, carbs: 11.1, fiber: 1.2 },
+            { name: "Maçã, fuji, com casca", kcal: 56, protein: 0.3, fat: 0, carbs: 15.2, fiber: 2 },
+            { name: "Maçã, gala", kcal: 57, protein: 0.3, fat: 0.1, carbs: 15.1, fiber: 1.3 },
+            { name: "Mamão, formosa, cru", kcal: 45, protein: 0.8, fat: 0.1, carbs: 11.6, fiber: 1.8 },
+            { name: "Mamão, papaia, cru", kcal: 40, protein: 0.5, fat: 0.1, carbs: 10.4, fiber: 1 },
+            { name: "Manga, haden, crua", kcal: 64, protein: 0.5, fat: 0.3, carbs: 16.7, fiber: 2.1 },
+            { name: "Manga, tommy, crua", kcal: 58, protein: 1, fat: 0.2, carbs: 15.4, fiber: 2.3 },
+            { name: "Maracujá, cru", kcal: 68, protein: 2, fat: 1.2, carbs: 14.3, fiber: 1.5 },
+            { name: "Melancia, crua", kcal: 31, protein: 0.9, fat: 0, carbs: 8.1, fiber: 0.1 },
+            { name: "Melão, cru", kcal: 29, protein: 0.7, fat: 0, carbs: 7.5, fiber: 0.2 },
+            { name: "Morango, cru", kcal: 30, protein: 0.9, fat: 0.3, carbs: 6.8, fiber: 1.7 },
+            { name: "Nêspera, crua", kcal: 45, protein: 0.4, fat: 0.2, carbs: 11.6, fiber: 2.1 },
+            { name: "Pêra, williams, crua", kcal: 53, protein: 0.2, fat: 0.1, carbs: 14, fiber: 3 },
+            { name: "Pêssego, cru", kcal: 36, protein: 0.8, fat: 0.1, carbs: 9.3, fiber: 1.4 },
+            { name: "Pêssego, em calda", kcal: 82, protein: 0.4, fat: 0.1, carbs: 21.6, fiber: 1 },
+            { name: "Pinha, crua", kcal: 88, protein: 1.6, fat: 0.3, carbs: 22.4, fiber: 3.3 },
+            { name: "Pinhão, cozido", kcal: 174, protein: 3.6, fat: 0.8, carbs: 40.7, fiber: 15.6 },
+            { name: "Piqui, cru", kcal: 205, protein: 2.3, fat: 18.2, carbs: 11.8, fiber: 19.1 },
+            { name: "Pitanga, crua", kcal: 41, protein: 0.9, fat: 0.2, carbs: 10.2, fiber: 1.5 },
+            { name: "Romã, crua", kcal: 56, protein: 0.4, fat: 0, carbs: 14.9, fiber: 1.7 },
+            { name: "Salada de frutas, em calda", kcal: 104, protein: 0.4, fat: 0.1, carbs: 27.5, fiber: 1.2 },
+            { name: "Sapoti, cru", kcal: 96, protein: 0.7, fat: 0.8, carbs: 23.9, fiber: 4.1 },
+            { name: "Tamarindo, cru", kcal: 283, protein: 2.9, fat: 0.3, carbs: 77.4, fiber: 6.4 },
+            { name: "Tangerina, poncã, crua", kcal: 38, protein: 0.8, fat: 0.1, carbs: 9.6, fiber: 1.9 },
+            { name: "Tucumã, polpa", kcal: 266, protein: 2.1, fat: 19.1, carbs: 26.5, fiber: 12.3 },
+            { name: "Umbu, cru", kcal: 37, protein: 0.8, fat: 0.2, carbs: 9.4, fiber: 2 },
+            { name: "Uva, itália, crua", kcal: 53, protein: 0.8, fat: 0.2, carbs: 13.6, fiber: 0.9 },
+            { name: "Uva, rubi, crua", kcal: 53, protein: 0.6, fat: 0.2, carbs: 13.6, fiber: 0.9 },
+            { name: "Uva, passa", kcal: 293, protein: 1.8, fat: 0.3, carbs: 78.3, fiber: 5.4 },
+            { name: "Amêndoa, torrada, salgada", kcal: 640, protein: 21.1, fat: 58.1, carbs: 13.6, fiber: 11.8 },
+            { name: "Amendoim, grão, cru", kcal: 544, protein: 22.4, fat: 44.9, carbs: 26.7, fiber: 8 },
+            { name: "Amendoim, torrado, salgado", kcal: 573, protein: 22.5, fat: 48.7, carbs: 24.3, fiber: 8.1 },
+            { name: "Castanha-de-caju, crua", kcal: 570, protein: 18.5, fat: 46.3, carbs: 29.1, fiber: 3.7 },
+            { name: "Castanha-de-caju, torrada, salgada", kcal: 570, protein: 18.5, fat: 46.3, carbs: 29.1, fiber: 3.7 },
+            { name: "Castanha-do-brasil, crua", kcal: 643, protein: 14.5, fat: 63.6, carbs: 15.1, fiber: 7.9 },
+            { name: "Coco, cru", kcal: 406, protein: 3.7, fat: 42, carbs: 10.3, fiber: 5.4 },
+            { name: "Coco, seco, flocado", kcal: 588, protein: 5.6, fat: 50.4, carbs: 36.8, fiber: 13.6 },
+            { name: "Ervilha, em conserva, drenada", kcal: 59, protein: 4.1, fat: 0.4, carbs: 10.5, fiber: 4.7 },
+            { name: "Ervilha, seca, cozida", kcal: 114, protein: 8.1, fat: 0.5, carbs: 20.6, fiber: 8.8 },
+            { name: "Feijão, carioca, cozido", kcal: 76, protein: 4.8, fat: 0.5, carbs: 13.6, fiber: 8.5 },
+            { name: "Feijão, fradinho, cozido", kcal: 77, protein: 5.1, fat: 0.6, carbs: 13.3, fiber: 7.5 },
+            { name: "Feijão, preto, cozido", kcal: 77, protein: 4.5, fat: 0.5, carbs: 14, fiber: 8.8 },
+            { name: "Feijão, rajado, cozido", kcal: 76, protein: 4.9, fat: 0.5, carbs: 13.5, fiber: 8.2 },
+            { name: "Feijão, rosinha, cozido", kcal: 78, protein: 5.3, fat: 0.5, carbs: 13.7, fiber: 7.8 },
+            { name: "Grão-de-bico, cozido", kcal: 132, protein: 7.8, fat: 2.1, carbs: 22.2, fiber: 8.8 },
+            { name: "Guandu, cozido", kcal: 114, protein: 7.5, fat: 0.5, carbs: 21, fiber: 7.1 },
+            { name: "Lentilha, cozida", kcal: 93, protein: 6.5, fat: 0.5, carbs: 16.3, fiber: 7.9 },
+            { name: "Linhaça, semente", kcal: 495, protein: 14.1, fat: 32.3, carbs: 43.3, fiber: 33.5 },
+            { name: "Milho, verde, em conserva, drenado", kcal: 98, protein: 3.2, fat: 2.8, carbs: 17.1, fiber: 4.6 },
+            { name: "Soja, farinha", kcal: 404, protein: 35.9, fat: 17, carbs: 33.8, fiber: 17.5 },
+            { name: "Soja, grão, cozido", kcal: 126, protein: 11.4, fat: 6.2, carbs: 8.4, fiber: 5.6 },
+            { name: "Tremoço, em conserva", kcal: 121, protein: 15.3, fat: 2.5, carbs: 11.8, fiber: 4.8 },
+            { name: "Açúcar, cristal", kcal: 387, protein: 0, fat: 0, carbs: 99.5, fiber: 0 },
+            { name: "Açúcar, mascavo", kcal: 369, protein: 0.8, fat: 0.1, carbs: 94.5, fiber: 0 },
+            { name: "Açúcar, refinado", kcal: 387, protein: 0, fat: 0, carbs: 99.5, fiber: 0 },
+            { name: "Achocolatado, pó", kcal: 396, protein: 5.6, fat: 2.5, carbs: 87.8, fiber: 4.5 },
+            { name: "Chocolate, ao leite", kcal: 540, protein: 6.9, fat: 30.9, carbs: 59.6, fiber: 2.2 },
+            { name: "Chocolate, ao leite, com castanha do pará", kcal: 559, protein: 8.1, fat: 36.3, carbs: 53.4, fiber: 2.7 },
+            { name: "Chocolate, em pó, 50% cacau", kcal: 341, protein: 18.5, fat: 10.3, carbs: 59.9, fiber: 28.1 },
+            { name: "Chocolate, meio amargo", kcal: 475, protein: 4.9, fat: 29.9, carbs: 54.4, fiber: 8 },
+            { name: "Doce, de abóbora, cremoso", kcal: 199, protein: 0.9, fat: 0.2, carbs: 54.6, fiber: 2.3 },
+            { name: "Doce, de leite, cremoso", kcal: 306, protein: 5.5, fat: 6, carbs: 59.5, fiber: 0 },
+            { name: "Geléia, mocotó, natural", kcal: 106, protein: 2.1, fat: 0.1, carbs: 24.2, fiber: 0 },
+            { name: "Glicose de milho", kcal: 292, protein: 0, fat: 0, carbs: 79.4, fiber: 0 },
+            { name: "Maria mole", kcal: 301, protein: 3.8, fat: 0.2, carbs: 73.6, fiber: 0.7 },
+            { name: "Maria mole, coco queimado", kcal: 307, protein: 3.9, fat: 0.1, carbs: 75.1, fiber: 0.6 },
+            { name: "Marmelada", kcal: 257, protein: 0.4, fat: 0.1, carbs: 70.8, fiber: 4.1 },
+            { name: "Mel, de abelha", kcal: 309, protein: 0, fat: 0, carbs: 84, fiber: 0 },
+            { name: "Melado", kcal: 297, protein: 0, fat: 0, carbs: 76.6, fiber: 0 },
+            { name: "Quindim", kcal: 411, protein: 4.7, fat: 24.4, carbs: 46.3, fiber: 3.2 },
+            { name: "Rapadura", kcal: 352, protein: 1, fat: 0.1, carbs: 90.8, fiber: 0 },
+            { name: "Azeitona, preta, conserva", kcal: 194, protein: 1.2, fat: 20.3, carbs: 5.5, fiber: 4.6 },
+            { name: "Azeitona, verde, conserva", kcal: 137, protein: 0.9, fat: 14.2, carbs: 4.1, fiber: 3.8 },
+            { name: "Leite, de coco", kcal: 166, protein: 1, fat: 18.4, carbs: 2.2, fiber: 0.7 },
+            { name: "Acarajé", kcal: 289, protein: 8.3, fat: 19.9, carbs: 19.1, fiber: 11.5 },
+            { name: "Arroz carreteiro", kcal: 167, protein: 8.8, fat: 6.8, carbs: 17.5, fiber: 0.9 },
+            { name: "Baião de dois", kcal: 144, protein: 5.9, fat: 3.4, carbs: 22.3, fiber: 4.3 },
+            { name: "Bife à role", kcal: 138, protein: 17.4, fat: 6.4, carbs: 2.1, fiber: 0.6 },
+            { name: "Bobó de camarão", kcal: 116, protein: 8.1, fat: 5.8, carbs: 7.8, fiber: 0.7 },
+            { name: "Canja, de galinha", kcal: 53, protein: 4.3, fat: 1.2, carbs: 6.2, fiber: 0.4 },
+            { name: "Carne de sol", kcal: 149, protein: 26.2, fat: 4.1, carbs: 0.8, fiber: 0 },
+            { name: "Charuto, de repolho", kcal: 104, protein: 7.4, fat: 4.4, carbs: 8.5, fiber: 1.5 },
+            { name: "Cuscuz, de milho, cozido com sal", kcal: 113, protein: 2.3, fat: 0.8, carbs: 25.3, fiber: 1.9 },
+            { name: "Cuscuz, paulista", kcal: 137, protein: 4.7, fat: 5.1, carbs: 18, fiber: 2.2 },
+            { name: "Dobradinha", kcal: 140, protein: 15.6, fat: 6.4, carbs: 4.7, fiber: 2.2 },
+            { name: "Escondidinho de carne seca", kcal: 133, protein: 8.1, fat: 5.7, carbs: 12.3, fiber: 0.9 },
+            { name: "Estrogonofe, de carne", kcal: 143, protein: 12, fat: 8.8, carbs: 3.5, fiber: 0.4 },
+            { name: "Estrogonofe, de frango", kcal: 129, protein: 13.9, fat: 6.8, carbs: 2.6, fiber: 0.3 },
+            { name: "Feijoada", kcal: 117, protein: 7.7, fat: 6.1, carbs: 7.8, fiber: 4.6 },
+            { name: "Frango, com quiabo", kcal: 109, protein: 12.1, fat: 5.4, carbs: 2.7, fiber: 1.1 },
+            { name: "Maniçoba", kcal: 137, protein: 9.3, fat: 8.7, carbs: 5.1, fiber: 2.2 },
+            { name: "Moqueca, de peixe", kcal: 114, protein: 10.1, fat: 6.4, carbs: 3.6, fiber: 0.9 },
+            { name: "Nhoque, de batata, com molho de tomate", kcal: 101, protein: 3.2, fat: 2.1, carbs: 17.1, fiber: 1.1 },
+            { name: "Paçoca, de carne seca", kcal: 295, protein: 16.9, fat: 13.7, carbs: 25.9, fiber: 2.5 },
+            { name: "Pamonha, doce", kcal: 171, protein: 3.1, fat: 6.3, carbs: 26.7, fiber: 2.7 },
+            { name: "Pão, de queijo, industrializado, cru", kcal: 382, protein: 3.9, fat: 20.9, carbs: 47.1, fiber: 1.7 },
+            { name: "Picadinho, de carne", kcal: 129, protein: 13.5, fat: 6.6, carbs: 3.4, fiber: 0.8 },
+            { name: "Pizza, de mussarela", kcal: 279, protein: 13.7, fat: 12.1, carbs: 28.6, fiber: 1.5 },
+            { name: "Salada, de frutas", kcal: 62, protein: 0.7, fat: 0.2, carbs: 15.9, fiber: 1.4 },
+            { name: "Salada, de legumes, cozida", kcal: 47, protein: 1.7, fat: 0.7, carbs: 9.3, fiber: 2.5 },
+            { name: "Salada, de legumes, com maionese", kcal: 128, protein: 1.9, fat: 9.9, carbs: 8.6, fiber: 1.9 },
+            { name: "Salpicão, de frango", kcal: 167, protein: 11.2, fat: 10.5, carbs: 6.8, fiber: 1.2 },
+            { name: "Sarapatel", kcal: 123, protein: 14.1, fat: 6.3, carbs: 1.9, fiber: 0.3 },
+            { name: "Sopa, de feijão", kcal: 69, protein: 3.7, fat: 2.1, carbs: 8.9, fiber: 3.3 },
+            { name: "Sopa, de legumes", kcal: 35, protein: 1.4, fat: 0.8, carbs: 6.1, fiber: 1.3 },
+            { name: "Tacacá", kcal: 43, protein: 2, fat: 1.9, carbs: 4.4, fiber: 0.5 },
+            { name: "Tutu, de feijão", kcal: 120, protein: 6.3, fat: 3.5, carbs: 15.7, fiber: 5.3 },
+            { name: "Vaca atolada", kcal: 147, protein: 12.3, fat: 8.7, carbs: 4.6, fiber: 0.7 },
+            { name: "Vatapá", kcal: 179, protein: 8.7, fat: 12.1, carbs: 8.6, fiber: 1.5 },
+            { name: "Virado à paulista", kcal: 169, protein: 9.2, fat: 8.1, carbs: 14.7, fiber: 3.5 },
+            { name: "Yakisoba", kcal: 113, protein: 6.8, fat: 4.2, carbs: 11.9, fiber: 1.3 },
+            { name: "Bebida láctea, pêssego", kcal: 71, protein: 2.6, fat: 1.8, carbs: 11.2, fiber: 0 },
+            { name: "Leite, de vaca, desnatado", kcal: 36, protein: 3.6, fat: 0.1, carbs: 5.2, fiber: 0 },
+            { name: "Leite, de vaca, desnatado, pó", kcal: 362, protein: 35, fat: 1, carbs: 52, fiber: 0 },
+            { name: "Leite, de vaca, integral", kcal: 60, protein: 3.2, fat: 3.2, carbs: 4.8, fiber: 0 },
+            { name: "Leite, de vaca, integral, pó", kcal: 493, protein: 25.4, fat: 26.2, carbs: 38.7, fiber: 0 },
+            { name: "Leite, de vaca, semidesnatado", kcal: 46, protein: 3.4, fat: 1.7, carbs: 4.9, fiber: 0 },
+            { name: "Leite, fermentado", kcal: 71, protein: 1.7, fat: 0.1, carbs: 16.1, fiber: 0 },
+            { name: "Queijo, minas, frescal", kcal: 239, protein: 17.4, fat: 18.2, carbs: 1.6, fiber: 0 },
+            { name: "Queijo, minas, padrão", kcal: 321, protein: 21.2, fat: 25.6, carbs: 1.5, fiber: 0 },
+            { name: "Queijo, mussarela", kcal: 354, protein: 24.6, fat: 27.8, carbs: 1.5, fiber: 0 },
+            { name: "Queijo, parmesão", kcal: 454, protein: 35.6, fat: 33.5, carbs: 2.2, fiber: 0 },
+            { name: "Queijo, petit suisse, morango", kcal: 127, protein: 7.1, fat: 3.5, carbs: 16.6, fiber: 0 },
+            { name: "Queijo, prato", kcal: 346, protein: 23.2, fat: 27.5, carbs: 1.3, fiber: 0 },
+            { name: "Queijo, requeijão, cremoso", kcal: 257, protein: 9.6, fat: 23.5, carbs: 2.2, fiber: 0 },
+            { name: "Queijo, ricota", kcal: 140, protein: 12.6, fat: 8.1, carbs: 4.1, fiber: 0 },
+            { name: "Requeijão, light", kcal: 189, protein: 17.6, fat: 11.2, carbs: 4.1, fiber: 0 },
+            { name: "Soja, extrato, fluido", kcal: 45, protein: 3.4, fat: 2, carbs: 3.6, fiber: 0.2 },
+            { name: "Soja, extrato, pó", kcal: 428, protein: 34.7, fat: 21.6, carbs: 29.5, fiber: 2.1 },
+            { name: "Iogurte, natural, desnatado", kcal: 41, protein: 4.1, fat: 0.2, carbs: 5.5, fiber: 0 },
+            { name: "Iogurte, natural, integral", kcal: 62, protein: 3.8, fat: 3.5, carbs: 4, fiber: 0 },
+            { name: "Ovo, de codorna, inteiro, cru", kcal: 177, protein: 13.7, fat: 12.8, carbs: 1.5, fiber: 0 },
+            { name: "Ovo, de galinha, clara, cozida", kcal: 55, protein: 13.1, fat: 0, carbs: 0.4, fiber: 0 },
+            { name: "Ovo, de galinha, gema, cozida", kcal: 353, protein: 16.4, fat: 31.2, carbs: 1.2, fiber: 0 },
+            { name: "Ovo, de galinha, inteiro, cozido", kcal: 146, protein: 13.3, fat: 9.5, carbs: 0.6, fiber: 0 },
+            { name: "Ovo, de galinha, inteiro, cru", kcal: 143, protein: 13, fat: 9.5, carbs: 0.7, fiber: 0 },
+            { name: "Ovo, de galinha, inteiro, frito", kcal: 240, protein: 15.3, fat: 19.6, carbs: 0.6, fiber: 0 },
+            { name: "Carne, bovina, acém, moído, cru", kcal: 216, protein: 19.8, fat: 15, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, acém, sem gordura, cozido", kcal: 257, protein: 26.1, fat: 16.5, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, alcatra, sem gordura, grelhada", kcal: 236, protein: 31.9, fat: 11.2, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, bucho, cozido", kcal: 92, protein: 16.4, fat: 2.4, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, capa de contra-filé, com gordura, grelhada", kcal: 263, protein: 28.5, fat: 16.3, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, capa de contra-filé, sem gordura, grelhada", kcal: 215, protein: 32.7, fat: 8.5, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, charque, cozido", kcal: 267, protein: 44.9, fat: 9, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, contra-filé, com gordura, cru", kcal: 254, protein: 18.2, fat: 19.8, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, contra-filé, com gordura, grelhado", kcal: 240, protein: 25, fat: 15, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, contra-filé, sem gordura, cru", kcal: 158, protein: 23.3, fat: 6.8, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, contra-filé, sem gordura, grelhado", kcal: 215, protein: 32.7, fat: 8.5, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, coração, cozido", kcal: 153, protein: 26.9, fat: 4.3, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, coxão mole, sem gordura, cozido", kcal: 219, protein: 32.3, fat: 9, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, cupim, assado", kcal: 375, protein: 22.3, fat: 31.5, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, fígado, grelhado", kcal: 213, protein: 30.1, fat: 8.1, carbs: 3.3, fiber: 0 },
+            { name: "Carne, bovina, filé mignon, com gordura, grelhado", kcal: 244, protein: 27.6, fat: 14.1, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, filé mignon, sem gordura, cru", kcal: 143, protein: 21.1, fat: 5.8, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, filé mignon, sem gordura, grelhado", kcal: 234, protein: 32.7, fat: 10.5, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, fraldinha, com gordura, cozida", kcal: 244, protein: 29.1, fat: 13.5, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, língua, cozida", kcal: 223, protein: 22.1, fat: 14.7, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, maminha, grelhada", kcal: 236, protein: 31.9, fat: 11.2, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, miolo de alcatra, sem gordura, grelhado", kcal: 236, protein: 31.9, fat: 11.2, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, músculo, sem gordura, cozido", kcal: 194, protein: 31.8, fat: 6.5, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, paleta, sem gordura, cozido", kcal: 216, protein: 31.8, fat: 9, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, patinho, sem gordura, cru", kcal: 133, protein: 21.7, fat: 4.5, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, patinho, sem gordura, grelhado", kcal: 219, protein: 35.7, fat: 7.9, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, peito, sem gordura, cozido", kcal: 223, protein: 31.8, fat: 9.6, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, picanha, com gordura, grelhada", kcal: 287, protein: 26.9, fat: 19.5, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, picanha, sem gordura, grelhada", kcal: 235, protein: 31.8, fat: 11, carbs: 0, fiber: 0 },
+            { name: "Carne, bovina, rabo, cozido", kcal: 371, protein: 25.4, fat: 29.5, carbs: 0, fiber: 0 },
+            { name: "Frango, asa, com pele, assado", kcal: 322, protein: 28.3, fat: 22.6, carbs: 0, fiber: 0 },
+            { name: "Frango, asa, com pele, crua", kcal: 215, protein: 18.2, fat: 15.6, carbs: 0, fiber: 0 },
+            { name: "Frango, coxa, com pele, assada", kcal: 217, protein: 28.1, fat: 11, carbs: 0, fiber: 0 },
+            { name: "Frango, coxa, com pele, crua", kcal: 153, protein: 18.2, fat: 8.4, carbs: 0, fiber: 0 },
+            { name: "Frango, coxa, sem pele, assada", kcal: 185, protein: 29.4, fat: 6.6, carbs: 0, fiber: 0 },
+            { name: "Frango, coxa, sem pele, crua", kcal: 120, protein: 19.5, fat: 4.2, carbs: 0, fiber: 0 },
+            { name: "Frango, coração, cru", kcal: 147, protein: 16.3, fat: 8.7, carbs: 0, fiber: 0 },
+            { name: "Frango, fígado, cru", kcal: 129, protein: 20.3, fat: 4.2, carbs: 1.3, fiber: 0 },
+            { name: "Frango, moela, crua", kcal: 115, protein: 20.1, fat: 3.2, carbs: 0, fiber: 0 },
+            { name: "Frango, peito, com pele, assado", kcal: 212, protein: 34.2, fat: 7.8, carbs: 0, fiber: 0 },
+            { name: "Frango, peito, com pele, cru", kcal: 149, protein: 21.5, fat: 6.6, carbs: 0, fiber: 0 },
+            { name: "Frango, peito, sem pele, cozido", kcal: 163, protein: 31.4, fat: 3.2, carbs: 0, fiber: 0 },
+            { name: "Frango, peito, sem pele, cru", kcal: 119, protein: 22.8, fat: 2.5, carbs: 0, fiber: 0 },
+            { name: "Frango, peito, sem pele, grelhado", kcal: 159, protein: 32, fat: 2.5, carbs: 0, fiber: 0 },
+            { name: "Carne, suína, bisteca, crua", kcal: 224, protein: 18.5, fat: 16.2, carbs: 0, fiber: 0 },
+            { name: "Carne, suína, bisteca, grelhada", kcal: 283, protein: 29.8, fat: 18, carbs: 0, fiber: 0 },
+            { name: "Carne, suína, costeleta, assada", kcal: 311, protein: 29.2, fat: 21, carbs: 0, fiber: 0 },
+            { name: "Carne, suína, costeleta, crua", kcal: 236, protein: 17.8, fat: 18.2, carbs: 0, fiber: 0 },
+            { name: "Carne, suína, lombo, assado", kcal: 256, protein: 33.6, fat: 12.8, carbs: 0, fiber: 0 },
+            { name: "Carne, suína, lombo, cru", kcal: 176, protein: 22.4, fat: 9.1, carbs: 0, fiber: 0 },
+            { name: "Carne, suína, pernil, assado", kcal: 257, protein: 28.5, fat: 15.3, carbs: 0, fiber: 0 },
+            { name: "Carne, suína, pernil, cru", kcal: 181, protein: 20.2, fat: 10.8, carbs: 0, fiber: 0 },
+            { name: "Linguiça, de frango, crua", kcal: 183, protein: 17.1, fat: 12.5, carbs: 0.1, fiber: 0 },
+            { name: "Linguiça, de frango, frita", kcal: 250, protein: 22.5, fat: 17.5, carbs: 0.1, fiber: 0 },
+            { name: "Linguiça, de porco, crua", kcal: 252, protein: 15.1, fat: 21.2, carbs: 0.1, fiber: 0 },
+            { name: "Linguiça, de porco, frita", kcal: 317, protein: 19.8, fat: 26.2, carbs: 0.1, fiber: 0 },
+            { name: "Linguiça, toscana, crua", kcal: 287, protein: 15.5, fat: 24.8, carbs: 0.1, fiber: 0 },
+            { name: "Linguiça, toscana, frita", kcal: 375, protein: 20.4, fat: 32.2, carbs: 0, fiber: 0 },
+            { name: "Mortadela", kcal: 270, protein: 12.1, fat: 23.2, carbs: 3.2, fiber: 0 },
+            { name: "Paio", kcal: 395, protein: 19.2, fat: 35.1, carbs: 0.1, fiber: 0 },
+            { name: "Peito, de peru, defumado", kcal: 131, protein: 21.7, fat: 4.1, carbs: 1.8, fiber: 0 },
+            { name: "Presunto, com capa de gordura", kcal: 181, protein: 17.8, fat: 11.8, carbs: 0.8, fiber: 0 },
+            { name: "Presunto, sem capa de gordura", kcal: 117, protein: 18.8, fat: 4.1, carbs: 1, fiber: 0 },
+            { name: "Salame", kcal: 385, protein: 22.8, fat: 32.1, carbs: 1.1, fiber: 0 },
+            { name: "Salsicha, Viena", kcal: 302, protein: 12.2, fat: 27.1, carbs: 2.1, fiber: 0 },
+            { name: "Salsicha, de frango", kcal: 240, protein: 12.1, fat: 20.1, carbs: 2.6, fiber: 0 },
+            { name: "Salsicha, de porco", kcal: 290, protein: 11.9, fat: 26.1, carbs: 2, fiber: 0 },
+            { name: "Salsicha, de peru", kcal: 227, protein: 12.8, fat: 18.7, carbs: 2.1, fiber: 0 },
+            { name: "Abadejo, filé, cozido", kcal: 97, protein: 21.5, fat: 0.7, carbs: 0, fiber: 0 },
+            { name: "Atum, em conserva, em óleo", kcal: 166, protein: 26.2, fat: 6.3, carbs: 0, fiber: 0 },
+            { name: "Atum, fresco, cru", kcal: 118, protein: 25.7, fat: 1, carbs: 0, fiber: 0 },
+            { name: "Bacalhau, salgado, cru", kcal: 136, protein: 29, fat: 1.8, carbs: 0, fiber: 0 },
+            { name: "Caçao, posta, cozida", kcal: 116, protein: 25.6, fat: 0.9, carbs: 0, fiber: 0 },
+            { name: "Camarão, grande, cozido", kcal: 82, protein: 17.4, fat: 1.1, carbs: 0, fiber: 0 },
+            { name: "Camarão, sete barbas, cozido", kcal: 71, protein: 15.1, fat: 0.8, carbs: 0, fiber: 0 },
+            { name: "Caranguejo, cozido", kcal: 83, protein: 17.9, fat: 0.9, carbs: 0, fiber: 0 },
+            { name: "Corimba, assado", kcal: 178, protein: 21.8, fat: 9.7, carbs: 0, fiber: 0 },
+            { name: "Corvina de água doce, assada", kcal: 161, protein: 24.3, fat: 6.6, carbs: 0, fiber: 0 },
+            { name: "Corvina do mar, assada", kcal: 140, protein: 24.1, fat: 4.3, carbs: 0, fiber: 0 },
+            { name: "Dourado do mar, filé, grelhado", kcal: 132, protein: 28.1, fat: 1.7, carbs: 0, fiber: 0 },
+            { name: "Lagosta, cozida", kcal: 83, protein: 18.2, fat: 0.8, carbs: 0, fiber: 0 },
+            { name: "Manjuba, com farinha de trigo, frita", kcal: 329, protein: 20.8, fat: 18.5, carbs: 19.1, fiber: 0.6 },
+            { name: "Merluza, filé, assado", kcal: 119, protein: 25.8, fat: 1.1, carbs: 0, fiber: 0 },
+            { name: "Ostra, crua", kcal: 59, protein: 8.6, fat: 1.3, carbs: 3.1, fiber: 0 },
+            { name: "Pescada, branca, filé, cozido", kcal: 110, protein: 24.1, fat: 1, carbs: 0, fiber: 0 },
+            { name: "Pescada, filé, frito", kcal: 193, protein: 26.6, fat: 8.9, carbs: 0, fiber: 0 },
+            { name: "Pescadinha, filé, frito", kcal: 196, protein: 22.9, fat: 11, carbs: 0, fiber: 0 },
+            { name: "Pintado, assado", kcal: 136, protein: 19.6, fat: 5.9, carbs: 0, fiber: 0 },
+            { name: "Porquinho, filé, frito", kcal: 186, protein: 32.7, fat: 5.4, carbs: 0, fiber: 0 },
+            { name: "Salmão, filé, com pele, grelhado", kcal: 213, protein: 23.1, fat: 13.1, carbs: 0, fiber: 0 },
+            { name: "Salmão, sem pele, fresco, cru", kcal: 170, protein: 19.3, fat: 9.7, carbs: 0, fiber: 0 },
+            { name: "Sardinha, em conserva, em óleo", kcal: 285, protein: 22.7, fat: 21.2, carbs: 0, fiber: 0 },
+            { name: "Sardinha, frita", kcal: 267, protein: 22.5, fat: 19.5, carbs: 0, fiber: 0 },
+            { name: "Siri, cozido", kcal: 83, protein: 17.9, fat: 0.9, carbs: 0, fiber: 0 },
+            { name: "Tucunaré, filé, grelhado", kcal: 132, protein: 28.1, fat: 1.7, carbs: 0, fiber: 0 },
+            { name: "Azeite, de dendê", kcal: 884, protein: 0, fat: 100, carbs: 0, fiber: 0 },
+            { name: "Azeite, de oliva, extra virgem", kcal: 884, protein: 0, fat: 100, carbs: 0, fiber: 0 },
+            { name: "Manteiga, com sal", kcal: 726, protein: 0.4, fat: 82.4, carbs: 0.1, fiber: 0 },
+            { name: "Manteiga, sem sal", kcal: 726, protein: 0.4, fat: 82.4, carbs: 0.1, fiber: 0 },
+            { name: "Margarina, com óleo hidrogenado, com sal", kcal: 722, protein: 0.3, fat: 81.2, carbs: 0.5, fiber: 0 },
+            { name: "Margarina, com óleo hidrogenado, sem sal", kcal: 722, protein: 0.3, fat: 81.2, carbs: 0.5, fiber: 0 },
+            { name: "Óleo, de babaçu", kcal: 884, protein: 0, fat: 100, carbs: 0, fiber: 0 },
+            { name: "Óleo, de canola", kcal: 884, protein: 0, fat: 100, carbs: 0, fiber: 0 },
+            { name: "Óleo, de girassol", kcal: 884, protein: 0, fat: 100, carbs: 0, fiber: 0 },
+            { name: "Óleo, de milho", kcal: 884, protein: 0, fat: 100, carbs: 0, fiber: 0 },
+            { name: "Óleo, de pequi", kcal: 884, protein: 0, fat: 100, carbs: 0, fiber: 0 },
+            { name: "Óleo, de soja", kcal: 884, protein: 0, fat: 100, carbs: 0, fiber: 0 },
+            { name: "Água de coco, industrializada", kcal: 22, protein: 0, fat: 0, carbs: 5.3, fiber: 0 },
+            { name: "Bebida isotônica, sabores variados", kcal: 28, protein: 0, fat: 0, carbs: 7, fiber: 0 },
+            { name: "Café, infusão 10%", kcal: 3, protein: 0.2, fat: 0, carbs: 0.5, fiber: 0 },
+            { name: "Caldo de cana", kcal: 65, protein: 0.1, fat: 0.1, carbs: 18.1, fiber: 0 },
+            { name: "Cerveja, pilsen", kcal: 41, protein: 0.6, fat: 0, carbs: 3.4, fiber: 0 },
+            { name: "Chá, erva-doce, infusão 5%", kcal: 1, protein: 0, fat: 0, carbs: 0.2, fiber: 0 },
+            { name: "Chá, mate, infusão 5%", kcal: 3, protein: 0.2, fat: 0, carbs: 0.5, fiber: 0 },
+            { name: "Chá, preto, infusão 5%", kcal: 1, protein: 0, fat: 0, carbs: 0.3, fiber: 0 },
+            { name: "Refrigerante, cola", kcal: 34, protein: 0, fat: 0, carbs: 8.8, fiber: 0 },
+            { name: "Refrigerante, guaraná", kcal: 39, protein: 0, fat: 0, carbs: 10, fiber: 0 },
+            { name: "Refrigerante, laranja", kcal: 46, protein: 0, fat: 0, carbs: 11.9, fiber: 0 },
+            { name: "Refrigerante, limão", kcal: 39, protein: 0, fat: 0, carbs: 10.1, fiber: 0 },
+            { name: "Suco, de abacaxi, industrializado", kcal: 47, protein: 0.3, fat: 0.1, carbs: 11.5, fiber: 0.4 },
+            { name: "Suco, de caju, industrializado", kcal: 41, protein: 0.3, fat: 0, carbs: 10.1, fiber: 0 },
+            { name: "Suco, de goiaba, industrializado", kcal: 45, protein: 0.2, fat: 0, carbs: 11.2, fiber: 0.4 },
+            { name: "Suco, de laranja, industrializado", kcal: 40, protein: 0.6, fat: 0.1, carbs: 9.3, fiber: 0 },
+            { name: "Suco, de manga, industrializado", kcal: 49, protein: 0.3, fat: 0, carbs: 12.2, fiber: 0.4 },
+            { name: "Suco, de maracujá, industrializado", kcal: 45, protein: 0.4, fat: 0, carbs: 11, fiber: 0 },
+            { name: "Suco, de uva, industrializado", kcal: 58, protein: 0.1, fat: 0, carbs: 14.7, fiber: 0 },
+            { name: "Whey Protein, Concentrado (Growth)", kcal: 423, protein: 76, fat: 6.6, carbs: 14, fiber: 0 },
+            { name: "Whey Protein, Isolado (Growth)", kcal: 373, protein: 86, fat: 1, carbs: 6.6, fiber: 0 }
         ];
 
         const calculatorBody = document.getElementById('calculator-body');
         
-        function createFoodOptions() {
-            const categories = {};
-            foodDatabase.forEach(food => {
-                if (!categories[food.category]) {
-                    categories[food.category] = [];
-                }
-                categories[food.category].push(food);
-            });
-
-            let optionsHtml = '<option value="" disabled selected>Selecione um alimento...</option>';
-            const categoryOrder = ['CARBOIDRATOS', 'PROTEÍNAS', 'FRUTAS', 'LIPÍDEOS (GORDURAS)'];
-
-            categoryOrder.forEach(category => {
-                if (categories[category]) {
-                    optionsHtml += `<optgroup label="--- ${category} ---">`;
-                    categories[category].forEach(food => {
-                        optionsHtml += `<option value="${food.name}">${food.name}</option>`;
-                    });
-                    optionsHtml += '</optgroup>';
-                }
-            });
-            return optionsHtml;
-        }
-
-        const foodOptionsHtml = createFoodOptions();
-
         function addRow() {
             const newRow = document.createElement('tr');
             newRow.className = 'fade-in';
             newRow.innerHTML = `
-                <td class="table-cell">
-                    <select class="food-select form-select">
-                        ${foodOptionsHtml}
-                    </select>
+                <td class="table-cell" data-header="Alimento">
+                    <div class="relative food-search-wrapper">
+                        <input type="text" class="food-search form-input" placeholder="Digite para buscar..." autocomplete="off">
+                        <div class="search-results absolute z-50 w-full hidden"></div>
+                    </div>
                 </td>
-                <td class="table-cell">
+                <td class="table-cell" data-header="Quantidade (g)">
                     <input type="number" min="0" class="quantity-input form-input text-center" placeholder="0">
                 </td>
-                <td class="table-cell text-right font-medium text-slate-700" data-value="kcal">0</td>
-                <td class="table-cell text-right font-medium text-slate-700" data-value="carbs">0.0</td>
-                <td class="table-cell text-right font-medium text-slate-700" data-value="protein">0.0</td>
-                <td class="table-cell text-right font-medium text-slate-700" data-value="fat">0.0</td>
+                <td class="table-cell text-right font-medium text-slate-700" data-header="Kcal" data-value="kcal">0</td>
+                <td class="table-cell text-right font-medium text-slate-700" data-header="Carbs (g)" data-value="carbs">0.0</td>
+                <td class="table-cell text-right font-medium text-slate-700" data-header="Proteínas (g)" data-value="protein">0.0</td>
+                <td class="table-cell text-right font-medium text-slate-700" data-header="Lipídeos (g)" data-value="fat">0.0</td>
+                <td class="table-cell text-right font-medium text-slate-700" data-header="Fibras (g)" data-value="fiber">0.0</td>
             `;
             calculatorBody.appendChild(newRow);
-            newRow.querySelector('.food-select').addEventListener('change', () => calculateRow(newRow));
-            newRow.querySelector('.quantity-input').addEventListener('input', () => calculateRow(newRow));
+        }
+
+        // Função de busca aprimorada
+        function handleSearch(inputElement) {
+             // Reset z-index for all other rows
+            document.querySelectorAll('.food-search-wrapper').forEach(wrapper => {
+                wrapper.classList.remove('is-searching');
+            });
+
+            // Set high z-index for the current row's wrapper
+            const currentWrapper = inputElement.closest('.food-search-wrapper');
+            if (currentWrapper) {
+                currentWrapper.classList.add('is-searching');
+            }
+
+            const searchTerm = inputElement.value.toLowerCase();
+            const resultsContainer = inputElement.nextElementSibling;
+
+            if (searchTerm.length < 2) {
+                resultsContainer.innerHTML = '';
+                resultsContainer.classList.add('hidden');
+                return;
+            }
+            
+            // Separa o termo de busca em palavras individuais
+            const searchWords = searchTerm.split(' ').filter(word => word.length > 0);
+
+            const filteredFoods = foodDatabase.filter(food => {
+                const foodNameLower = food.name.toLowerCase();
+                // Verifica se TODAS as palavras da busca estão presentes no nome do alimento
+                return searchWords.every(word => foodNameLower.includes(word));
+            }).slice(0, 15); // Limita a 15 resultados para performance
+
+            resultsContainer.innerHTML = '';
+            if (filteredFoods.length > 0) {
+                filteredFoods.forEach(food => {
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = 'result-item';
+                    resultDiv.textContent = food.name;
+                    resultDiv.addEventListener('click', () => {
+                        inputElement.value = food.name;
+                        resultsContainer.classList.add('hidden');
+                        if (currentWrapper) {
+                           currentWrapper.classList.remove('is-searching');
+                        }
+                        calculateRow(inputElement.closest('tr'));
+                    });
+                    resultsContainer.appendChild(resultDiv);
+                });
+                resultsContainer.classList.remove('hidden');
+            } else {
+                resultsContainer.classList.add('hidden');
+            }
         }
 
         function calculateRow(row) {
-            const selectedFoodName = row.querySelector('.food-select').value;
+            const selectedFoodName = row.querySelector('.food-search').value;
             const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
+            const basePortion = 100; // Todos os dados da TACO são por 100g
             const foodData = foodDatabase.find(food => food.name === selectedFoodName);
 
             if (!foodData) {
@@ -437,25 +835,28 @@
                 row.querySelector('[data-value="carbs"]').textContent = '0.0';
                 row.querySelector('[data-value="protein"]').textContent = '0.0';
                 row.querySelector('[data-value="fat"]').textContent = '0.0';
+                row.querySelector('[data-value="fiber"]').textContent = '0.0';
                 updateTotals();
                 return;
             }
 
-            const kcalPerGram = foodData.kcal / foodData.basePortion;
-            const carbsPerGram = foodData.carbs / foodData.basePortion;
-            const proteinPerGram = foodData.protein / foodData.basePortion;
-            const fatPerGram = foodData.fat / foodData.basePortion;
+            const kcalPerGram = (foodData.kcal || 0) / basePortion;
+            const carbsPerGram = (foodData.carbs || 0) / basePortion;
+            const proteinPerGram = (foodData.protein || 0) / basePortion;
+            const fatPerGram = (foodData.fat || 0) / basePortion;
+            const fiberPerGram = (foodData.fiber || 0) / basePortion;
 
             row.querySelector('[data-value="kcal"]').textContent = (kcalPerGram * quantity).toFixed(0);
             row.querySelector('[data-value="carbs"]').textContent = (carbsPerGram * quantity).toFixed(1);
             row.querySelector('[data-value="protein"]').textContent = (proteinPerGram * quantity).toFixed(1);
             row.querySelector('[data-value="fat"]').textContent = (fatPerGram * quantity).toFixed(1);
+            row.querySelector('[data-value="fiber"]').textContent = (fiberPerGram * quantity).toFixed(1);
 
             updateTotals();
         }
 
         function updateTotals() {
-            let totalKcal = 0, totalCarbs = 0, totalProtein = 0, totalFat = 0;
+            let totalKcal = 0, totalCarbs = 0, totalProtein = 0, totalFat = 0, totalFiber = 0;
 
             const rows = calculatorBody.querySelectorAll('tr');
             rows.forEach(row => {
@@ -463,19 +864,22 @@
                 totalCarbs += parseFloat(row.querySelector('[data-value="carbs"]').textContent) || 0;
                 totalProtein += parseFloat(row.querySelector('[data-value="protein"]').textContent) || 0;
                 totalFat += parseFloat(row.querySelector('[data-value="fat"]').textContent) || 0;
+                totalFiber += parseFloat(row.querySelector('[data-value="fiber"]').textContent) || 0;
             });
             
             const totalElements = {
                 kcal: document.querySelector('#total-kcal .total-value'),
                 carbs: document.querySelector('#total-carbs .total-value'),
                 protein: document.querySelector('#total-protein .total-value'),
-                fat: document.querySelector('#total-fat .total-value')
+                fat: document.querySelector('#total-fat .total-value'),
+                fiber: document.querySelector('#total-fiber .total-value')
             };
 
             totalElements.kcal.textContent = totalKcal.toFixed(0);
             totalElements.carbs.textContent = totalCarbs.toFixed(1);
             totalElements.protein.textContent = totalProtein.toFixed(1);
             totalElements.fat.textContent = totalFat.toFixed(1);
+            totalElements.fiber.textContent = totalFiber.toFixed(1);
             
             Object.values(totalElements).forEach(el => {
                 el.classList.add('highlight');
@@ -485,7 +889,7 @@
 
         function clearAll() {
             calculatorBody.innerHTML = '';
-            addRow();
+            for(let i=0; i<4; i++) addRow();
             updateTotals();
         }
 
@@ -507,10 +911,75 @@
             button.appendChild(circle);
         }
 
+        // --- THEME AND FONT SIZE LOGIC ---
+        const docHtml = document.documentElement;
+        const decreaseFontBtn = document.getElementById('decrease-font');
+        const increaseFontBtn = document.getElementById('increase-font');
+        const lightThemeBtn = document.getElementById('theme-toggle-light');
+        const darkThemeBtn = document.getElementById('theme-toggle-dark');
+        
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                docHtml.classList.add('dark');
+            } else {
+                docHtml.classList.remove('dark');
+            }
+            localStorage.setItem('theme', theme);
+        };
+
+        const applyFontSize = (size) => {
+            docHtml.style.fontSize = `${size}px`;
+            localStorage.setItem('fontSize', size);
+        };
+
+        increaseFontBtn.addEventListener('click', () => {
+            let currentSize = parseFloat(getComputedStyle(docHtml).fontSize);
+            if (currentSize < 20) { // Max size
+                applyFontSize(currentSize + 1);
+            }
+        });
+
+        decreaseFontBtn.addEventListener('click', () => {
+            let currentSize = parseFloat(getComputedStyle(docHtml).fontSize);
+            if (currentSize > 12) { // Min size
+                applyFontSize(currentSize - 1);
+            }
+        });
+
+        lightThemeBtn.addEventListener('click', () => applyTheme('light'));
+        darkThemeBtn.addEventListener('click', () => applyTheme('dark'));
+
+        // Load preferences on start
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const savedFontSize = localStorage.getItem('fontSize') || '16';
+        applyTheme(savedTheme);
+        applyFontSize(savedFontSize);
+
+
+        // --- CALCULATOR LOGIC ---
+        // Event delegation for dynamic elements
+        document.addEventListener('input', (e) => {
+            if (e.target.matches('.food-search')) {
+                handleSearch(e.target);
+            }
+            if (e.target.matches('.quantity-input')) {
+                calculateRow(e.target.closest('tr'));
+            }
+        });
+
+        // Hide search results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.matches('.food-search')) {
+                document.querySelectorAll('.search-results').forEach(div => div.classList.add('hidden'));
+                document.querySelectorAll('.food-search-wrapper').forEach(wrapper => {
+                    wrapper.classList.remove('is-searching');
+                });
+            }
+        });
+
         window.onload = () => {
-            addRow();
-            const buttons = document.querySelectorAll(".btn");
-            buttons.forEach(button => {
+            for(let i=0; i<4; i++) addRow();
+            document.querySelectorAll(".btn").forEach(button => {
                 button.addEventListener("click", createRipple);
             });
         };
