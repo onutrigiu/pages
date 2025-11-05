@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Nutrição Hospitalar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -207,6 +208,7 @@
         .modal-buttons { margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; }
 
         /* --- Responsive Design --- */
+
         @media (max-width: 1024px) {
             #sidebar { transform: translateX(-100%); }
             #sidebar.open { transform: translateX(0); }
@@ -249,8 +251,34 @@
     </div>
 
     <div class="page-content">
+        <header class="bg-white dark:bg-slate-800 shadow-md mb-8">
+            <nav class="container mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+                        <a href="index.html">O Nutri Giu</a>
+                    </div>
+                    <div class="hidden md:flex items-center space-x-4">
+                        <a href="index.html" class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 font-semibold rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700">Calculadora</a>
+                        <a href="QuizExp.html" class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 font-semibold rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700">Quiz Experimental</a>
+                        <a href="QuizNutHosp.html" class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 font-semibold rounded-lg bg-gray-100 dark:bg-slate-700">Quiz Hospitalar</a>
+                    </div>
+                    <div class="md:hidden">
+                        <button id="mobile-menu-button" class="text-gray-700 dark:text-gray-200 focus:outline-none">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div id="mobile-menu" class="hidden md:hidden mt-4">
+                    <a href="index.html" class="block py-2 px-4 text-sm text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700">Calculadora</a>
+                    <a href="QuizExp.html" class="block py-2 px-4 text-sm text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700">Quiz Experimental</a>
+                    <a href="QuizNutHosp.html" class="block py-2 px-4 text-sm text-gray-700 dark:text-gray-200 rounded-lg bg-gray-100 dark:bg-slate-700">Quiz Hospitalar</a>
+                </div>
+            </nav>
+        </header>
         <div id="header-container">
-            <div id="theme-switcher">
+             <div id="theme-switcher">
                 <label class="switch">
                     <input type="checkbox" id="dark-mode-toggle">
                     <span class="slider"></span>
@@ -785,6 +813,11 @@
             const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
             localStorage.setItem('quizTheme', theme);
         }
+
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
     </script>
 </body>
 </html>
